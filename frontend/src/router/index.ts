@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import MyNovelsView from '../views/MyNovelsView.vue'
+import NovelDetailView from '../views/NovelDetailView.vue'
+import CharacterTemplatesView from '../views/CharacterTemplatesView.vue'
+import WorkspaceLayout from '../layouts/WorkspaceLayout.vue'
+import WorkspaceTimelineView from '../views/workspace/TimelineView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +13,22 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/my-novels',
+      name: 'MyNovels',
+      component: MyNovelsView
+    },
+    {
+      path: '/novel/:id/details', // Using :id as a route parameter
+      name: 'NovelDetail',
+      component: NovelDetailView,
+      props: true // This allows the :id parameter to be passed as a prop to the component
+    },
+    {
+      path: '/character-templates',
+      name: 'CharacterTemplates',
+      component: CharacterTemplatesView
     },
     {
       path: '/about',
@@ -35,52 +56,53 @@ const router = createRouter({
     },
     {
       path: '/workspace/:novelId',
-      name: 'workspace',
-      redirect: to => `/workspace/${to.params.novelId}/characters`,
-      meta: {
-        title: '创作工作空间'
-      }
+      component: WorkspaceLayout,
+      name: 'workspace', // Name for the layout route itself
+      // Default child to redirect to. Let's use characters as it was before.
+      redirect: to => ({ name: 'WorkspaceCharacters', params: { novelId: to.params.novelId } }),
+      meta: { title: '创作工作空间' },
+      children: [
+        {
+          path: 'worldview', // resolves to /workspace/:novelId/worldview
+          name: 'WorkspaceWorldview',
+          component: () => import('../views/workspace/Worldview.vue'),
+          meta: { title: '世界观管理' }
+        },
+        {
+          path: 'characters',
+          name: 'WorkspaceCharacters',
+          component: () => import('../views/workspace/Characters.vue'),
+          meta: { title: '角色管理' }
+        },
+        {
+          path: 'outline',
+          name: 'WorkspaceOutline',
+          component: () => import('../views/workspace/Outline.vue'),
+          meta: { title: '大纲管理' }
+        },
+        {
+          path: 'chapters',
+          name: 'WorkspaceChapters',
+          component: () => import('../views/workspace/Chapters.vue'),
+          meta: { title: '章节管理' }
+        },
+        {
+          path: 'timeline',
+          name: 'WorkspaceTimeline',
+          component: WorkspaceTimelineView,
+          meta: { title: '时间轴' }
+        },
+        {
+          // Assuming ai-configs is part of a specific novel's workspace
+          path: 'ai-configs',
+          name: 'WorkspaceAIConfigs', // Consistent naming
+          component: () => import('../views/workspace/AIConfigs.vue'),
+          meta: { title: 'AI配置管理' }
+        }
+      ]
     },
-    {
-      path: '/workspace/:novelId/characters',
-      name: 'workspace-characters',
-      component: () => import('../views/workspace/Characters.vue'),
-      meta: {
-        title: '角色管理'
-      }
-    },
-    {
-      path: '/workspace/:novelId/outline',
-      name: 'workspace-outline',
-      component: () => import('../views/workspace/Outline.vue'),
-      meta: {
-        title: '大纲管理'
-      }
-    },
-    {
-      path: '/workspace/:novelId/chapters',
-      name: 'workspace-chapters',
-      component: () => import('../views/workspace/Chapters.vue'),
-      meta: {
-        title: '章节管理'
-      }
-    },
-    {
-      path: '/workspace/:novelId/worldview',
-      name: 'workspace-worldview',
-      component: () => import('../views/workspace/Worldview.vue'),
-      meta: {
-        title: '世界观管理'
-      }
-    },
-    {
-      path: '/ai-configs',
-      name: 'ai-configs',
-      component: () => import('../views/workspace/AIConfigs.vue'),
-      meta: {
-        title: 'AI配置管理'
-      }
-    },
+    // The old individual workspace routes are now children of the above layout route.
+    // The old /ai-configs top-level route is also moved as a child.
   ],
 })
 

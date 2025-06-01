@@ -209,36 +209,77 @@
           <!-- 综合创作 -->
           <el-tab-pane label="🎯 综合创作" name="compose">
             <div class="compose-section">
-              <el-alert
-                title="即将开放"
-                description="综合创作功能将整合小说名、创意、大纲等所有生成功能，敬请期待！"
-                type="info"
-                show-icon
-                :closable="false"
-              />
-              
-              <!-- 已选择的内容展示 -->
-              <div v-if="selectedTitle || adoptedIdea" class="selected-content">
-                <h3>已选择的内容：</h3>
-                
-                <el-card v-if="selectedTitle" class="selected-item">
-                  <template #header>
-                    <span>📖 小说标题</span>
-                  </template>
-                  <p>{{ selectedTitle }}</p>
-                </el-card>
-
-                <el-card v-if="adoptedIdea" class="selected-item">
-                  <template #header>
-                    <span>💡 小说创意</span>
-                  </template>
-                  <el-descriptions :column="1" size="small">
-                    <el-descriptions-item label="标题">{{ adoptedIdea.title }}</el-descriptions-item>
-                    <el-descriptions-item label="设定">{{ adoptedIdea.setting }}</el-descriptions-item>
-                    <el-descriptions-item label="主角">{{ adoptedIdea.main_character }}</el-descriptions-item>
-                  </el-descriptions>
-                </el-card>
+              <!-- 已选择的内容展示 (Simplified) -->
+              <div v-if="selectedTitle || adoptedIdea" class="selected-content-summary">
+                <h4>已选参考信息:</h4>
+                <p v-if="selectedTitle"><strong>选定标题:</strong> {{ selectedTitle }}</p>
+                <p v-if="adoptedIdea && adoptedIdea.title"><strong>创意标题:</strong> {{ adoptedIdea.title }}</p>
+                <p v-if="adoptedIdea && adoptedIdea.genre"><strong>创意类型:</strong> {{ adoptedIdea.genre }}</p>
+                 <p v-if="adoptedIdea && adoptedIdea.target_audience"><strong>创意受众:</strong> {{ adoptedIdea.target_audience }}</p>
               </div>
+
+              <el-form
+                ref="creationFormRef"
+                :model="creationForm"
+                :rules="creationFormRules"
+                label-width="120px"
+                label-position="right"
+                style="margin-top: 20px;"
+              >
+                <el-form-item label="小说名称" prop="name">
+                  <el-input v-model="creationForm.name" placeholder="请输入小说名称" />
+                </el-form-item>
+
+                <el-form-item label="小说类型" prop="type">
+                  <el-select v-model="creationForm.type" placeholder="请选择小说类型" style="width: 100%;">
+                    <el-option v-for="item in novelTypeOptions" :key="item" :label="item" :value="item" />
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item label="小说创意概述" prop="idea_summary">
+                  <el-input
+                    v-model="creationForm.idea_summary"
+                    type="textarea"
+                    :rows="4"
+                    placeholder="简要描述小说的核心创意、故事梗概等"
+                  />
+                </el-form-item>
+
+                <el-row :gutter="20">
+                  <el-col :xs="24" :sm="12">
+                    <el-form-item label="字数目标" prop="word_target">
+                      <el-select v-model="creationForm.word_target" placeholder="请选择字数目标" style="width: 100%;">
+                        <el-option v-for="item in wordTargetOptions" :key="item" :label="item" :value="item" />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :xs="24" :sm="12">
+                    <el-form-item label="面向读者" prop="audience">
+                      <el-select v-model="creationForm.audience" placeholder="请选择面向读者" style="width: 100%;">
+                        <el-option v-for="item in audienceOptions" :key="item" :label="item" :value="item" />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <el-form-item label="世界观数量" prop="worldview_quantity">
+                  <el-select v-model="creationForm.worldview_quantity" placeholder="请选择世界观数量" style="width: 100%;">
+                     <el-option v-for="item in worldviewQuantityOptions" :key="item" :label="item" :value="item" />
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="handleCreateNovel"
+                    :loading="creationLoading"
+                    size="large"
+                  >
+                    <el-icon style="margin-right: 5px;"><MagicStick /></el-icon>
+                    创建小说
+                  </el-button>
+                </el-form-item>
+              </el-form>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -266,6 +307,8 @@ import { generationApi, type GenerationResponse } from '../api/generation'
 // 活动标签
 const activeTab = ref('name')
 
+// --- Forms & Data ---
+
 // 小说名生成表单
 const nameForm = reactive({
   genre: '',
@@ -282,16 +325,45 @@ const ideaForm = reactive({
   user_input: ''
 })
 
-// 响应式数据
+// 综合创作表单
+const creationFormRef = ref<FormInstance>()
+const creationForm = reactive({
+  name: '',
+  type: '', // 玄幻, 奇幻, 历史, 轻小说, 都市, 科幻, 武侠, 言情, 悬疑, 其他
+  idea_summary: '',
+  word_target: '', // 1w字, 10w字, 100w字, 300w字, 500w字, 1000w字
+  audience: '', // 男频, 女频
+  worldview_quantity: '单世界' // 单世界, 多世界
+})
+
+const creationFormRules = reactive<FormRules>({
+  name: [{ required: true, message: '请输入小说名称', trigger: 'blur' }],
+  type: [{ required: true, message: '请选择小说类型', trigger: 'change' }],
+  idea_summary: [{ required: true, message: '请输入小说创意概述', trigger: 'blur' }],
+  word_target: [{ required: true, message: '请选择字数目标', trigger: 'change' }],
+  audience: [{ required: true, message: '请选择面向读者', trigger: 'change' }],
+  worldview_quantity: [{ required: true, message: '请选择世界观数量', trigger: 'change' }],
+})
+
+const novelTypeOptions = ["玄幻", "奇幻", "历史", "轻小说", "都市", "科幻", "武侠", "言情", "悬疑", "其他"];
+const wordTargetOptions = ["1w字", "10w字", "100w字", "300w字", "500w字", "1000w字"];
+const audienceOptions = ["男频", "女频"];
+const worldviewQuantityOptions = ["单世界", "多世界"];
+
+
+// --- Loading, Results, Errors ---
 const nameLoading = ref(false)
 const ideaLoading = ref(false)
+const creationLoading = ref(false) // For the create novel button
 const nameResult = ref<GenerationResponse | null>(null)
 const ideaResult = ref<GenerationResponse | null>(null)
 const error = ref('')
 
-// 选择的内容
-const selectedTitle = ref('')
-const adoptedIdea = ref<any>(null)
+// --- Selected/Adopted Data from other tabs ---
+const selectedTitle = ref('') // From name generation
+const adoptedIdea = ref<any>(null) // From idea generation, structure defined by API response
+
+// --- Functions ---
 
 // 生成小说名
 const generateNovelName = async () => {
@@ -348,29 +420,113 @@ const selectTitle = (title: string) => {
 // 采用创意
 const adoptIdea = () => {
   if (ideaResult.value?.data?.idea) {
-    adoptedIdea.value = ideaResult.value.data.idea
+    adoptedIdea.value = ideaResult.value.data.idea // Assuming ideaResult.data.idea is the object
     ElMessage.success('已采用此创意')
+
+    // Pre-fill logic for creationForm, only if not already set by user or tab is compose
+    if (activeTab.value === 'compose' || !creationForm.name) {
+       if (adoptedIdea.value.title && !creationForm.name) {
+        creationForm.name = adoptedIdea.value.title;
+      }
+    }
+    if (activeTab.value === 'compose' || !creationForm.type) {
+      if (adoptedIdea.value.genre && novelTypeOptions.includes(adoptedIdea.value.genre) && !creationForm.type) {
+        creationForm.type = adoptedIdea.value.genre;
+      }
+    }
+     if (activeTab.value === 'compose' || !creationForm.idea_summary) {
+      let summary = '';
+      if (adoptedIdea.value.title) summary += `标题：${adoptedIdea.value.title}\n`;
+      if (adoptedIdea.value.plot) summary += `主线：${adoptedIdea.value.plot}\n`;
+      else if (adoptedIdea.value.setting) summary += `设定：${adoptedIdea.value.setting}\n`;
+      if (summary && !creationForm.idea_summary) {
+        creationForm.idea_summary = summary.trim();
+      }
+    }
+    if (activeTab.value === 'compose' || !creationForm.audience) {
+       if (adoptedIdea.value.target_audience && audienceOptions.includes(adoptedIdea.value.target_audience) && !creationForm.audience) {
+        creationForm.audience = adoptedIdea.value.target_audience;
+      }
+    }
+
     // 跳转到综合创作标签
     activeTab.value = 'compose'
   }
 }
+
+
+// Watchers for pre-filling creationForm, ensuring user edits are not overwritten.
+watch(selectedTitle, (newTitle) => {
+  if (newTitle && (!creationForm.name || activeTab.value !== 'compose')) {
+    // Only pre-fill if creationForm.name is empty or if we are not on the compose tab (to avoid overwriting active edits)
+    // This logic might need refinement based on exact desired UX when switching tabs.
+    // A simpler approach: only pre-fill if creationForm.name is empty.
+    if(!creationForm.name) {
+        creationForm.name = newTitle;
+    }
+  }
+});
+
+watch(nameForm, (newNameFormValues) => {
+    if (newNameFormValues.genre && novelTypeOptions.includes(newNameFormValues.genre) && !creationForm.type && !adoptedIdea.value?.genre) {
+        creationForm.type = newNameFormValues.genre;
+    }
+}, { deep: true });
+
+
+watch(activeTab, (newTab) => {
+  if (newTab === 'compose') {
+    // When switching to compose tab, re-evaluate pre-fills if fields are empty
+    if (selectedTitle.value && !creationForm.name) {
+      creationForm.name = selectedTitle.value;
+    }
+    if (adoptedIdea.value) {
+      if (adoptedIdea.value.title && !creationForm.name) {
+         creationForm.name = adoptedIdea.value.title; // Adopted idea title can also fill name
+      }
+      if (adoptedIdea.value.genre && novelTypeOptions.includes(adoptedIdea.value.genre) && !creationForm.type) {
+        creationForm.type = adoptedIdea.value.genre;
+      } else if (nameForm.genre && novelTypeOptions.includes(nameForm.genre) && !creationForm.type) {
+        // Fallback to nameForm.genre if adoptedIdea.genre is not available/suitable
+        creationForm.type = nameForm.genre;
+      }
+
+      if (!creationForm.idea_summary) {
+        let summary = '';
+        if (adoptedIdea.value.title) summary += `创意标题：${adoptedIdea.value.title}\n`;
+        if (adoptedIdea.value.plot) summary += `故事情节：${adoptedIdea.value.plot}\n`;
+        else if (adoptedIdea.value.setting) summary += `世界设定：${adoptedIdea.value.setting}\n`;
+        if (adoptedIdea.value.main_character) summary += `主要角色：${adoptedIdea.value.main_character}\n`;
+        if (adoptedIdea.value.conflict) summary += `核心冲突：${adoptedIdea.value.conflict}\n`;
+        creationForm.idea_summary = summary.trim();
+      }
+      if (adoptedIdea.value.target_audience && audienceOptions.includes(adoptedIdea.value.target_audience) && !creationForm.audience) {
+        creationForm.audience = adoptedIdea.value.target_audience;
+      }
+    } else if (nameForm.genre && novelTypeOptions.includes(nameForm.genre) && !creationForm.type) {
+        // If no adopted idea, still try to fill type from nameForm
+        creationForm.type = nameForm.genre;
+    }
+  }
+});
+
 
 // 复制创意
 const copyIdea = async () => {
   if (ideaResult.value?.data?.idea) {
     try {
       const idea = ideaResult.value.data.idea
-      const text = `
-标题：${idea.title}
-世界设定：${idea.setting}
-主角设定：${idea.main_character}
-核心冲突：${idea.conflict}
-故事主线：${idea.plot}
-独特卖点：${idea.unique_selling_point}
-目标读者：${idea.target_audience}
-      `.trim()
+      const ideaToCopy = ideaResult.value.data.idea
+      let textToCopy = `标题：${ideaToCopy.title}\n`;
+      if(ideaToCopy.genre) textToCopy += `类型：${ideaToCopy.genre}\n`;
+      if(ideaToCopy.setting) textToCopy += `世界设定：${ideaToCopy.setting}\n`;
+      if(ideaToCopy.main_character) textToCopy += `主角设定：${ideaToCopy.main_character}\n`;
+      if(ideaToCopy.conflict) textToCopy += `核心冲突：${ideaToCopy.conflict}\n`;
+      if(ideaToCopy.plot) textToCopy += `故事情节：${ideaToCopy.plot}\n`;
+      if(ideaToCopy.unique_selling_point) textToCopy += `独特卖点：${ideaToCopy.unique_selling_point}\n`;
+      if(ideaToCopy.target_audience) textToCopy += `目标读者：${ideaToCopy.target_audience}\n`;
       
-      await navigator.clipboard.writeText(text)
+      await navigator.clipboard.writeText(textToCopy.trim())
       ElMessage.success('创意已复制到剪贴板')
     } catch (err) {
       ElMessage.error('复制失败')
@@ -394,7 +550,36 @@ const resetIdeaForm = () => {
   ideaForm.length = ''
   ideaForm.user_input = ''
   ideaResult.value = null
+  adoptedIdea.value = null // Also reset adopted idea
   error.value = ''
+}
+
+// 处理小说创建
+const handleCreateNovel = async () => {
+  if (!creationFormRef.value) return
+  await creationFormRef.value.validate(async (valid) => {
+    if (valid) {
+      creationLoading.value = true
+      try {
+        // Simulate API call
+        console.log('Form Data:', JSON.parse(JSON.stringify(creationForm))) // Use stringify/parse for clean log of reactive object
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+        ElMessage.success('小说创建成功（模拟）！')
+        // Here you would typically call an API:
+        // await novelApi.createNovel(creationForm);
+        // And then maybe redirect or clear form:
+        // router.push({ name: 'MyNovels' });
+        // creationFormRef.value?.resetFields(); // if you want to reset
+      } catch (err: any) {
+        ElMessage.error(err.message || '小说创建失败，请重试。')
+      } finally {
+        creationLoading.value = false
+      }
+    } else {
+      ElMessage.error('请检查表单填写是否正确。')
+      return false
+    }
+  })
 }
 </script>
 
@@ -493,15 +678,25 @@ const resetIdeaForm = () => {
 }
 
 .compose-section {
-  padding: 20px 0;
+  padding: 10px 0; /* Adjusted padding */
 }
 
-.selected-content {
-  margin-top: 30px;
+.selected-content-summary {
+  background-color: #f5f7fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  border: 1px solid #e4e7ed;
 }
-
-.selected-item {
-  margin-bottom: 15px;
+.selected-content-summary h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #303133;
+}
+.selected-content-summary p {
+  margin: 5px 0;
+  font-size: 0.9em;
+  color: #606266;
 }
 
 :deep(.el-tabs__content) {
