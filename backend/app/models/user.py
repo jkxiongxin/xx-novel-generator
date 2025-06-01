@@ -90,8 +90,68 @@ class User(Base):
     
     # 关系映射
     novels = relationship(
-        "Novel", 
-        back_populates="user", 
+        "Novel",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    characters = relationship(
+        "Character",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    rough_outlines = relationship(
+        "RoughOutline",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    detailed_outlines = relationship(
+        "DetailedOutline",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    worldviews = relationship(
+        "Worldview",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    chapters = relationship(
+        "Chapter",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    world_maps = relationship(
+        "WorldMap",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    cultivation_systems = relationship(
+        "CultivationSystem",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    histories = relationship(
+        "History",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    factions = relationship(
+        "Faction",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    ai_model_configs = relationship(
+        "AIModelConfig",
+        back_populates="user",
         cascade="all, delete-orphan",
         lazy="select"
     )

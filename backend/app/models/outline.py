@@ -39,6 +39,7 @@ class RoughOutline(Base, TimestampMixin, UserOwnedMixin):
     end_chapter = Column(Integer, comment="结束章节数")
     
     # 关系定义
+    user = relationship("User", back_populates="rough_outlines")
     novel = relationship("Novel", back_populates="rough_outlines")
     
     def to_dict(self) -> dict:
@@ -95,6 +96,7 @@ class DetailedOutline(Base, TimestampMixin, UserOwnedMixin):
     new_plot_summary = Column(Text, comment="新剧情简介")
     
     # 关系定义
+    user = relationship("User", back_populates="detailed_outlines")
     novel = relationship("Novel", back_populates="detailed_outlines")
     
     def to_dict(self) -> dict:

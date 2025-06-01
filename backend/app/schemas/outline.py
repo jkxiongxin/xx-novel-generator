@@ -132,6 +132,7 @@ class OutlineGenerationResponse(BaseModel):
     rough_outlines: List[RoughOutlineResponse] = Field(default_factory=list, description="生成的粗略大纲列表")
     detailed_outlines: List[DetailedOutlineResponse] = Field(default_factory=list, description="生成的详细大纲列表")
     total_generated: int = Field(default=0, description="成功生成的大纲数量")
+    generation_data: Optional[List[dict]] = Field(default=None, description="原始生成数据")
 
 
 class OutlineFilterRequest(BaseModel):

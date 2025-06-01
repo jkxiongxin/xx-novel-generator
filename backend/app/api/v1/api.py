@@ -22,7 +22,7 @@ async def api_health():
 
 
 # 导入路由模块
-from app.api.v1 import auth, novels, generation, demo, characters, outline, worldview
+from app.api.v1 import auth, novels, generation, demo, characters, outline, worldview, chapters, ai_configs
 
 # 包含认证路由
 api_router.include_router(
@@ -54,6 +54,20 @@ api_router.include_router(
 api_router.include_router(
     worldview.router,
     tags=["世界观管理"]
+)
+
+# 包含章节管理路由
+api_router.include_router(
+    chapters.router,
+    prefix="/chapters",
+    tags=["章节管理"]
+)
+
+# 包含AI配置管理路由
+api_router.include_router(
+    ai_configs.router,
+    prefix="/ai-configs",
+    tags=["AI配置管理"]
 )
 
 # 包含AI生成路由

@@ -8,20 +8,25 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
+import logging
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.user import User
-from app.models.novel import Novel
-from app.models.character import Character
+from app.models.character import Character, CharacterType, CharacterGender
 from app.schemas.character import (
     CharacterCreate, CharacterUpdate, CharacterResponse,
     CharacterSummaryResponse, CharacterListResponse,
     CharacterGenerationRequest, CharacterGenerationResponse,
     CharacterFilterRequest, CharacterBatchAddRequest, CharacterBatchAddResponse
 )
+from app.services.generation_service import get_generation_service
+from app.services.prompt_service import get_prompt_service
+from app.models.novel import Novel
+from app.models.worldview import Worldview
 
 router = APIRouter(prefix="/characters", tags=["角色管理"])
+logger = logging.getLogger(__name__)
 
 
 @router.post("/", response_model=CharacterResponse, status_code=status.HTTP_201_CREATED)
@@ -391,4 +396,122 @@ async def batch_add_characters(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"批量添加角色失败: {str(e)}"
+        )
+
+
+@router.post("/generate", response_model=CharacterGenerationResponse)
+async def generate_characters(
+    request: CharacterGenerationRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    AI生成角色
+    
+    Args:
+        request: 角色生成请求
+        db: 数据库会话
+        current_user: 当前用户
+        
+    Returns:
+        CharacterGenerationResponse: 角色生成响应
+    """
+    try:
+        # 验证小说是否属于当前用户
+        novel = db.query(Novel).filter(
+            and_(Novel.id == request.novel_id, Novel.user_id == current_user.id)
+        ).first()
+        if not novel:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="小说不存在或无权访问"
+            )
+        
+        # 获取世界观信息（如果需要）
+        worldview_info = ""
+        if request.include_worldview and request.worldview_id:
+            worldview = db.query(Worldview).filter(
+                and_(Worldview.id == request.worldview_id, Worldview.user_id == current_user.id)
+            ).first()
+            if worldview:
+                worldview_info = f"世界名称: {worldview.name}\n世界描述: {worldview.description or '无'}"
+        
+        # 准备小说信息
+        novel_info = {
+            "title": novel.title,
+            "genre": novel.genre.value if novel.genre else "通用",
+            "description": novel.description or ""
+        }
+        
+        # 调用生成服务
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        generation_result = await generation_service.generate_characters(
+            request=request,
+            novel_info=novel_info,
+            worldview_info=worldview_info
+        )
+        
+        if not generation_result.success:
+            return generation_result
+        
+        # 将生成的数据转换为角色对象并保存到数据库
+        created_characters = []
+        for character_data in generation_result.generation_data or []:
+            try:
+                # 映射AI生成的字段到数据库模型
+                character_type_mapping = {
+                    "protagonist": CharacterType.PROTAGONIST,
+                    "major_supporting": CharacterType.SUPPORTING,
+                    "supporting": CharacterType.SUPPORTING,
+                    "antagonist": CharacterType.ANTAGONIST,
+                    "minor": CharacterType.MINOR
+                }
+                
+                gender_mapping = {
+                    "male": CharacterGender.MALE,
+                    "female": CharacterGender.FEMALE,
+                    "unknown": CharacterGender.UNKNOWN,
+                    "other": CharacterGender.OTHER
+                }
+                
+                character = Character(
+                    name=character_data.get("name", "未命名角色"),
+                    gender=gender_mapping.get(character_data.get("gender", "unknown"), CharacterGender.UNKNOWN),
+                    personality=character_data.get("personality", ""),
+                    character_type=character_type_mapping.get(character_data.get("character_type", "supporting"), CharacterType.SUPPORTING),
+                    tags=character_data.get("tags", []),
+                    description=character_data.get("description", ""),
+                    abilities=character_data.get("abilities", ""),
+                    novel_id=request.novel_id,
+                    worldview_id=request.worldview_id,
+                    user_id=current_user.id,
+                    is_template=False
+                )
+                
+                db.add(character)
+                db.flush()  # 获取ID但不提交
+                created_characters.append(CharacterResponse.model_validate(character))
+                
+            except Exception as e:
+                logger.error(f"创建角色失败: {str(e)}")
+                continue
+        
+        db.commit()
+        
+        return CharacterGenerationResponse(
+            success=True,
+            message=f"成功生成并保存 {len(created_characters)} 个角色",
+            characters=created_characters,
+            total_generated=len(created_characters),
+            generation_data=generation_result.generation_data
+        )
+        
+    except Exception as e:
+        db.rollback()
+        logger.error(f"角色生成失败: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"角色生成失败: {str(e)}"
         )

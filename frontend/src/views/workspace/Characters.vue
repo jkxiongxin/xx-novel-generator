@@ -27,6 +27,9 @@
         <el-button @click="showTemplateDialog = true">
           从角色库选择
         </el-button>
+        <el-button type="primary" @click="showGenerateDialog = true">
+          AI生成角色
+        </el-button>
       </div>
     </div>
 
@@ -342,6 +345,57 @@
         <el-button type="primary" @click="submitWorldviewForm">创建</el-button>
       </template>
     </el-dialog>
+
+    <!-- AI生成角色对话框 -->
+    <el-dialog v-model="showGenerateDialog" title="AI生成角色" width="600px">
+      <el-form ref="generateFormRef" :model="generateForm" :rules="generateRules" label-width="120px">
+        <el-form-item label="角色类型">
+          <el-select v-model="generateForm.character_type" placeholder="选择角色类型">
+            <el-option
+              v-for="type in characterTypes.filter(t => t.value !== 'all')"
+              :key="type.value"
+              :label="type.label"
+              :value="type.value"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="生成数量" prop="character_count">
+          <el-input-number v-model="generateForm.character_count" :min="1" :max="5" />
+        </el-form-item>
+        
+        <el-form-item label="所属世界观">
+          <el-select v-model="generateForm.worldview_id" placeholder="选择世界观">
+            <el-option
+              v-for="worldview in worldviews"
+              :key="worldview.id"
+              :label="worldview.name"
+              :value="worldview.id"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item>
+          <el-checkbox v-model="generateForm.include_worldview">使用世界观信息</el-checkbox>
+        </el-form-item>
+        
+        <el-form-item label="生成建议">
+          <el-input
+            v-model="generateForm.user_suggestion"
+            type="textarea"
+            :rows="3"
+            placeholder="请描述您希望生成的角色特征或要求"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <el-button @click="showGenerateDialog = false">取消</el-button>
+        <el-button type="primary" @click="submitGenerateForm" :loading="generating">
+          {{ generating ? '生成中...' : '开始生成' }}
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -349,6 +403,8 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router'
+import * as charactersApi from '@/api/characters'
+import * as outlineApi from '@/api/outline'
 
 // 获取路由参数
 const route = useRoute()
@@ -367,7 +423,9 @@ const loading = ref(false)
 const showCreateDialog = ref(false)
 const showTemplateDialog = ref(false)
 const showNewWorldviewDialog = ref(false)
+const showGenerateDialog = ref(false)
 const editingCharacter = ref(null)
+const generating = ref(false)
 
 // 表单数据
 const createForm = reactive({
@@ -396,6 +454,14 @@ const templateFilters = reactive({
   character_type: ''
 })
 
+const generateForm = reactive({
+  character_type: '',
+  character_count: 2,
+  worldview_id: null,
+  include_worldview: true,
+  user_suggestion: ''
+})
+
 // 标签输入
 const tagInput = ref('')
 const selectedTemplates = ref([])
@@ -420,6 +486,10 @@ const worldviewRules = {
   name: [{ required: true, message: '请输入世界名称', trigger: 'blur' }]
 }
 
+const generateRules = {
+  character_count: [{ required: true, message: '请输入生成数量', trigger: 'blur' }]
+}
+
 // 计算属性
 const filteredCharacters = computed(() => {
   if (activeFilter.value === 'all') {
@@ -432,11 +502,10 @@ const filteredCharacters = computed(() => {
 const loadCharacters = async () => {
   try {
     loading.value = true
-    const response = await fetch(`/api/v1/characters/?novel_id=${novelId.value}`)
-    const data = await response.json()
-    if (data.success !== false) {
-      characters.value = data.items || []
-    }
+    const data = await charactersApi.getCharacters({
+      novel_id: novelId.value
+    })
+    characters.value = data.items || []
   } catch (error) {
     console.error('加载角色列表失败:', error)
     ElMessage.error('加载角色列表失败')
@@ -456,24 +525,19 @@ const loadWorldviews = async () => {
     console.error('加载世界观列表失败:', error)
   }
 }
-
 const loadTemplates = async () => {
   try {
-    const params = new URLSearchParams({
-      is_template: true,
+    const params = {
       page: 1,
       page_size: 50
-    })
-    
-    if (templateFilters.name) params.append('search', templateFilters.name)
-    if (templateFilters.gender) params.append('gender', templateFilters.gender)
-    if (templateFilters.character_type) params.append('character_type', templateFilters.character_type)
-    
-    const response = await fetch(`/api/v1/characters/templates/?${params}`)
-    const data = await response.json()
-    if (data.success !== false) {
-      templates.value = data.items || []
     }
+    
+    if (templateFilters.name) params.search = templateFilters.name
+    if (templateFilters.gender) params.gender = templateFilters.gender
+    if (templateFilters.character_type) params.character_type = templateFilters.character_type
+    
+    const data = await charactersApi.getCharacterTemplates(params)
+    templates.value = data.items || []
   } catch (error) {
     console.error('加载角色模板失败:', error)
     ElMessage.error('加载角色模板失败')
@@ -537,17 +601,10 @@ const deleteCharacter = async () => {
       type: 'warning'
     })
     
-    const response = await fetch(`/api/v1/characters/${selectedCharacter.value.id}`, {
-      method: 'DELETE'
-    })
-    
-    if (response.ok) {
-      ElMessage.success('角色删除成功')
-      selectedCharacter.value = null
-      await loadCharacters()
-    } else {
-      throw new Error('删除失败')
-    }
+    await charactersApi.deleteCharacter(selectedCharacter.value.id)
+    ElMessage.success('角色删除成功')
+    selectedCharacter.value = null
+    await loadCharacters()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除角色失败:', error)
@@ -594,36 +651,23 @@ const resetCreateForm = () => {
 
 const submitCreateForm = async () => {
   try {
-    const method = editingCharacter.value ? 'PUT' : 'POST'
-    const url = editingCharacter.value 
-      ? `/api/v1/characters/${editingCharacter.value.id}`
-      : '/api/v1/characters/'
-    
     const requestData = { ...createForm }
     if (!editingCharacter.value) {
       requestData.novel_id = novelId.value
     }
     
-    const response = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    })
-    
-    if (response.ok) {
-      ElMessage.success(editingCharacter.value ? '角色更新成功' : '角色创建成功')
-      showCreateDialog.value = false
-      await loadCharacters()
-      
-      if (editingCharacter.value) {
-        const updatedCharacter = await response.json()
-        selectedCharacter.value = updatedCharacter
-      }
+    let updatedCharacter
+    if (editingCharacter.value) {
+      updatedCharacter = await charactersApi.updateCharacter(editingCharacter.value.id, requestData)
+      ElMessage.success('角色更新成功')
+      selectedCharacter.value = updatedCharacter
     } else {
-      throw new Error('操作失败')
+      await charactersApi.createCharacter(requestData)
+      ElMessage.success('角色创建成功')
     }
+    
+    showCreateDialog.value = false
+    await loadCharacters()
   } catch (error) {
     console.error('角色操作失败:', error)
     ElMessage.error('角色操作失败')
@@ -680,23 +724,12 @@ const handleTemplateSelection = (selection) => {
 
 const addSingleTemplate = async (template) => {
   try {
-    const response = await fetch('/api/v1/characters/batch-add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        character_ids: [template.id],
-        novel_id: novelId.value
-      })
+    await charactersApi.batchAddCharacters({
+      character_ids: [template.id],
+      novel_id: novelId.value
     })
-    
-    if (response.ok) {
-      ElMessage.success('角色添加成功')
-      await loadCharacters()
-    } else {
-      throw new Error('添加失败')
-    }
+    ElMessage.success('角色添加成功')
+    await loadCharacters()
   } catch (error) {
     console.error('添加角色失败:', error)
     ElMessage.error('添加角色失败')
@@ -710,28 +743,52 @@ const batchAddTemplates = async () => {
   }
   
   try {
-    const response = await fetch('/api/v1/characters/batch-add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        character_ids: selectedTemplates.value.map(t => t.id),
-        novel_id: novelId.value
-      })
+    const result = await charactersApi.batchAddCharacters({
+      character_ids: selectedTemplates.value.map(t => t.id),
+      novel_id: novelId.value
     })
-    
-    if (response.ok) {
-      const result = await response.json()
-      ElMessage.success(`成功添加 ${result.added_count} 个角色`)
-      showTemplateDialog.value = false
-      await loadCharacters()
-    } else {
-      throw new Error('批量添加失败')
-    }
+    ElMessage.success(`成功添加 ${result.added_count} 个角色`)
+    showTemplateDialog.value = false
+    await loadCharacters()
   } catch (error) {
     console.error('批量添加角色失败:', error)
     ElMessage.error('批量添加角色失败')
+  }
+}
+
+const submitGenerateForm = async () => {
+  try {
+    generating.value = true
+    const result = await charactersApi.generateCharacters({
+      novel_id: novelId.value,
+      character_type: generateForm.character_type,
+      character_count: generateForm.character_count,
+      user_suggestion: generateForm.user_suggestion,
+      include_worldview: generateForm.include_worldview,
+      worldview_id: generateForm.worldview_id
+    })
+    
+    if (result.success) {
+      ElMessage.success(`成功生成 ${result.total_generated} 个角色`)
+      showGenerateDialog.value = false
+      await loadCharacters()
+      
+      // 重置表单
+      Object.assign(generateForm, {
+        character_type: '',
+        character_count: 2,
+        worldview_id: null,
+        include_worldview: true,
+        user_suggestion: ''
+      })
+    } else {
+      ElMessage.error(result.message || 'AI生成失败')
+    }
+  } catch (error) {
+    console.error('AI生成角色失败:', error)
+    ElMessage.error('AI生成角色失败')
+  } finally {
+    generating.value = false
   }
 }
 

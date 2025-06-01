@@ -322,6 +322,8 @@ import { useRoute } from 'vue-router'
 import OutlineSection from '@/components/outline/OutlineSection.vue'
 import PlotPointSection from '@/components/outline/PlotPointSection.vue'
 import DetailedOutlineSection from '@/components/outline/DetailedOutlineSection.vue'
+import * as outlineApi from '@/api/outline'
+import * as charactersApi from '@/api/characters'
 
 // 获取路由参数
 const route = useRoute()
@@ -413,11 +415,8 @@ const plotPoints = computed(() =>
 const loadRoughOutlines = async () => {
   try {
     loading.value = true
-    const response = await fetch(`/api/v1/outline/rough/novel/${novelId.value}`)
-    const data = await response.json()
-    if (data.success !== false) {
-      roughOutlines.value = data.items || []
-    }
+    const data = await outlineApi.getRoughOutlinesByNovel(novelId.value)
+    roughOutlines.value = data.items || []
   } catch (error) {
     console.error('加载粗略大纲失败:', error)
     ElMessage.error('加载粗略大纲失败')
@@ -428,11 +427,8 @@ const loadRoughOutlines = async () => {
 
 const loadDetailedOutlines = async () => {
   try {
-    const response = await fetch(`/api/v1/outline/detailed/novel/${novelId.value}`)
-    const data = await response.json()
-    if (data.success !== false) {
-      detailedOutlines.value = data.items || []
-    }
+    const data = await outlineApi.getDetailedOutlinesByNovel(novelId.value)
+    detailedOutlines.value = data.items || []
   } catch (error) {
     console.error('加载详细大纲失败:', error)
     ElMessage.error('加载详细大纲失败')
@@ -441,11 +437,10 @@ const loadDetailedOutlines = async () => {
 
 const loadCharacters = async () => {
   try {
-    const response = await fetch(`/api/v1/characters/?novel_id=${novelId.value}`)
-    const data = await response.json()
-    if (data.success !== false) {
-      characters.value = data.items || []
-    }
+    const data = await charactersApi.getCharacters({
+      novel_id: novelId.value
+    })
+    characters.value = data.items || []
   } catch (error) {
     console.error('加载角色列表失败:', error)
   }
@@ -477,16 +472,9 @@ const handleDeleteRoughOutline = async (item) => {
       type: 'warning'
     })
     
-    const response = await fetch(`/api/v1/outline/rough/${item.id}`, {
-      method: 'DELETE'
-    })
-    
-    if (response.ok) {
-      ElMessage.success('大纲删除成功')
-      await loadRoughOutlines()
-    } else {
-      throw new Error('删除失败')
-    }
+    await outlineApi.deleteRoughOutline(item.id)
+    ElMessage.success('大纲删除成功')
+    await loadRoughOutlines()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除大纲失败:', error)
@@ -532,16 +520,9 @@ const handleDeleteDetailedOutline = async (item) => {
       type: 'warning'
     })
     
-    const response = await fetch(`/api/v1/outline/detailed/${item.id}`, {
-      method: 'DELETE'
-    })
-    
-    if (response.ok) {
-      ElMessage.success('详细大纲删除成功')
-      await loadDetailedOutlines()
-    } else {
-      throw new Error('删除失败')
-    }
+    await outlineApi.deleteDetailedOutline(item.id)
+    ElMessage.success('详细大纲删除成功')
+    await loadDetailedOutlines()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除详细大纲失败:', error)
@@ -611,31 +592,21 @@ const resetDetailedForm = () => {
 
 const submitRoughForm = async () => {
   try {
-    const method = editingRoughOutline.value ? 'PUT' : 'POST'
-    const url = editingRoughOutline.value 
-      ? `/api/v1/outline/rough/${editingRoughOutline.value.id}`
-      : '/api/v1/outline/rough'
-    
     const requestData = { ...roughForm }
     if (!editingRoughOutline.value) {
       requestData.novel_id = novelId.value
     }
     
-    const response = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    })
-    
-    if (response.ok) {
-      ElMessage.success(editingRoughOutline.value ? '大纲更新成功' : '大纲创建成功')
-      showRoughDialog.value = false
-      await loadRoughOutlines()
+    if (editingRoughOutline.value) {
+      await outlineApi.updateRoughOutline(editingRoughOutline.value.id, requestData)
+      ElMessage.success('大纲更新成功')
     } else {
-      throw new Error('操作失败')
+      await outlineApi.createRoughOutline(requestData)
+      ElMessage.success('大纲创建成功')
     }
+    
+    showRoughDialog.value = false
+    await loadRoughOutlines()
   } catch (error) {
     console.error('大纲操作失败:', error)
     ElMessage.error('大纲操作失败')
@@ -644,31 +615,21 @@ const submitRoughForm = async () => {
 
 const submitDetailedForm = async () => {
   try {
-    const method = editingDetailedOutline.value ? 'PUT' : 'POST'
-    const url = editingDetailedOutline.value 
-      ? `/api/v1/outline/detailed/${editingDetailedOutline.value.id}`
-      : '/api/v1/outline/detailed'
-    
     const requestData = { ...detailedForm }
     if (!editingDetailedOutline.value) {
       requestData.novel_id = novelId.value
     }
     
-    const response = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    })
-    
-    if (response.ok) {
-      ElMessage.success(editingDetailedOutline.value ? '详细大纲更新成功' : '详细大纲创建成功')
-      showDetailedDialog.value = false
-      await loadDetailedOutlines()
+    if (editingDetailedOutline.value) {
+      await outlineApi.updateDetailedOutline(editingDetailedOutline.value.id, requestData)
+      ElMessage.success('详细大纲更新成功')
     } else {
-      throw new Error('操作失败')
+      await outlineApi.createDetailedOutline(requestData)
+      ElMessage.success('详细大纲创建成功')
     }
+    
+    showDetailedDialog.value = false
+    await loadDetailedOutlines()
   } catch (error) {
     console.error('详细大纲操作失败:', error)
     ElMessage.error('详细大纲操作失败')

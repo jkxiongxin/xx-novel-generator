@@ -8,6 +8,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
+import logging
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
@@ -22,8 +23,13 @@ from app.schemas.outline import (
     OutlineGenerationResponse, OutlineFilterRequest,
     OutlineSummaryRequest, OutlineSummaryResponse
 )
+from app.services.generation_service import get_generation_service
+from app.services.prompt_service import get_prompt_service
+from app.models.worldview import Worldview
+from app.models.character import Character
 
 router = APIRouter(prefix="/outline", tags=["大纲管理"])
+logger = logging.getLogger(__name__)
 
 
 # ============ 粗略大纲 API ============
@@ -468,14 +474,81 @@ async def generate_rough_outline(
                 detail="小说不存在或无权访问"
             )
         
-        # TODO: 这里应该调用AI生成服务
-        # 暂时返回模拟数据
+        # 获取世界观信息（如果需要）
+        worldview_info = ""
+        character_info = ""
+        
+        if request.include_worldview:
+            worldviews = db.query(Worldview).filter(
+                and_(Worldview.novel_id == request.novel_id, Worldview.user_id == current_user.id)
+            ).all()
+            if worldviews:
+                worldview_info = "\n".join([f"世界名称: {w.name}\n世界描述: {w.description or '无'}" for w in worldviews])
+        
+        if request.include_novel_idea:
+            character_info = "包含小说创意信息"  # 这里可以进一步扩展
+        
+        # 准备小说信息
+        novel_info = {
+            "title": novel.title,
+            "genre": novel.genre.value if novel.genre else "通用",
+            "description": novel.description or ""
+        }
+        
+        # 调用生成服务
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        generation_result = await generation_service.generate_rough_outline(
+            request=request,
+            novel_info=novel_info,
+            worldview_info=worldview_info,
+            character_info=character_info
+        )
+        
+        if not generation_result.success:
+            return generation_result
+        
+        # 将生成的数据转换为大纲对象并保存到数据库
+        created_outlines = []
+        for outline_data in generation_result.generation_data or []:
+            try:
+                # 映射大纲类型
+                outline_type_mapping = {
+                    "storyline": OutlineType.STORYLINE,
+                    "character_growth": OutlineType.CHARACTER_GROWTH,
+                    "major_events": OutlineType.MAJOR_EVENT,
+                    "plot_points": OutlineType.PLOT_POINT
+                }
+                
+                rough_outline = RoughOutline(
+                    novel_id=request.novel_id,
+                    outline_type=outline_type_mapping.get(outline_data.get("outline_type", "storyline"), OutlineType.STORYLINE),
+                    title=outline_data.get("title", "未命名大纲"),
+                    content=outline_data.get("content", ""),
+                    start_chapter=outline_data.get("start_chapter"),
+                    end_chapter=outline_data.get("end_chapter"),
+                    order_index=len(created_outlines),
+                    user_id=current_user.id
+                )
+                
+                db.add(rough_outline)
+                db.flush()  # 获取ID但不提交
+                created_outlines.append(RoughOutlineResponse.model_validate(rough_outline))
+                
+            except Exception as e:
+                logger.error(f"创建粗略大纲失败: {str(e)}")
+                continue
+        
+        db.commit()
+        
         return OutlineGenerationResponse(
-            success=False,
-            message="AI生成功能暂未实现，请手动创建大纲",
-            rough_outlines=[],
+            success=True,
+            message=f"成功生成并保存 {len(created_outlines)} 个粗略大纲",
+            rough_outlines=created_outlines,
             detailed_outlines=[],
-            total_generated=0
+            total_generated=len(created_outlines),
+            generation_data=generation_result.generation_data
         )
         
     except Exception as e:
@@ -513,14 +586,103 @@ async def generate_detailed_outline(
                 detail="小说不存在或无权访问"
             )
         
-        # TODO: 这里应该调用AI生成服务
-        # 暂时返回模拟数据
+        # 获取相关信息
+        worldview_info = ""
+        rough_outline_info = ""
+        character_info = ""
+        
+        if request.include_worldview:
+            worldviews = db.query(Worldview).filter(
+                and_(Worldview.novel_id == request.novel_id, Worldview.user_id == current_user.id)
+            ).all()
+            if worldviews:
+                worldview_info = "\n".join([f"世界名称: {w.name}\n世界描述: {w.description or '无'}" for w in worldviews])
+        
+        if request.include_rough_outline:
+            rough_outlines = db.query(RoughOutline).filter(
+                and_(RoughOutline.novel_id == request.novel_id, RoughOutline.user_id == current_user.id)
+            ).all()
+            if rough_outlines:
+                rough_outline_info = "\n".join([f"大纲类型: {ro.outline_type}\n标题: {ro.title}\n内容: {ro.content}" for ro in rough_outlines])
+        
+        if request.include_characters:
+            characters = db.query(Character).filter(
+                and_(Character.novel_id == request.novel_id, Character.user_id == current_user.id)
+            ).all()
+            if characters:
+                character_info = "\n".join([f"角色名: {c.name}\n类型: {c.character_type}\n描述: {c.description or '无'}" for c in characters])
+        
+        # 准备小说信息
+        novel_info = {
+            "title": novel.title,
+            "genre": novel.genre.value if novel.genre else "通用",
+            "description": novel.description or ""
+        }
+        
+        # 调用生成服务
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        generation_result = await generation_service.generate_detailed_outline(
+            request=request,
+            novel_info=novel_info,
+            worldview_info=worldview_info,
+            rough_outline_info=rough_outline_info,
+            character_info=character_info
+        )
+        
+        if not generation_result.success:
+            return generation_result
+        
+        # 将生成的数据转换为详细大纲对象并保存到数据库
+        created_outlines = []
+        for outline_data in generation_result.generation_data or []:
+            try:
+                # 检查章节号是否已存在
+                existing_outline = db.query(DetailedOutline).filter(
+                    and_(
+                        DetailedOutline.novel_id == request.novel_id,
+                        DetailedOutline.chapter_number == outline_data.get("chapter_number"),
+                        DetailedOutline.user_id == current_user.id
+                    )
+                ).first()
+                
+                if existing_outline:
+                    logger.warning(f"章节 {outline_data.get('chapter_number')} 的详细大纲已存在，跳过创建")
+                    continue
+                
+                detailed_outline = DetailedOutline(
+                    novel_id=request.novel_id,
+                    chapter_number=outline_data.get("chapter_number", 1),
+                    chapter_title=outline_data.get("chapter_title", "未命名章节"),
+                    plot_points=outline_data.get("plot_points", ""),
+                    participating_characters=outline_data.get("participating_characters", []),
+                    entering_characters=outline_data.get("entering_characters", []),
+                    exiting_characters=outline_data.get("exiting_characters", []),
+                    chapter_summary=outline_data.get("chapter_summary", ""),
+                    is_plot_end=outline_data.get("is_plot_end", False),
+                    is_new_plot=outline_data.get("is_new_plot", False),
+                    new_plot_summary=outline_data.get("new_plot_summary", ""),
+                    user_id=current_user.id
+                )
+                
+                db.add(detailed_outline)
+                db.flush()  # 获取ID但不提交
+                created_outlines.append(DetailedOutlineResponse.model_validate(detailed_outline))
+                
+            except Exception as e:
+                logger.error(f"创建详细大纲失败: {str(e)}")
+                continue
+        
+        db.commit()
+        
         return OutlineGenerationResponse(
-            success=False,
-            message="AI生成功能暂未实现，请手动创建大纲",
+            success=True,
+            message=f"成功生成并保存 {len(created_outlines)} 个详细大纲",
             rough_outlines=[],
-            detailed_outlines=[],
-            total_generated=0
+            detailed_outlines=created_outlines,
+            total_generated=len(created_outlines),
+            generation_data=generation_result.generation_data
         )
         
     except Exception as e:

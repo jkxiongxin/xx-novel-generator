@@ -58,11 +58,27 @@ const router = createRouter({
       }
     },
     {
+      path: '/workspace/:novelId/chapters',
+      name: 'workspace-chapters',
+      component: () => import('../views/workspace/Chapters.vue'),
+      meta: {
+        title: '章节管理'
+      }
+    },
+    {
       path: '/workspace/:novelId/worldview',
       name: 'workspace-worldview',
       component: () => import('../views/workspace/Worldview.vue'),
       meta: {
         title: '世界观管理'
+      }
+    },
+    {
+      path: '/ai-configs',
+      name: 'ai-configs',
+      component: () => import('../views/workspace/AIConfigs.vue'),
+      meta: {
+        title: 'AI配置管理'
       }
     },
   ],

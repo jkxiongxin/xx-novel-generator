@@ -182,6 +182,13 @@ class Novel(Base):
         cascade="all, delete-orphan"
     )
     
+    chapters = relationship(
+        "Chapter",
+        back_populates="novel",
+        cascade="all, delete-orphan",
+        order_by="Chapter.chapter_number"
+    )
+    
     def __repr__(self) -> str:
         """小说模型的字符串表示"""
         return f"<Novel(id={self.id}, title='{self.title}', author='{self.author}')>"

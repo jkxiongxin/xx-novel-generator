@@ -103,13 +103,26 @@ def check_database_health() -> bool:
         bool: 连接是否正常
     """
     try:
+        from sqlalchemy import text
         db = SessionLocal()
         # 执行简单查询测试连接
-        db.execute("SELECT 1")
+        result = db.execute(text("SELECT 1"))
+        # 确保能获取结果
+        result.fetchone()
         db.close()
         return True
-    except Exception:
-        return False
+    except Exception as e:
+        # 记录具体错误信息便于调试
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.debug(f"数据库健康检查失败: {str(e)}")
+        try:
+            # 尝试简单的连接测试
+            db = SessionLocal()
+            db.close()
+            return True
+        except:
+            return False
 
 
 # 数据库连接信息

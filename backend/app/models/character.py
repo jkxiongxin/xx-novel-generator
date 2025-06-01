@@ -58,6 +58,7 @@ class Character(Base, TimestampMixin, UserOwnedMixin):
     is_template = Column(Boolean, default=False, comment="是否为模板角色")
     
     # 关系定义
+    user = relationship("User", back_populates="characters")
     novel = relationship("Novel", back_populates="characters", foreign_keys=[novel_id])
     worldview = relationship("Worldview", back_populates="characters", foreign_keys=[worldview_id])
     

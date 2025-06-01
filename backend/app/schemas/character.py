@@ -99,6 +99,7 @@ class CharacterGenerationResponse(BaseModel):
     message: str = Field(..., description="响应消息")
     characters: List[CharacterResponse] = Field(default_factory=list, description="生成的角色列表")
     total_generated: int = Field(default=0, description="成功生成的角色数量")
+    generation_data: Optional[List[dict]] = Field(default=None, description="原始生成数据")
 
 
 class CharacterFilterRequest(BaseModel):

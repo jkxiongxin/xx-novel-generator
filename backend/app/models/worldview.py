@@ -26,6 +26,7 @@ class Worldview(Base, TimestampMixin, UserOwnedMixin):
     is_primary = Column(Boolean, default=False, comment="是否主世界")
     
     # 关系定义
+    user = relationship("User", back_populates="worldviews")
     novel = relationship("Novel", back_populates="worldviews")
     characters = relationship("Character", back_populates="worldview", foreign_keys="Character.worldview_id")
     world_maps = relationship("WorldMap", back_populates="worldview", cascade="all, delete-orphan")
@@ -72,6 +73,7 @@ class WorldMap(Base, TimestampMixin, UserOwnedMixin):
     level = Column(Integer, default=1, comment="层级")
     
     # 关系定义
+    user = relationship("User", back_populates="world_maps")
     worldview = relationship("Worldview", back_populates="world_maps")
     parent = relationship("WorldMap", remote_side=[id], back_populates="children")
     children = relationship("WorldMap", back_populates="parent", cascade="all, delete-orphan")
@@ -118,6 +120,7 @@ class CultivationSystem(Base, TimestampMixin, UserOwnedMixin):
     level_order = Column(Integer, nullable=False, comment="等级顺序")
     
     # 关系定义
+    user = relationship("User", back_populates="cultivation_systems")
     worldview = relationship("Worldview", back_populates="cultivation_systems")
     
     def to_dict(self) -> dict:
@@ -167,6 +170,7 @@ class History(Base, TimestampMixin, UserOwnedMixin):
     time_order = Column(Integer, nullable=False, comment="时间顺序")
     
     # 关系定义
+    user = relationship("User", back_populates="histories")
     worldview = relationship("Worldview", back_populates="histories")
     
     def to_dict(self) -> dict:
@@ -216,6 +220,7 @@ class Faction(Base, TimestampMixin, UserOwnedMixin):
     important_figures = Column(Text, comment="重要人物")
     
     # 关系定义
+    user = relationship("User", back_populates="factions")
     worldview = relationship("Worldview", back_populates="factions")
     
     def to_dict(self) -> dict:
