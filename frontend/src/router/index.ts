@@ -33,6 +33,38 @@ const router = createRouter({
         title: '小说创作'
       }
     },
+    {
+      path: '/workspace/:novelId',
+      name: 'workspace',
+      redirect: to => `/workspace/${to.params.novelId}/characters`,
+      meta: {
+        title: '创作工作空间'
+      }
+    },
+    {
+      path: '/workspace/:novelId/characters',
+      name: 'workspace-characters',
+      component: () => import('../views/workspace/Characters.vue'),
+      meta: {
+        title: '角色管理'
+      }
+    },
+    {
+      path: '/workspace/:novelId/outline',
+      name: 'workspace-outline',
+      component: () => import('../views/workspace/Outline.vue'),
+      meta: {
+        title: '大纲管理'
+      }
+    },
+    {
+      path: '/workspace/:novelId/worldview',
+      name: 'workspace-worldview',
+      component: () => import('../views/workspace/Worldview.vue'),
+      meta: {
+        title: '世界观管理'
+      }
+    },
   ],
 })
 
