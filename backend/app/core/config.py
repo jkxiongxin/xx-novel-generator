@@ -34,7 +34,18 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     
     # CORS配置
-    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
+    ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1", "*"]
+    
+    # 开发环境CORS配置
+    DEV_CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173,http://localhost:8080,http://localhost:4173"
+    
+    # 生产环境CORS配置
+    PROD_CORS_ORIGINS: str = ""
+    
+    # CORS通配符支持 (仅开发环境)
+    CORS_ALLOW_ALL_ORIGINS: bool = False
+    
+    # 传统CORS配置 (保持兼容性)
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:5173",
@@ -82,15 +93,38 @@ class Settings(BaseSettings):
             "url": self.DATABASE_URL,
             "echo": self.DATABASE_ECHO,
         }
-    
     @property
     def cors_config(self) -> Dict[str, Any]:
         """获取CORS配置"""
+        # 根据环境选择CORS源
+        if self.DEBUG:
+            if self.CORS_ALLOW_ALL_ORIGINS:
+                origins = ["*"]
+            else:
+                # 将字符串转换为列表
+                origins = [url.strip() for url in self.DEV_CORS_ORIGINS.split(",") if url.strip()]
+        else:
+            if self.PROD_CORS_ORIGINS:
+                origins = [url.strip() for url in self.PROD_CORS_ORIGINS.split(",") if url.strip()]
+            else:
+                origins = self.CORS_ORIGINS
+        
         return {
-            "allow_origins": self.CORS_ORIGINS,
+            "allow_origins": origins,
             "allow_credentials": True,
-            "allow_methods": ["*"],
-            "allow_headers": ["*"],
+            "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+            "allow_headers": [
+                "Accept",
+                "Accept-Language",
+                "Content-Language",
+                "Content-Type",
+                "Authorization",
+                "X-Requested-With",
+                "X-CSRF-Token",
+                "X-Process-Time",
+            ],
+            "expose_headers": ["X-Process-Time", "X-Total-Count"],
+            "max_age": 86400,  # 24小时预检缓存
         }
     
     @property

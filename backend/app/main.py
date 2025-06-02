@@ -104,6 +104,33 @@ async def log_requests(request: Request, call_next):
     return response
 
 
+# CORS调试中间件
+@app.middleware("http")
+async def cors_debug_middleware(request: Request, call_next):
+    """CORS调试中间件"""
+    if settings.DEBUG:
+        origin = request.headers.get("origin")
+        method = request.method
+        
+        if origin:
+            logger.info(f"CORS请求 - Origin: {origin}, Method: {method}")
+        
+        # 处理预检请求
+        if method == "OPTIONS":
+            logger.info(f"预检请求 - Headers: {dict(request.headers)}")
+    
+    response = await call_next(request)
+    
+    if settings.DEBUG and request.headers.get("origin"):
+        cors_headers = {
+            k: v for k, v in response.headers.items()
+            if k.lower().startswith("access-control-")
+        }
+        logger.info(f"CORS响应头: {cors_headers}")
+    
+    return response
+
+
 # 全局异常处理器
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

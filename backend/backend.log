@@ -1,0 +1,805 @@
+INFO:     Will watch for changes in these directories: ['/Users/xiongxin/projects/ai-writer-design1/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [80156] using WatchFiles
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [80158]
+INFO:     Waiting for application startup.
+2025-06-01 20:40:32,453 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-01 20:40:32,454 - app.main - INFO - 数据库初始化完成
+2025-06-01 20:40:32,455 - app.main - INFO - 数据库连接正常
+2025-06-01 20:40:32,455 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-01 20:40:45,409 - app.main - INFO - 请求: GET http://localhost:8001/health
+2025-06-01 20:40:45,411 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56490 - "GET /health HTTP/1.1" 200 OK
+2025-06-01 20:40:45,423 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:40:45,424 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:40:45,424 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56492 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:40:54,326 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/register
+2025-06-01 20:40:54,545 - app.main - INFO - 响应: 500
+INFO:     127.0.0.1:56564 - "POST /api/v1/auth/register HTTP/1.1" 500 Internal Server Error
+2025-06-01 20:44:10,898 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:44:10,905 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:44:10,907 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57863 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:44:10,909 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:44:10,910 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:44:10,911 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57863 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:44:44,060 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:44:44,062 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:44:44,063 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58009 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:44:44,064 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:44:44,065 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:44:44,066 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58011 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:49:09,409 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-01 20:49:09,419 - app.main - INFO - 响应: 422
+INFO:     127.0.0.1:60704 - "POST /api/v1/auth/login HTTP/1.1" 422 Unprocessable Content
+2025-06-01 20:49:10,892 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:49:10,897 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:49:10,897 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60717 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:49:10,898 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:49:10,899 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:49:10,899 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60717 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:49:14,203 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-01 20:49:14,204 - app.main - INFO - 响应: 422
+INFO:     127.0.0.1:60739 - "POST /api/v1/auth/login HTTP/1.1" 422 Unprocessable Content
+2025-06-01 20:49:40,857 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-01 20:49:40,862 - app.main - INFO - 响应: 422
+INFO:     127.0.0.1:60888 - "POST /api/v1/auth/login HTTP/1.1" 422 Unprocessable Content
+2025-06-01 20:49:44,073 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:49:44,074 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:49:44,081 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:49:44,082 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:49:44,083 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60911 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:49:44,084 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60912 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:49:53,114 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-01 20:49:53,122 - app.main - ERROR - 未处理的异常: 'User' object has no attribute 'hashed_password'
+  + Exception Group Traceback (most recent call last):
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 177, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 102, in log_requests
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    |     raise app_exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 91, in add_process_time_header
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    |     raise app_exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/trustedhost.py", line 51, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 714, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 73, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 301, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/api/v1/auth.py", line 138, in login
+    |     if not verify_password(user_login.password, user.hashed_password):
+    |                                                 ^^^^^^^^^^^^^^^^^^^^
+    | AttributeError: 'User' object has no attribute 'hashed_password'
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 102, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    raise app_exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 91, in add_process_time_header
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    raise app_exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/trustedhost.py", line 51, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/api/v1/auth.py", line 138, in login
+    if not verify_password(user_login.password, user.hashed_password):
+                                                ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'hashed_password'
+INFO:     127.0.0.1:60986 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 177, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    |     result = await app(  # type: ignore[func-returns-value]
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         self.scope, self.receive, self.send
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    |     return await self.app(scope, receive, send)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    |     await super().__call__(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/applications.py", line 112, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 102, in log_requests
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    |     raise app_exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 91, in add_process_time_header
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    |     raise app_exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/trustedhost.py", line 51, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 714, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 734, in app
+    |     await route.handle(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 73, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 301, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/Users/xiongxin/projects/ai-writer-design1/backend/app/api/v1/auth.py", line 138, in login
+    |     if not verify_password(user_login.password, user.hashed_password):
+    |                                                 ^^^^^^^^^^^^^^^^^^^^
+    | AttributeError: 'User' object has no attribute 'hashed_password'
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 102, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    raise app_exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 176, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 178, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/main.py", line 91, in add_process_time_header
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 156, in call_next
+    raise app_exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/trustedhost.py", line 51, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiongxin/projects/ai-writer-design1/backend/app/api/v1/auth.py", line 138, in login
+    if not verify_password(user_login.password, user.hashed_password):
+                                                ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'hashed_password'
+2025-06-01 20:54:10,900 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:54:10,904 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:54:10,905 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62619 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:54:10,906 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:54:10,907 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:54:10,908 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62619 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:54:44,065 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:54:44,066 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:54:44,067 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62762 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:54:44,069 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:54:44,070 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:54:44,071 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62762 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:55:32,117 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:55:32,118 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:55:32,120 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:55:32,120 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:55:32,137 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:55:32,137 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:55:32,138 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:55:32,138 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:55:32,138 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63113 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:55:32,139 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63117 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:55:32,139 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63115 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:55:32,140 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63119 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:55:42,626 - app.main - INFO - 请求: GET http://localhost:8001/health
+2025-06-01 20:55:42,632 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63186 - "GET /health HTTP/1.1" 200 OK
+2025-06-01 20:56:45,779 - app.main - INFO - 请求: GET http://localhost:8001/health
+2025-06-01 20:56:45,787 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63671 - "GET /health HTTP/1.1" 200 OK
+2025-06-01 20:56:45,792 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:56:45,793 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:56:45,794 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63673 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,393 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,398 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,398 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63807 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,400 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,400 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,400 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,400 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,400 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63807 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,401 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63810 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,401 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,401 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,401 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,402 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,402 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63811 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,402 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63810 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:43,403 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:43,403 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:43,403 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63811 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,763 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,763 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,764 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,765 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,769 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,770 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,771 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,771 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,771 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63822 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,772 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,772 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,773 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,773 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,774 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63823 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,774 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,774 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,775 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,775 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63822 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:45,776 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:45,776 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:45,777 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63823 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,823 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,824 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,825 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63823 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,826 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,826 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,827 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,827 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,827 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63822 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,828 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63823 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,828 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,829 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,829 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,830 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,830 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,831 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63822 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:57:47,831 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:57:47,832 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:57:47,832 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:59:10,904 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:59:10,908 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:59:10,911 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:64000 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 20:59:10,913 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 20:59:10,913 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 20:59:10,913 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:64002 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:02:43,905 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:02:43,911 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:02:43,913 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49215 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:02:45,902 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:02:45,903 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:02:45,904 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49218 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:02:47,900 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:02:47,902 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:02:47,903 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49218 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:04:10,911 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:04:10,915 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:04:10,916 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49357 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:04:10,917 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:04:10,918 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:04:10,919 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49357 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,486 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,490 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,491 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49664 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,492 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,492 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,493 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,494 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,494 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49664 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,494 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49666 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,495 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,495 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,496 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,497 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,498 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49668 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,498 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49666 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,499 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,499 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,500 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49668 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:07:06,500 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:07:06,500 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:07:06,501 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49666 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:12:06,487 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:12:06,495 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:12:06,497 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:50402 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,074 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,090 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,095 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53804 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,100 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,101 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,105 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,105 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,107 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53804 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,108 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53808 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,112 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,112 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,114 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,114 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,114 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53809 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,115 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53808 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,134 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,136 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,138 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53809 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:27:56,139 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:27:56,141 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:27:56,143 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53808 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,087 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,088 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,088 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53816 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,089 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,090 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,091 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,091 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,091 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,092 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53816 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,092 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,093 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,093 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53820 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,094 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,095 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,095 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,096 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,096 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,097 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53820 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:00,097 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:00,098 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:00,098 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,972 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,974 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,974 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,975 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,975 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,976 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,976 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,976 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53820 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,977 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,978 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,978 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,979 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53820 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,980 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,981 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,981 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:28:02,982 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:28:02,982 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:28:02,983 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53820 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:32:56,061 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:32:56,069 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:32:56,073 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55804 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:33:00,090 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:33:00,091 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:33:00,092 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55813 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:33:02,974 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:33:02,976 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:33:02,977 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55813 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:33:02,980 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:33:02,981 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:33:02,981 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55813 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-01 21:33:02,982 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-01 21:33:02,983 - app.api.v1.generation - ERROR - 数据库连接检查失败: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-06-01 21:33:02,983 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55818 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/api/v1/novels.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-01 21:33:26,334 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [80158]
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/schemas/user.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>
+WARNING:  WatchFiles detected changes in 'app/api/v1/auth.py'. Reloading...
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x00000001f8060c80 (most recent call first):
+  <no Python frame>

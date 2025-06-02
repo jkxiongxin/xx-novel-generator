@@ -177,31 +177,105 @@ async def generate_brain_storm(
 
 @router.get("/status")
 async def get_generation_status(
+    db: Session = Depends(get_db)
+):
+    """
+    获取系统状态 - 首页专用，无需登录
+    
+    返回系统各项服务的状态信息，用于首页展示
+    """
+    try:
+        # 获取服务实例并检查AI服务状态
+        ai_service_status = "available"
+        database_status = "connected"
+        
+        try:
+            prompt_service = get_prompt_service(db)
+            generation_service = get_generation_service(prompt_service)
+            
+            # 测试AI服务连接
+            service_status = generation_service.get_service_status()
+            
+            # 根据服务状态确定AI服务可用性
+            if service_status.get("ai_service", {}).get("available", False):
+                ai_service_status = "available"
+            else:
+                ai_service_status = "limited"
+                
+        except Exception as ai_error:
+            logger.warning(f"AI服务检查失败: {str(ai_error)}")
+            ai_service_status = "unavailable"
+        
+        # 检查数据库连接
+        try:
+            db.execute("SELECT 1")
+            database_status = "connected"
+        except Exception as db_error:
+            logger.error(f"数据库连接检查失败: {str(db_error)}")
+            database_status = "disconnected"
+        
+        # 功能特性开关
+        feature_flags = {
+            "brain_generator": ai_service_status == "available",
+            "character_templates": True,  # 这个功能不依赖AI服务
+            "ai_generation": ai_service_status in ["available", "limited"]
+        }
+        
+        return {
+            "status": "success",
+            "data": {
+                "ai_service": ai_service_status,
+                "database": database_status,
+                "feature_flags": feature_flags
+            },
+            "message": "系统状态获取成功"
+        }
+        
+    except Exception as e:
+        logger.error(f"获取系统状态异常: {str(e)}")
+        # 即使出错也要返回基本状态信息
+        return {
+            "status": "success",
+            "data": {
+                "ai_service": "unavailable",
+                "database": "disconnected",
+                "feature_flags": {
+                    "brain_generator": False,
+                    "character_templates": True,
+                    "ai_generation": False
+                }
+            },
+            "message": "系统状态获取成功（部分服务不可用）"
+        }
+
+
+@router.get("/status/detailed")
+async def get_detailed_generation_status(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
-    获取AI生成服务状态
+    获取详细的AI生成服务状态 - 需要登录
     """
     try:
         # 获取服务实例
         prompt_service = get_prompt_service(db)
         generation_service = get_generation_service(prompt_service)
         
-        # 获取服务状态
+        # 获取详细服务状态
         status_info = generation_service.get_service_status()
         
         return {
             "status": "success",
             "data": status_info,
-            "message": "服务状态获取成功"
+            "message": "详细服务状态获取成功"
         }
         
     except Exception as e:
-        logger.error(f"获取生成服务状态异常: {str(e)}")
+        logger.error(f"获取详细生成服务状态异常: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="获取服务状态时发生内部错误"
+            detail="获取详细服务状态时发生内部错误"
         )
 
 
