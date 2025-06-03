@@ -5,7 +5,7 @@ Created: 2025-06-01
 """
 
 import enum
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
@@ -56,11 +56,14 @@ class Character(Base, TimestampMixin, UserOwnedMixin):
     
     # 模板标识
     is_template = Column(Boolean, default=False, comment="是否为模板角色")
+    from_template_id = Column(Integer, ForeignKey("characters.id", ondelete="SET NULL"), nullable=True, comment="来源模板ID")
     
     # 关系定义
     user = relationship("User", back_populates="characters")
     novel = relationship("Novel", back_populates="characters", foreign_keys=[novel_id])
     worldview = relationship("Worldview", back_populates="characters", foreign_keys=[worldview_id])
+    template_detail = relationship("CharacterTemplateDetail", back_populates="character", uselist=False, cascade="all, delete-orphan")
+    from_template = relationship("Character", remote_side=[id], foreign_keys=[from_template_id])
     
     def to_dict(self) -> dict:
         """转换为字典"""

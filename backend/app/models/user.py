@@ -155,6 +155,32 @@ class User(Base):
         cascade="all, delete-orphan",
         lazy="select"
     )
+    brain_storm_history = relationship(
+        "BrainStormHistory",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    brain_storm_preferences = relationship(
+        "BrainStormPreferences",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False,  # 一对一关系
+        lazy="select"
+    )
+    # 角色模板相关关系
+    character_favorites = relationship(
+        "CharacterTemplateFavorite",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
+    template_usages = relationship(
+        "CharacterTemplateUsage",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
+    )
     
     def __repr__(self) -> str:
         """用户模型的字符串表示"""

@@ -237,8 +237,8 @@ const quickForm = reactive<UserLogin>({
 
 // 扩展登录表单
 const extendedForm = reactive<LoginRequestExtended>({
-  username: '',
-  password: '',
+  username: '846762278@qq.com',
+  password: '214wochusheng',
   remember_me: false,
   captcha_token: undefined
 })

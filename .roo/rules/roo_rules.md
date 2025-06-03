@@ -1664,7 +1664,9 @@ db.execute(text("SELECT 1"))
 - 在文件顶部导入：`from sqlalchemy import text`
 - 适用于所有 `.execute()` 调用中的字符串 SQL
 
-#### 修复记录
-- 文件：`backend/app/api/v1/generation.py`
-- 位置：第 211 行数据库连接检查
-- 修复时间：2025-06-02
+## 前端文件拆分
+页面结构，逻辑和样式都应该分开，存放为 vue, ts和 css 文件。
+
+## 后端api接口定义
+不要以/结尾，否则前端调用接口时会触发重定向。
+比如router.get("/")，需要写为router.get("")

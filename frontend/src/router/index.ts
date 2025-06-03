@@ -113,6 +113,18 @@ const router = createRouter({
       name: 'ai-config-management',
       component: () => import('../views/AIConfigManagement.vue'),
       meta: { title: 'AI模型配置管理', requiresAuth: true }
+    },
+    {
+      path: '/tools/character-templates',
+      name: 'character-templates',
+      component: () => import('../views/CharacterTemplatesView.vue'),
+      meta: { title: '角色模板库', requiresAuth: true }
+    },
+    {
+      path: '/admin/character-templates',
+      name: 'admin-character-templates',
+      component: () => import('../views/AdminCharacterTemplatesView.vue'),
+      meta: { title: '角色模板管理', requiresAuth: true, requiresAdmin: true }
     }
   ]
 })
@@ -129,6 +141,37 @@ router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('access_token')
     if (!token) {
       // 重定向到登录页面，并保存原始路径
+      next({
+        name: 'login',
+        query: { redirect: to.fullPath }
+      })
+      return
+    }
+  }
+
+  // 检查是否需要管理员权限
+  if (to.meta.requiresAdmin) {
+    const userInfoStr = localStorage.getItem('user_info')
+    if (!userInfoStr) {
+      next({
+        name: 'login',
+        query: { redirect: to.fullPath }
+      })
+      return
+    }
+    
+    try {
+      const userInfo = JSON.parse(userInfoStr)
+      if (!userInfo.is_admin) {
+        // 非管理员用户，重定向到首页
+        next({
+          name: 'home',
+          query: { error: 'insufficient_permissions' }
+        })
+        return
+      }
+    } catch (error) {
+      // 用户信息解析失败，重定向到登录页
       next({
         name: 'login',
         query: { redirect: to.fullPath }

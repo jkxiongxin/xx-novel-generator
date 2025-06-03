@@ -201,26 +201,26 @@ class CommonDependencies:
 
 
 def require_admin_user(
-    current_user_id: str = Depends(get_current_user_id),
-    db: Session = Depends(get_db)
-) -> str:
+    current_user: User = Depends(get_current_user)
+) -> User:
     """
     要求管理员用户权限
     
     Args:
-        current_user_id: 当前用户ID
-        db: 数据库会话
+        current_user: 当前用户对象
         
     Returns:
-        str: 用户ID
+        User: 管理员用户对象
         
     Raises:
         HTTPException: 非管理员用户时抛出异常
     """
-    # TODO: 实现用户权限检查逻辑
-    # 这里需要查询用户表，检查用户是否为管理员
-    # 暂时返回用户ID，后续实现用户模型后完善
-    return current_user_id
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限"
+        )
+    return current_user
 
 
 def validate_content_owner(

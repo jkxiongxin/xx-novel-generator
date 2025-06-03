@@ -48,17 +48,18 @@
             <div class="card-content">
               <div class="card-header">
                 <h3 class="novel-title" :title="novel.title">{{ novel.title }}</h3>
-                <el-dropdown 
+                <el-dropdown
                   class="card-menu"
                   @click.stop
                   trigger="click"
                   placement="bottom-end"
                 >
-                  <el-button 
-                    type="text" 
-                    :icon="MoreFilled" 
+                  <el-button
+                    type="text"
+                    :icon="MoreFilled"
                     size="small"
                     circle
+                    @click.stop
                   />
                   <template #dropdown>
                     <el-dropdown-menu>

@@ -28,8 +28,11 @@
         >
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/novels" v-if="isLoggedIn">我的小说</el-menu-item>
-          <el-menu-item index="/tools/brain-generator">脑洞生成器</el-menu-item>
+          <el-menu-item index="/brain-generator">脑洞生成器</el-menu-item>
           <el-menu-item index="/tools/character-templates">角色模板</el-menu-item>
+          <el-menu-item index="/admin/character-templates" v-if="isLoggedIn && userInfo?.is_admin">
+            角色模板管理
+          </el-menu-item>
         </el-menu>
       </div>
 
@@ -153,13 +156,17 @@
             <el-icon><Document /></el-icon>
             <span>我的小说</span>
           </el-menu-item>
-          <el-menu-item index="/tools/brain-generator">
+          <el-menu-item index="/brain-generator">
             <el-icon><MagicStick /></el-icon>
             <span>脑洞生成器</span>
           </el-menu-item>
           <el-menu-item index="/tools/character-templates">
             <el-icon><Avatar /></el-icon>
             <span>角色模板</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/character-templates" v-if="isLoggedIn && userInfo?.is_admin">
+            <el-icon><Setting /></el-icon>
+            <span>角色模板管理</span>
           </el-menu-item>
         </el-menu>
 

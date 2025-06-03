@@ -42,10 +42,18 @@ export interface UserInfo {
   id: number
   username: string
   email: string
+  nickname?: string
+  bio?: string
   avatar_url?: string
+  is_active: boolean
+  is_verified: boolean
+  is_admin: boolean
+  preferred_language: string
+  timezone: string
   created_at: string
-  last_login_at: string
-  preferences: {
+  updated_at: string
+  last_login_at?: string
+  preferences?: {
     theme: 'light' | 'dark' | 'auto'
     language: string
   }

@@ -93,7 +93,7 @@
     
     <!-- 导出对话框 -->
     <ExportDialog
-      v-model:visible="showExportDialog"
+      v-model="showExportDialog"
       :novel="selectedNovelForExport"
       :loading="loadingStates.export"
       @export="handleExportConfirm"

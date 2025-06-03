@@ -200,11 +200,19 @@ async def get_current_user_info(
         return {
             "status": "success",
             "data": {
-                "id": str(current_user.id),
+                "id": current_user.id,
                 "username": current_user.username,
                 "email": current_user.email,
-                "avatar_url": None,  # 可以后续添加头像功能
+                "nickname": current_user.nickname,
+                "bio": current_user.bio,
+                "avatar_url": current_user.avatar_url,
+                "is_active": current_user.is_active,
+                "is_verified": current_user.is_verified,
+                "is_admin": current_user.is_admin,
+                "preferred_language": current_user.preferred_language,
+                "timezone": current_user.timezone,
                 "created_at": current_user.created_at.isoformat(),
+                "updated_at": current_user.updated_at.isoformat(),
                 "last_login_at": current_user.updated_at.isoformat(),  # 暂用更新时间
                 "preferences": preferences
             },

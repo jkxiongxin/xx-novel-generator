@@ -14,10 +14,21 @@ from app.models.worldview import (
     History, Faction
 )
 from app.models.ai_model_config import AIModelConfig
+from app.models.brain_storm import (
+    BrainStormHistory, BrainStormIdea, BrainStormPreferences,
+    BrainStormElements, BrainStormTopicSuggestion
+)
+from app.models.character_template import (
+    CharacterTemplateDetail, UsageExample,
+    CharacterTemplateFavorite, CharacterTemplateUsage
+)
 
 __all__ = [
     "Base", "User", "Novel", "Prompt", "Character", "Chapter",
     "RoughOutline", "DetailedOutline", "Worldview",
     "WorldMap", "CultivationSystem", "History", "Faction",
-    "AIModelConfig"
+    "AIModelConfig", "BrainStormHistory", "BrainStormIdea",
+    "BrainStormPreferences", "BrainStormElements", "BrainStormTopicSuggestion",
+    "CharacterTemplateDetail", "UsageExample",
+    "CharacterTemplateFavorite", "CharacterTemplateUsage"
 ]

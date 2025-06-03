@@ -124,11 +124,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue'
-import type { NovelDetailResponse } from '@/api/novels'
+import type { NovelDetailResponse, NovelListItem } from '@/api/novels'
 
 interface Props {
   modelValue: boolean
-  novel?: NovelDetailResponse | null
+  novel?: NovelDetailResponse | NovelListItem | null
+  loading?: boolean
 }
 
 interface Emits {
@@ -141,7 +142,7 @@ const emit = defineEmits<Emits>()
 
 // 响应式数据
 const visible = ref(false)
-const exporting = ref(false)
+const exporting = computed(() => props.loading || false)
 
 const form = reactive({
   format: 'txt',
@@ -183,8 +184,6 @@ const handleClose = () => {
 }
 
 const handleExport = () => {
-  exporting.value = true
-  
   const exportData: any = {
     format: form.format,
     include_outline: form.includes.includes('outline'),
@@ -211,7 +210,6 @@ const handleExport = () => {
   }
   
   emit('export', exportData)
-  exporting.value = false
 }
 
 const getFormatText = (format: string) => {

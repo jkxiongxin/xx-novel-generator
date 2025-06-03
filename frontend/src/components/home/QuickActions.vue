@@ -274,7 +274,7 @@ const handleLogin = () => {
 
 // 处理免费体验
 const handleTrialFeature = () => {
-  router.push('/tools/brain-generator')
+  router.push('/brain-generator')
 }
 
 // 生命周期
