@@ -550,3 +550,4 @@
 ---
 
 *"好的产品是技术与艺术的完美结合，我们做到了！"* 🎨✨
+[2025-06-03 11:32:37] - 前端API调用规范补充完成: 基于frontend/src/views/workspace/Characters.vue和frontend/src/api/novels.ts的实现模式，在.roo/rules/roo_rules.md中添加了完整的前端API调用规范，包含TypeScript接口定义、Vue组件调用模式、错误处理、批量操作等最佳实践

@@ -1009,6 +1009,619 @@ CREATE UNIQUE INDEX idx_users_email ON users(email);
 - 生成内容质量评估
 
 
+## 前端API调用规范
+
+### API接口定义规范
+
+#### 1. TypeScript接口定义标准
+
+所有API接口都应按照以下标准定义：
+
+```typescript
+// 响应数据类型定义
+export interface ApiResponse<T = any> {
+  success: boolean
+  code: number
+  message: string
+  data: T
+  timestamp: string
+}
+
+// 分页响应类型
+export interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  page_size: number
+  total_pages: number
+}
+
+// 枚举类型定义
+export enum NovelStatus {
+  DRAFT = 'draft',
+  WRITING = 'writing',
+  COMPLETED = 'completed',
+  PUBLISHED = 'published',
+  PAUSED = 'paused'
+}
+
+// 数据模型接口定义
+export interface Novel {
+  id: number
+  title: string
+  description?: string
+  genre: string
+  status: NovelStatus
+  word_count: number
+  created_at: string
+  updated_at: string
+}
+```
+
+#### 2. API服务类设计标准
+
+```typescript
+// API服务类使用静态方法模式
+export class NovelService {
+  /**
+   * 创建新小说
+   */
+  static async createNovel(novelData: NovelCreate): Promise<Novel> {
+    const response = await apiClient.post('/novels', novelData)
+    return response.data
+  }
+
+  /**
+   * 获取小说列表 - 支持完整的筛选和排序参数
+   */
+  static async getNovels(params?: NovelSearchParams): Promise<PaginatedResponse<Novel>> {
+    const response = await apiClient.get('/novels', { params })
+    return response.data
+  }
+}
+```
+
+#### 3. 请求参数类型定义
+
+```typescript
+// 创建请求参数
+export interface NovelCreate {
+  title: string
+  description?: string
+  genre: string
+  tags?: string[]
+  target_word_count?: number
+}
+
+// 搜索参数
+export interface NovelSearchParams {
+  page?: number
+  page_size?: number
+  search?: string
+  genre?: string
+  status?: string
+  sort_by?: string
+  sort_order?: string
+}
+
+// 批量操作参数
+export interface BatchDeleteResponse {
+  success_count: number
+  failed_count: number
+  failed_items: { id: number; reason: string }[]
+  message: string
+}
+```
+
+### Vue组件中的API调用规范
+
+#### 1. 导入API模块的标准方式
+
+```typescript
+// 导入统一API客户端
+import apiClient from '@/api/index'
+
+// 导入具体API服务模块
+import * as charactersApi from '@/api/characters'
+import * as novelsApi from '@/api/novels'
+import { NovelService } from '@/api/novels'
+
+// 导入Element Plus组件
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+```
+
+#### 2. 异步调用的标准错误处理模式
+
+```typescript
+// 标准的异步API调用模式
+const loadCharacters = async () => {
+  try {
+    loading.value = true
+    const data = await charactersApi.getCharacters({
+      novel_id: novelId.value
+    })
+    characters.value = data.items || []
+  } catch (error) {
+    console.error('加载角色列表失败:', error)
+    ElMessage.error('加载角色列表失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 删除操作的确认模式
+const deleteCharacter = async () => {
+  if (!selectedCharacter.value) return
+  
+  try {
+    await ElMessageBox.confirm('确定要删除这个角色吗？', '确认删除', {
+      type: 'warning'
+    })
+    
+    await charactersApi.deleteCharacter(selectedCharacter.value.id)
+    ElMessage.success('角色删除成功')
+    selectedCharacter.value = null
+    await loadCharacters()
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除角色失败:', error)
+      ElMessage.error('删除角色失败')
+    }
+  }
+}
+```
+
+#### 3. Loading状态管理标准
+
+```typescript
+// 使用ref管理loading状态
+const loading = ref(false)
+const generating = ref(false)
+
+// 在API调用中正确设置loading状态
+const submitForm = async () => {
+  try {
+    generating.value = true
+    const result = await charactersApi.generateCharacters(formData)
+    
+    if (result.success) {
+      ElMessage.success(`成功生成 ${result.total_generated} 个角色`)
+      showDialog.value = false
+      await loadCharacters()
+    } else {
+      ElMessage.error(result.message || 'AI生成失败')
+    }
+  } catch (error) {
+    console.error('AI生成角色失败:', error)
+    ElMessage.error('AI生成角色失败')
+  } finally {
+    generating.value = false
+  }
+}
+```
+
+#### 4. 用户反馈机制规范
+
+```typescript
+// 成功操作反馈
+ElMessage.success('操作成功')
+ElNotification.success({
+  title: '成功',
+  message: '角色创建成功',
+  duration: 3000
+})
+
+// 错误反馈
+ElMessage.error('操作失败')
+ElMessage.warning('请选择要操作的项目')
+
+// 信息提示
+ElMessage.info('功能开发中...')
+
+// 批量操作结果反馈
+const result = await charactersApi.batchAddCharacters(formData)
+ElMessage.success(`成功添加 ${result.added_count} 个角色`)
+```
+
+### API服务类设计规范
+
+#### 1. 静态方法使用模式
+
+```typescript
+export class NovelService {
+  // 使用静态方法避免实例化
+  static async createNovel(novelData: NovelCreate): Promise<Novel> {
+    const response = await apiClient.post('/novels', novelData)
+    return response.data
+  }
+
+  // 支持可选参数的方法
+  static async getNovels(params?: NovelSearchParams): Promise<PaginatedResponse<Novel>> {
+    const response = await apiClient.get('/novels', { params })
+    return response.data
+  }
+
+  // 复杂参数处理
+  static async exportNovel(novelId: number, options: ExportRequest): Promise<ExportResponse> {
+    const params = new URLSearchParams({
+      export_format: options.format,
+      include_outline: options.include_outline?.toString() || 'false',
+      include_worldview: options.include_worldview?.toString() || 'false'
+    })
+    
+    const response = await apiClient.post(`/novels/${novelId}/export?${params}`)
+    return response.data
+  }
+}
+```
+
+#### 2. 统一的响应数据处理
+
+```typescript
+// API客户端配置
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1',
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
+
+// 响应拦截器处理统一数据格式
+apiClient.interceptors.response.use(
+  (response) => {
+    // 直接返回后端的标准响应格式
+    return response.data
+  },
+  (error) => {
+    console.error('API Error:', error)
+    throw error
+  }
+)
+```
+
+#### 3. 错误处理和重试机制
+
+```typescript
+// 带重试的API调用
+const retryApiCall = async <T>(
+  apiCall: () => Promise<T>,
+  retries: number = 3,
+  delay: number = 1000
+): Promise<T> => {
+  try {
+    return await apiCall()
+  } catch (error) {
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, delay))
+      return retryApiCall(apiCall, retries - 1, delay * 2)
+    }
+    throw error
+  }
+}
+
+// 使用示例
+const loadDataWithRetry = async () => {
+  try {
+    const data = await retryApiCall(() =>
+      charactersApi.getCharacters({ novel_id: novelId.value })
+    )
+    characters.value = data.items || []
+  } catch (error) {
+    ElMessage.error('加载失败，请稍后重试')
+  }
+}
+```
+
+### 最佳实践示例
+
+#### 1. 标准的CRUD操作实现
+
+```typescript
+// 组合式API中的标准CRUD实现
+export function useCharacterCRUD(novelId: Ref<number>) {
+  const characters = ref<Character[]>([])
+  const loading = ref(false)
+  const selectedCharacter = ref<Character | null>(null)
+
+  // 获取列表
+  const loadCharacters = async () => {
+    try {
+      loading.value = true
+      const data = await charactersApi.getCharacters({
+        novel_id: novelId.value
+      })
+      characters.value = data.items || []
+    } catch (error) {
+      console.error('加载角色列表失败:', error)
+      ElMessage.error('加载角色列表失败')
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // 创建角色
+  const createCharacter = async (characterData: CharacterCreate) => {
+    try {
+      const newCharacter = await charactersApi.createCharacter({
+        ...characterData,
+        novel_id: novelId.value
+      })
+      characters.value.push(newCharacter)
+      ElMessage.success('角色创建成功')
+      return newCharacter
+    } catch (error) {
+      console.error('创建角色失败:', error)
+      ElMessage.error('创建角色失败')
+      throw error
+    }
+  }
+
+  // 更新角色
+  const updateCharacter = async (characterId: number, characterData: CharacterUpdate) => {
+    try {
+      const updatedCharacter = await charactersApi.updateCharacter(characterId, characterData)
+      const index = characters.value.findIndex(c => c.id === characterId)
+      if (index !== -1) {
+        characters.value[index] = updatedCharacter
+      }
+      if (selectedCharacter.value?.id === characterId) {
+        selectedCharacter.value = updatedCharacter
+      }
+      ElMessage.success('角色更新成功')
+      return updatedCharacter
+    } catch (error) {
+      console.error('更新角色失败:', error)
+      ElMessage.error('更新角色失败')
+      throw error
+    }
+  }
+
+  // 删除角色
+  const deleteCharacter = async (characterId: number) => {
+    try {
+      await ElMessageBox.confirm('确定要删除这个角色吗？', '确认删除', {
+        type: 'warning'
+      })
+      
+      await charactersApi.deleteCharacter(characterId)
+      characters.value = characters.value.filter(c => c.id !== characterId)
+      if (selectedCharacter.value?.id === characterId) {
+        selectedCharacter.value = null
+      }
+      ElMessage.success('角色删除成功')
+    } catch (error) {
+      if (error !== 'cancel') {
+        console.error('删除角色失败:', error)
+        ElMessage.error('删除角色失败')
+      }
+    }
+  }
+
+  return {
+    characters: readonly(characters),
+    loading: readonly(loading),
+    selectedCharacter,
+    loadCharacters,
+    createCharacter,
+    updateCharacter,
+    deleteCharacter
+  }
+}
+```
+
+#### 2. 批量操作的处理方式
+
+```typescript
+// 批量删除实现
+const batchDeleteNovels = async (selectedIds: number[]) => {
+  if (selectedIds.length === 0) {
+    ElMessage.warning('请选择要删除的小说')
+    return
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除选中的 ${selectedIds.length} 部小说吗？`,
+      '批量删除确认',
+      { type: 'warning' }
+    )
+
+    const result = await NovelService.batchDeleteNovels(selectedIds)
+    
+    if (result.success_count > 0) {
+      ElNotification.success({
+        title: '批量删除完成',
+        message: `成功删除 ${result.success_count} 部小说`
+      })
+    }
+    
+    if (result.failed_count > 0) {
+      ElNotification.warning({
+        title: '部分删除失败',
+        message: `${result.failed_count} 部小说删除失败`
+      })
+    }
+
+    await loadNovels() // 重新加载列表
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('批量删除失败:', error)
+      ElMessage.error('批量删除失败')
+    }
+  }
+}
+```
+
+#### 3. 实时数据更新模式
+
+```typescript
+// 使用WebSocket或轮询实现实时更新
+export function useRealTimeUpdates(novelId: Ref<number>) {
+  const lastUpdateTime = ref<string>('')
+  
+  // 轮询检查更新
+  const checkForUpdates = async () => {
+    try {
+      const response = await apiClient.get(`/novels/${novelId.value}/last-update`)
+      if (response.data.last_update !== lastUpdateTime.value) {
+        lastUpdateTime.value = response.data.last_update
+        // 触发数据重新加载
+        await loadLatestData()
+      }
+    } catch (error) {
+      console.error('检查更新失败:', error)
+    }
+  }
+
+  // 定时检查
+  const startPolling = () => {
+    const interval = setInterval(checkForUpdates, 30000) // 30秒检查一次
+    onUnmounted(() => clearInterval(interval))
+  }
+
+  return {
+    startPolling,
+    lastUpdateTime: readonly(lastUpdateTime)
+  }
+}
+```
+
+### API调用性能优化
+
+#### 1. 请求去重和缓存
+
+```typescript
+// 请求去重
+const pendingRequests = new Map<string, Promise<any>>()
+
+const deduplicateRequest = <T>(key: string, requestFn: () => Promise<T>): Promise<T> => {
+  if (pendingRequests.has(key)) {
+    return pendingRequests.get(key)!
+  }
+
+  const promise = requestFn().finally(() => {
+    pendingRequests.delete(key)
+  })
+
+  pendingRequests.set(key, promise)
+  return promise
+}
+
+// 使用示例
+const loadCharacters = () => {
+  return deduplicateRequest(
+    `characters-${novelId.value}`,
+    () => charactersApi.getCharacters({ novel_id: novelId.value })
+  )
+}
+```
+
+#### 2. 分页加载优化
+
+```typescript
+// 虚拟滚动和分页加载
+export function usePaginatedData<T>(
+  fetchFn: (page: number, pageSize: number) => Promise<PaginatedResponse<T>>,
+  pageSize: number = 20
+) {
+  const items = ref<T[]>([])
+  const loading = ref(false)
+  const hasMore = ref(true)
+  const currentPage = ref(1)
+
+  const loadMore = async () => {
+    if (loading.value || !hasMore.value) return
+
+    try {
+      loading.value = true
+      const response = await fetchFn(currentPage.value, pageSize)
+      
+      if (currentPage.value === 1) {
+        items.value = response.items
+      } else {
+        items.value.push(...response.items)
+      }
+      
+      hasMore.value = response.items.length === pageSize
+      currentPage.value++
+    } catch (error) {
+      console.error('加载数据失败:', error)
+      ElMessage.error('加载数据失败')
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const refresh = () => {
+    currentPage.value = 1
+    hasMore.value = true
+    items.value = []
+    loadMore()
+  }
+
+  return {
+    items: readonly(items),
+    loading: readonly(loading),
+    hasMore: readonly(hasMore),
+    loadMore,
+    refresh
+  }
+}
+```
+
+### 开发调试规范
+
+#### 1. API调用日志记录
+
+```typescript
+// 开发环境下的详细日志
+const isDev = import.meta.env.DEV
+
+const logApiCall = (method: string, url: string, data?: any, response?: any) => {
+  if (isDev) {
+    console.group(`🌐 API ${method.toUpperCase()} ${url}`)
+    if (data) console.log('📤 Request:', data)
+    if (response) console.log('📥 Response:', response)
+    console.groupEnd()
+  }
+}
+
+// 在API服务中使用
+static async createNovel(novelData: NovelCreate): Promise<Novel> {
+  logApiCall('POST', '/novels', novelData)
+  const response = await apiClient.post('/novels', novelData)
+  logApiCall('POST', '/novels', novelData, response.data)
+  return response.data
+}
+```
+
+#### 2. 错误边界和降级处理
+
+```typescript
+// 全局错误处理
+const handleApiError = (error: any, operation: string) => {
+  const errorMessage = error.response?.data?.message || error.message || '操作失败'
+  
+  console.error(`${operation} 失败:`, error)
+  
+  // 根据错误类型提供不同的用户反馈
+  if (error.response?.status === 401) {
+    ElMessage.error('登录已过期，请重新登录')
+    // 跳转到登录页面
+  } else if (error.response?.status === 403) {
+    ElMessage.error('没有权限执行此操作')
+  } else if (error.response?.status >= 500) {
+    ElMessage.error('服务器错误，请稍后重试')
+  } else {
+    ElMessage.error(errorMessage)
+  }
+}
+```
+
+以上规范确保了前端API调用的一致性、可维护性和用户体验。所有新开发的功能都应遵循这些标准。
+
+
 限定使用的工具列表：
 read_file
 write_to_file
