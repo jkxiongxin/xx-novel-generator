@@ -115,21 +115,29 @@
       >
         <template #default="{ row }">
           <div class="action-buttons">
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               size="small"
               @click.stop="$emit('enter-workspace', row.id)"
             >
               工作台
             </el-button>
 
-            <el-dropdown 
+            <el-button
+              size="small"
+              @click.stop="$emit('view-detail', row.id)"
+            >
+              <el-icon><View /></el-icon>
+              详情
+            </el-button>
+
+            <el-dropdown
               @click.stop
               trigger="click"
               placement="bottom-end"
             >
-              <el-button 
-                type="default" 
+              <el-button
+                type="default"
                 size="small"
                 :icon="MoreFilled"
               >
@@ -137,10 +145,6 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="$emit('view-detail', row.id)">
-                    <el-icon><View /></el-icon>
-                    查看详情
-                  </el-dropdown-item>
                   <el-dropdown-item divided @click="$emit('export-novel', row)">
                     <el-icon><Download /></el-icon>
                     导出小说

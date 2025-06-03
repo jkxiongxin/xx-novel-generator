@@ -34,6 +34,12 @@ const router = createRouter({
       component: () => import('../views/NovelCreate.vue'),
       meta: { title: '创建小说', requiresAuth: true }
     },
+    {
+      path: '/novels/:novelId',
+      name: 'novel-detail',
+      component: () => import('../views/NovelDetailView.vue'),
+      meta: { title: '小说详情', requiresAuth: true }
+    },
     // 认证相关路由
     {
       path: '/auth/login',

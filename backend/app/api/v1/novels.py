@@ -754,6 +754,32 @@ async def export_novel(
                 detail="小说不存在或您没有权限访问"
             )
         
+        try:
+            novel.status = new_status
+            db.commit()
+            db.refresh(novel)
+            
+            return NovelResponse(
+                id=novel.id,
+                title=novel.title,
+                description=novel.description,
+                genre=novel.genre,
+                tags=novel.tags,
+                status=novel.status,
+                target_word_count=novel.target_words,  # 修正：使用正确的Model字段
+                word_count=novel.current_words,  # 修正：使用正确的Model字段
+                user_id=novel.user_id,
+                created_at=novel.created_at,
+                updated_at=novel.updated_at
+            )
+            
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="状态更新失败"
+            )
+        
         # 生成导出ID（实际项目中应该是真实的导出任务）
         import uuid
         export_id = str(uuid.uuid4())
@@ -1324,29 +1350,3 @@ def generate_recent_activities(novel: Novel, db: Session, limit: int = 10) -> Li
     # 按时间排序并限制数量
     activities.sort(key=lambda x: x.timestamp, reverse=True)
     return activities[:limit]
-    
-    try:
-        novel.status = new_status
-        db.commit()
-        db.refresh(novel)
-        
-        return NovelResponse(
-            id=novel.id,
-            title=novel.title,
-            description=novel.description,
-            genre=novel.genre,
-            tags=novel.tags,
-            status=novel.status,
-            target_word_count=novel.target_words,  # 修正：使用正确的Model字段
-            word_count=novel.current_words,  # 修正：使用正确的Model字段
-            user_id=novel.user_id,
-            created_at=novel.created_at,
-            updated_at=novel.updated_at
-        )
-        
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="状态更新失败"
-        )

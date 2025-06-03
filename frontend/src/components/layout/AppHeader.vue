@@ -229,6 +229,19 @@ const isMobile = ref(false)
 // 计算属性
 const activeMenu = computed(() => route.path)
 
+// 加载用户信息
+const loadUserInfo = async () => {
+  if (!isLoggedIn.value) return
+  
+  try {
+    const userData = await HomepageService.getUserInfo()
+    userInfo.value = userData
+    localStorage.setItem('user_info', JSON.stringify(userData))
+  } catch (error) {
+    console.error('加载用户信息失败:', error)
+  }
+}
+
 // 监听token变化
 watch(() => localStorage.getItem('access_token'), (newToken) => {
   if (newToken) {
@@ -324,19 +337,6 @@ const checkAuthStatus = () => {
   if (token && savedUserInfo) {
     isLoggedIn.value = true
     userInfo.value = JSON.parse(savedUserInfo)
-  }
-}
-
-// 加载用户信息
-const loadUserInfo = async () => {
-  if (!isLoggedIn.value) return
-  
-  try {
-    const userData = await HomepageService.getUserInfo()
-    userInfo.value = userData
-    localStorage.setItem('user_info', JSON.stringify(userData))
-  } catch (error) {
-    console.error('加载用户信息失败:', error)
   }
 }
 

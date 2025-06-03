@@ -130,15 +130,23 @@
             
             <!-- 操作按钮 -->
             <div class="novel-actions">
-              <el-button 
-                type="primary" 
+              <el-button
+                type="primary"
                 size="small"
                 @click.stop="handleContinueEdit(novel)"
                 class="continue-btn"
               >
                 继续编辑
               </el-button>
-              <el-dropdown 
+              <el-button
+                size="small"
+                @click.stop="handleViewDetail(novel)"
+                class="detail-btn"
+              >
+                <el-icon><View /></el-icon>
+                详情
+              </el-button>
+              <el-dropdown
                 @command="(command: string) => handleDropdownCommand(command, novel)"
                 trigger="click"
                 @click.stop
@@ -148,10 +156,6 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item command="view">
-                      <el-icon><View /></el-icon>
-                      查看详情
-                    </el-dropdown-item>
                     <el-dropdown-item command="workspace">
                       <el-icon><FolderOpened /></el-icon>
                       进入工作台
@@ -579,13 +583,16 @@ onMounted(() => {
 
 .novel-actions {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
   align-items: center;
 }
 
 .continue-btn {
   flex: 1;
-  margin-right: 8px;
+  border-radius: 8px;
+}
+
+.detail-btn {
   border-radius: 8px;
 }
 
@@ -710,8 +717,8 @@ onMounted(() => {
     gap: 12px;
   }
   
-  .continue-btn {
-    margin-right: 0;
+  .continue-btn,
+  .detail-btn {
     width: 100%;
   }
   

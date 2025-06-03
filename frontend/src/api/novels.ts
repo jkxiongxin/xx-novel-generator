@@ -48,6 +48,109 @@ export interface NovelListItem {
   last_edit_date?: string
 }
 
+// 小说详情页面专用接口类型
+export interface NovelDetailResponse {
+  id: number
+  title: string
+  description?: string
+  genre: string
+  status: 'draft' | 'ongoing' | 'completed' | 'paused'
+  author: string
+  cover_image?: string
+  word_count: number
+  chapter_count: number
+  target_words?: number
+  audience?: 'male' | 'female' | 'general'
+  writing_style?: string
+  tags: string[]
+  created_at: string
+  updated_at: string
+  last_edit_date?: string
+  last_chapter_id?: number
+  last_chapter_title?: string
+  progress_percentage: number
+  
+  // 统计信息
+  stats: {
+    total_chapters: number
+    completed_chapters: number
+    draft_chapters: number
+    total_words: number
+    average_words_per_chapter: number
+    estimated_completion_time?: string
+    writing_days: number
+    average_daily_words: number
+  }
+  
+  // 创作概览
+  content_overview: {
+    has_worldview: boolean
+    worldview_count: number
+    character_count: number
+    rough_outline_count: number
+    detailed_outline_count: number
+    last_activity_date?: string
+  }
+}
+
+// 小说统计数据详情
+export interface NovelStatsDetailResponse {
+  basic_stats: {
+    total_words: number
+    total_chapters: number
+    completed_chapters: number
+    average_chapter_length: number
+  }
+  
+  progress_stats: {
+    completion_percentage: number
+    estimated_days_to_completion: number
+    target_words: number
+    daily_target_words: number
+  }
+  
+  writing_stats: {
+    writing_days: number
+    total_writing_hours?: number
+    average_daily_words: number
+    most_productive_day: string
+    writing_streak: number
+  }
+  
+  content_stats: {
+    character_count: number
+    worldview_count: number
+    outline_completion: number
+    plot_point_count: number
+  }
+  
+  quality_stats: {
+    ai_review_score?: number
+    consistency_score?: number
+    readability_score?: number
+  }
+}
+
+// 最近活动
+export interface Activity {
+  id: string
+  type: 'chapter_created' | 'chapter_updated' | 'character_added' | 'outline_generated' | 'worldview_updated'
+  title: string
+  description: string
+  timestamp: string
+  metadata?: {
+    chapter_id?: string
+    character_id?: string
+    words_added?: number
+    [key: string]: any
+  }
+}
+
+export interface RecentActivitiesResponse {
+  activities: Activity[]
+  total: number
+}
+
 // 小说数据类型定义
 export interface Novel {
   id: number
@@ -178,6 +281,67 @@ export class NovelService {
    */
   static async getNovel(novelId: number): Promise<Novel> {
     const response = await apiClient.get<Novel>(`/novels/${novelId}`)
+    return response.data
+  }
+
+  /**
+   * 获取小说详情（详情页面专用）
+   */
+  static async getNovelDetail(novelId: number): Promise<NovelDetailResponse> {
+    const response = await apiClient.get<NovelDetailResponse>(`/novels/${novelId}`)
+    return response.data
+  }
+
+  /**
+   * 获取小说统计数据详情
+   */
+  static async getNovelStatsDetail(novelId: number): Promise<NovelStatsDetailResponse> {
+    const response = await apiClient.get<NovelStatsDetailResponse>(`/novels/${novelId}/stats`)
+    return response.data
+  }
+
+  /**
+   * 获取最近活动
+   */
+  static async getRecentActivities(novelId: number, limit: number = 10): Promise<RecentActivitiesResponse> {
+    const response = await apiClient.get<RecentActivitiesResponse>(`/novels/${novelId}/activities`, {
+      params: { limit }
+    })
+    return response.data
+  }
+
+  /**
+   * 上传封面图片
+   */
+  static async uploadCover(novelId: number, file: File): Promise<{ cover_url: string; message: string }> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await apiClient.post(`/novels/${novelId}/cover`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
+  }
+
+  /**
+   * 生成分享链接
+   */
+  static async createShareLink(novelId: number, options: {
+    access_level: 'public' | 'restricted' | 'private'
+    expires_in?: number
+    password?: string
+    include_outline?: boolean
+    include_characters?: boolean
+  }): Promise<{
+    share_id: string
+    share_url: string
+    qr_code_url: string
+    access_level: string
+    expires_at?: string
+    view_count: number
+  }> {
+    const response = await apiClient.post(`/novels/${novelId}/share`, options)
     return response.data
   }
 
