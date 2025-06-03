@@ -101,6 +101,12 @@ const router = createRouter({
       name: 'workspace-ai-configs',
       component: () => import('../views/workspace/AIConfigs.vue'),
       meta: { title: 'AI配置', requiresAuth: true }
+    },
+    {
+      path: '/ai-config-management',
+      name: 'ai-config-management',
+      component: () => import('../views/AIConfigManagement.vue'),
+      meta: { title: 'AI模型配置管理', requiresAuth: true }
     }
   ]
 })

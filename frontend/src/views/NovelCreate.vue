@@ -276,6 +276,9 @@
             <el-button @click="saveDraft" :loading="isDrafting">
               保存草稿
             </el-button>
+            <el-button @click="goToHome">
+              返回首页
+            </el-button>
             <el-button @click="cancelCreate">
               取消
             </el-button>
@@ -581,11 +584,20 @@ const generateNovelIdea = async () => {
   try {
     isGeneratingIdea.value = true
     
+    // 构建用户输入信息
+    const userInputParts = []
+    if (novelForm.title.trim()) {
+      userInputParts.push(`小说标题：${novelForm.title}`)
+    }
+    if (novelForm.description.trim()) {
+      userInputParts.push(`已有创意：${novelForm.description}`)
+    }
+    
     const response = await generationApi.generateNovelIdea({
       genre: selectedGenre.value,
       themes: selectedTags.value.join('，') || undefined,
       length: getWordCountRange(),
-      user_input: novelForm.title ? `小说标题：${novelForm.title}` : undefined
+      user_input: userInputParts.length > 0 ? userInputParts.join('\n\n') : undefined
     })
 
     if (response.data?.idea) {
@@ -770,7 +782,12 @@ const cancelCreate = async () => {
     }
   }
   
-  router.back()
+  router.push('/')
+}
+
+// 返回首页
+const goToHome = () => {
+  router.push('/')
 }
 
 // 错误处理

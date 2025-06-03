@@ -202,3 +202,68 @@ class NovelSearchParams(BaseModel):
         if v > 100:
             raise ValueError('每页大小不能超过100')
         return v
+
+
+class NovelDetailStats(BaseModel):
+    """小说详细统计信息"""
+    total_chapters: int
+    completed_chapters: int
+    draft_chapters: int
+    total_words: int
+    average_words_per_chapter: float
+    estimated_completion_time: Optional[str] = None
+    writing_days: int
+    average_daily_words: float
+
+
+class NovelContentOverview(BaseModel):
+    """小说内容概览"""
+    has_worldview: bool
+    worldview_count: int
+    character_count: int
+    rough_outline_count: int
+    detailed_outline_count: int
+    last_activity_date: Optional[str] = None
+
+
+class NovelDetailResponse(NovelResponse):
+    """小说详情扩展响应模式"""
+    author: str
+    cover_image: Optional[str] = None
+    target_audience: Optional[str] = None
+    writing_style: Optional[str] = None
+    progress_percentage: float
+    last_edit_date: Optional[str] = None
+    last_chapter_id: Optional[int] = None
+    last_chapter_title: Optional[str] = None
+    
+    # 统计信息
+    stats: NovelDetailStats
+    
+    # 内容概览
+    content_overview: NovelContentOverview
+
+
+class NovelStatsDetailResponse(BaseModel):
+    """小说详细统计数据响应"""
+    basic_stats: dict
+    progress_stats: dict
+    writing_stats: dict
+    content_stats: dict
+    quality_stats: Optional[dict] = None
+
+
+class Activity(BaseModel):
+    """活动记录"""
+    id: str
+    type: str
+    title: str
+    description: str
+    timestamp: str
+    metadata: Optional[dict] = None
+
+
+class RecentActivitiesResponse(BaseModel):
+    """最近活动响应"""
+    activities: List[Activity]
+    total: int

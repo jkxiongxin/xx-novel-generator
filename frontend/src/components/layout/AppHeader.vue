@@ -199,7 +199,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -228,6 +228,17 @@ const isMobile = ref(false)
 
 // 计算属性
 const activeMenu = computed(() => route.path)
+
+// 监听token变化
+watch(() => localStorage.getItem('access_token'), (newToken) => {
+  if (newToken) {
+    isLoggedIn.value = true
+    loadUserInfo()
+  } else {
+    isLoggedIn.value = false
+    userInfo.value = null
+  }
+}, { immediate: true })
 
 // 检查是否为移动设备
 const checkMobile = () => {
@@ -337,16 +348,31 @@ const handleResize = () => {
   }
 }
 
+// 监听存储变化
+const handleStorageChange = (event: StorageEvent) => {
+  if (event.key === 'access_token') {
+    if (event.newValue) {
+      isLoggedIn.value = true
+      loadUserInfo()
+    } else {
+      isLoggedIn.value = false
+      userInfo.value = null
+    }
+  }
+}
+
 // 生命周期
 onMounted(() => {
   checkMobile()
   checkAuthStatus()
   loadUserInfo()
   window.addEventListener('resize', handleResize)
+  window.addEventListener('storage', handleStorageChange)
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+  window.removeEventListener('storage', handleStorageChange)
 })
 </script>
 

@@ -19,7 +19,9 @@ from app.schemas.ai_model_config import (
     AIModelConfigFullResponse, AIModelConfigListResponse,
     AIModelConfigTestRequest, AIModelConfigTestResponse,
     AIModelConfigBatchRequest, AIModelConfigStatsResponse,
-    AIModelConfigTemplateResponse, AI_MODEL_TEMPLATES
+    AIModelConfigTemplateResponse, AI_MODEL_TEMPLATES,
+    AIModelGroupResponse, AIModelGroupListResponse,
+    AIModelGroupStatsResponse, DEFAULT_MODEL_GROUPS
 )
 from app.services.ai_service import get_ai_service
 
@@ -27,7 +29,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/", response_model=AIModelConfigResponse, summary="创建AI模型配置")
+@router.post("", response_model=AIModelConfigResponse, summary="创建AI模型配置")
 async def create_ai_config(
     config_data: AIModelConfigCreate,
     current_user: User = Depends(get_current_user),
@@ -58,6 +60,10 @@ async def create_ai_config(
         db.commit()
         db.refresh(config)
         
+        # 创建成功后重新加载用户适配器
+        ai_service = get_ai_service()
+        ai_service.load_user_adapters(current_user.id, db)
+        
         logger.info(f"用户 {current_user.id} 创建AI配置: {config.name}")
         
         return config
@@ -70,7 +76,7 @@ async def create_ai_config(
         raise HTTPException(status_code=500, detail="创建配置失败")
 
 
-@router.get("/", response_model=AIModelConfigListResponse, summary="获取AI模型配置列表")
+@router.get("", response_model=AIModelConfigListResponse, summary="获取AI模型配置列表")
 async def get_ai_configs(
     page: int = Query(1, ge=1, description="页码"),
     page_size: int = Query(20, ge=1, le=100, description="每页数量"),
@@ -183,6 +189,10 @@ async def update_ai_config(
         db.commit()
         db.refresh(config)
         
+        # 更新成功后重新加载用户适配器
+        ai_service = get_ai_service()
+        ai_service.load_user_adapters(current_user.id, db)
+        
         logger.info(f"用户 {current_user.id} 更新AI配置: {config.name}")
         
         return config
@@ -289,6 +299,10 @@ async def toggle_ai_config(
         db.commit()
         db.refresh(config)
         
+        # 切换状态后重新加载用户适配器
+        ai_service = get_ai_service()
+        ai_service.load_user_adapters(current_user.id, db)
+        
         status = "启用" if config.is_active else "禁用"
         logger.info(f"用户 {current_user.id} {status}AI配置: {config.name}")
         
@@ -331,6 +345,10 @@ async def set_default_ai_config(
         
         db.commit()
         db.refresh(config)
+        
+        # 设置默认配置后重新加载用户适配器
+        ai_service = get_ai_service()
+        ai_service.load_user_adapters(current_user.id, db)
         
         logger.info(f"用户 {current_user.id} 设置默认AI配置: {config.name}")
         
@@ -517,3 +535,219 @@ async def create_from_template(
         db.rollback()
         logger.error(f"从模板创建AI配置失败: {str(e)}")
         raise HTTPException(status_code=500, detail="从模板创建配置失败")
+
+
+@router.get("/groups/list", response_model=AIModelGroupListResponse, summary="获取AI模型分组列表")
+async def get_ai_config_groups(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取用户的AI模型配置分组列表"""
+    try:
+        # 查询所有配置按分组聚合
+        configs = db.query(AIModelConfig).filter(
+            AIModelConfig.user_id == current_user.id
+        ).order_by(
+            AIModelConfig.group_name.asc(),
+            AIModelConfig.priority.desc(),
+            AIModelConfig.created_at.desc()
+        ).all()
+        
+        # 按分组整理数据
+        groups_data = {}
+        ungrouped_configs = []
+        
+        for config in configs:
+            if config.group_name:
+                if config.group_name not in groups_data:
+                    groups_data[config.group_name] = {
+                        'configs': [],
+                        'active_count': 0,
+                        'default_config_id': None
+                    }
+                
+                groups_data[config.group_name]['configs'].append(config)
+                if config.is_active:
+                    groups_data[config.group_name]['active_count'] += 1
+                if config.is_group_default:
+                    groups_data[config.group_name]['default_config_id'] = config.id
+            else:
+                ungrouped_configs.append(config)
+        
+        # 构建响应
+        groups = []
+        
+        # 添加已分组的配置
+        for group_name, group_data in groups_data.items():
+            group_desc = DEFAULT_MODEL_GROUPS.get(group_name, {}).get('description', '')
+            groups.append(AIModelGroupResponse(
+                group_name=group_name,
+                group_description=group_desc,
+                model_count=len(group_data['configs']),
+                active_count=group_data['active_count'],
+                default_config_id=group_data['default_config_id'],
+                configs=group_data['configs']
+            ))
+        
+        # 添加未分组的配置
+        if ungrouped_configs:
+            ungrouped_active = sum(1 for c in ungrouped_configs if c.is_active)
+            ungrouped_default = next((c.id for c in ungrouped_configs if c.is_default), None)
+            
+            groups.append(AIModelGroupResponse(
+                group_name="未分组",
+                group_description="未分配到特定分组的模型配置",
+                model_count=len(ungrouped_configs),
+                active_count=ungrouped_active,
+                default_config_id=ungrouped_default,
+                configs=ungrouped_configs
+            ))
+        
+        return AIModelGroupListResponse(
+            groups=groups,
+            total_groups=len(groups),
+            total_configs=len(configs)
+        )
+        
+    except Exception as e:
+        logger.error(f"获取AI配置分组失败: {str(e)}")
+        raise HTTPException(status_code=500, detail="获取分组列表失败")
+
+
+@router.get("/groups/{group_name}/stats", response_model=AIModelGroupStatsResponse, summary="获取分组统计信息")
+async def get_group_stats(
+    group_name: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取指定分组的统计信息"""
+    try:
+        # 查询分组配置
+        query = db.query(AIModelConfig).filter(
+            AIModelConfig.user_id == current_user.id
+        )
+        
+        if group_name == "未分组":
+            query = query.filter(
+                or_(AIModelConfig.group_name.is_(None), AIModelConfig.group_name == "")
+            )
+        else:
+            query = query.filter(AIModelConfig.group_name == group_name)
+        
+        configs = query.all()
+        
+        if not configs:
+            raise HTTPException(status_code=404, detail="分组不存在或无配置")
+        
+        # 统计信息
+        active_configs = sum(1 for c in configs if c.is_active)
+        
+        # 模型类型统计
+        model_types = {}
+        for config in configs:
+            model_type = str(config.model_type)
+            model_types[model_type] = model_types.get(model_type, 0) + 1
+        
+        # 默认配置
+        default_config = next((c for c in configs if c.is_group_default), None)
+        
+        # 分组描述
+        group_desc = DEFAULT_MODEL_GROUPS.get(group_name, {}).get('description', '')
+        
+        return AIModelGroupStatsResponse(
+            group_name=group_name,
+            group_description=group_desc,
+            total_configs=len(configs),
+            active_configs=active_configs,
+            model_types=model_types,
+            default_config=default_config
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"获取分组统计失败: {str(e)}")
+        raise HTTPException(status_code=500, detail="获取分组统计失败")
+
+
+@router.patch("/{config_id}/set-group-default", response_model=AIModelConfigResponse, summary="设置分组默认配置")
+async def set_group_default_config(
+    config_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """设置指定配置为其分组内的默认配置"""
+    try:
+        config = db.query(AIModelConfig).filter(
+            AIModelConfig.id == config_id,
+            AIModelConfig.user_id == current_user.id,
+            AIModelConfig.is_active == True
+        ).first()
+        
+        if not config:
+            raise HTTPException(status_code=404, detail="配置不存在或未启用")
+        
+        # 取消同分组其他配置的默认状态
+        if config.group_name:
+            db.query(AIModelConfig).filter(
+                AIModelConfig.user_id == current_user.id,
+                AIModelConfig.group_name == config.group_name,
+                AIModelConfig.id != config_id,
+                AIModelConfig.is_group_default == True
+            ).update({"is_group_default": False})
+        else:
+            # 未分组配置，取消其他未分组配置的默认状态
+            db.query(AIModelConfig).filter(
+                AIModelConfig.user_id == current_user.id,
+                or_(AIModelConfig.group_name.is_(None), AIModelConfig.group_name == ""),
+                AIModelConfig.id != config_id,
+                AIModelConfig.is_group_default == True
+            ).update({"is_group_default": False})
+        
+        # 设置为分组默认
+        config.is_group_default = True
+        
+        db.commit()
+        db.refresh(config)
+        
+        # 设置分组默认配置后重新加载用户适配器
+        ai_service = get_ai_service()
+        ai_service.load_user_adapters(current_user.id, db)
+        
+        logger.info(f"用户 {current_user.id} 设置分组默认AI配置: {config.name}")
+        
+        return config
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"设置分组默认配置失败: {str(e)}")
+        raise HTTPException(status_code=500, detail="设置分组默认配置失败")
+
+
+@router.get("/groups/available", summary="获取可用分组列表")
+async def get_available_groups():
+    """获取系统预设的分组列表"""
+    try:
+        groups = []
+        for group_name, group_info in DEFAULT_MODEL_GROUPS.items():
+            groups.append({
+                "name": group_name,
+                "description": group_info["description"],
+                "priority": group_info["priority"],
+                "suggested_models": group_info["models"]
+            })
+        
+        # 按优先级排序
+        groups.sort(key=lambda x: x["priority"], reverse=True)
+        
+        return {
+            "success": True,
+            "data": groups,
+            "message": "获取可用分组成功"
+        }
+        
+    except Exception as e:
+        logger.error(f"获取可用分组失败: {str(e)}")
+        raise HTTPException(status_code=500, detail="获取可用分组失败")

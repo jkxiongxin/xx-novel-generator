@@ -1,23 +1,27 @@
 /**
- * AI模型配置管理API
+ * AI模型配置管理API客户端
  * Author: AI Writer Team
- * Created: 2025-06-01
+ * Created: 2025-06-02
+ * Updated: 2025-06-02 - 重构为统一API客户端模式
  */
 
 import apiClient from './index'
 
-// AI模型配置相关的类型定义
+// 类型定义
 export interface AIModelConfig {
   id: number
   name: string
   description?: string
-  model_type: 'openai_compatible' | 'claude_compatible' | 'custom_http' | 'hugging_face' | 'ollama' | 'openrouter'
+  model_type: ModelType
   is_active: boolean
   is_default: boolean
+  group_name?: string
+  group_description?: string
+  is_group_default: boolean
   api_endpoint: string
   api_key?: string
   model_name: string
-  request_format: 'openai_chat' | 'claude_messages' | 'custom_json' | 'rest_api'
+  request_format: RequestFormat
   max_tokens: number
   temperature: string
   timeout: number
@@ -33,19 +37,36 @@ export interface AIModelConfig {
   user_id: number
   created_at: string
   updated_at: string
-  updating?: boolean // 前端临时状态属性
 }
+
+export type ModelType = 
+  | 'openai_compatible'
+  | 'custom_http'
+  | 'claude_compatible'
+  | 'hugging_face'
+  | 'ollama'
+  | 'openrouter'
+
+export type RequestFormat = 
+  | 'openai_chat'
+  | 'openai_completion'
+  | 'claude_messages'
+  | 'custom_json'
+  | 'rest_api'
 
 export interface AIModelConfigCreate {
   name: string
   description?: string
-  model_type: string
+  model_type: ModelType
   is_active?: boolean
   is_default?: boolean
+  group_name?: string
+  group_description?: string
+  is_group_default?: boolean
   api_endpoint: string
   api_key?: string
   model_name: string
-  request_format: string
+  request_format: RequestFormat
   max_tokens?: number
   temperature?: string
   timeout?: number
@@ -60,29 +81,7 @@ export interface AIModelConfigCreate {
   priority?: number
 }
 
-export interface AIModelConfigUpdate {
-  name?: string
-  description?: string
-  model_type?: string
-  is_active?: boolean
-  is_default?: boolean
-  api_endpoint?: string
-  api_key?: string
-  model_name?: string
-  request_format?: string
-  max_tokens?: number
-  temperature?: string
-  timeout?: number
-  retry_count?: number
-  request_headers?: Record<string, string>
-  request_params?: Record<string, any>
-  response_mapping?: Record<string, string>
-  prompt_template?: string
-  system_message?: string
-  daily_limit?: number
-  monthly_limit?: number
-  priority?: number
-}
+export interface AIModelConfigUpdate extends Partial<AIModelConfigCreate> {}
 
 export interface AIModelConfigListResponse {
   items: AIModelConfig[]
@@ -90,20 +89,6 @@ export interface AIModelConfigListResponse {
   page: number
   page_size: number
   total_pages: number
-}
-
-export interface AIModelConfigTestRequest {
-  prompt: string
-  max_tokens?: number
-  temperature?: string
-}
-
-export interface AIModelConfigTestResponse {
-  success: boolean
-  response_time: number
-  content?: string
-  error?: string
-  usage?: Record<string, any>
 }
 
 export interface AIModelConfigStats {
@@ -118,162 +103,241 @@ export interface AIModelConfigStats {
 export interface AIModelConfigTemplate {
   name: string
   description: string
-  model_type: string
-  request_format: string
+  model_type: ModelType
+  request_format: RequestFormat
   default_config: AIModelConfigCreate
 }
 
-// AI配置管理API
-export const aiConfigsApi = {
-  // 获取AI配置列表
-  async getConfigs(params: {
-    page?: number
-    page_size?: number
-    search?: string
-    model_type?: string
-    is_active?: boolean
-  } = {}): Promise<AIModelConfigListResponse> {
-    const response = await apiClient.get('/ai-configs/', { params })
-    return response.data
-  },
-
-  // 获取AI配置详情
-  async getConfig(configId: number): Promise<AIModelConfig> {
-    const response = await apiClient.get(`/ai-configs/${configId}`)
-    return response.data
-  },
-
-  // 创建AI配置
-  async createConfig(data: AIModelConfigCreate): Promise<AIModelConfig> {
-    const response = await apiClient.post('/ai-configs/', data)
-    return response.data
-  },
-
-  // 更新AI配置
-  async updateConfig(configId: number, data: AIModelConfigUpdate): Promise<AIModelConfig> {
-    const response = await apiClient.put(`/ai-configs/${configId}`, data)
-    return response.data
-  },
-
-  // 删除AI配置
-  async deleteConfig(configId: number): Promise<{ success: boolean; message: string }> {
-    const response = await apiClient.delete(`/ai-configs/${configId}`)
-    return response.data
-  },
-
-  // 测试AI配置
-  async testConfig(configId: number, testData: AIModelConfigTestRequest): Promise<AIModelConfigTestResponse> {
-    const response = await apiClient.post(`/ai-configs/${configId}/test`, testData)
-    return response.data
-  },
-
-  // 切换AI配置状态
-  async toggleConfig(configId: number): Promise<AIModelConfig> {
-    const response = await apiClient.patch(`/ai-configs/${configId}/toggle`)
-    return response.data
-  },
-
-  // 设置默认AI配置
-  async setDefaultConfig(configId: number): Promise<AIModelConfig> {
-    const response = await apiClient.patch(`/ai-configs/${configId}/set-default`)
-    return response.data
-  },
-
-  // 批量操作AI配置
-  async batchOperation(data: {
-    config_ids: number[]
-    action: 'activate' | 'deactivate' | 'delete'
-  }): Promise<{ success: boolean; message: string; affected_count: number }> {
-    const response = await apiClient.post('/ai-configs/batch', data)
-    return response.data
-  },
-
-  // 获取AI配置统计
-  async getStats(): Promise<AIModelConfigStats> {
-    const response = await apiClient.get('/ai-configs/stats/overview')
-    return response.data
-  },
-
-  // 获取配置模板
-  async getTemplates(): Promise<AIModelConfigTemplate[]> {
-    const response = await apiClient.get('/ai-configs/templates/list')
-    return response.data
-  },
-
-  // 从模板创建配置
-  async createFromTemplate(templateName: string, apiKey?: string): Promise<AIModelConfig> {
-    const response = await apiClient.post(`/ai-configs/templates/${templateName}`, {
-      api_key: apiKey
-    })
-    return response.data
-  }
+export interface AIModelGroup {
+  group_name: string
+  group_description?: string
+  model_count: number
+  active_count: number
+  default_config_id?: number
+  configs: AIModelConfig[]
 }
 
-// 导出模型类型常量
-export const MODEL_TYPES = {
-  OPENAI_COMPATIBLE: 'openai_compatible',
-  CLAUDE_COMPATIBLE: 'claude_compatible', 
-  CUSTOM_HTTP: 'custom_http',
-  HUGGING_FACE: 'hugging_face',
-  OLLAMA: 'ollama',
-  OPENROUTER: 'openrouter'
-} as const
+export interface AIModelGroupListResponse {
+  groups: AIModelGroup[]
+  total_groups: number
+  total_configs: number
+}
 
-export const REQUEST_FORMATS = {
-  OPENAI_CHAT: 'openai_chat',
-  CLAUDE_MESSAGES: 'claude_messages',
-  CUSTOM_JSON: 'custom_json',
-  REST_API: 'rest_api'
-} as const
+export interface AIModelGroupStats {
+  group_name: string
+  group_description?: string
+  total_configs: number
+  active_configs: number
+  model_types: Record<string, number>
+  default_config?: AIModelConfig
+}
 
-// 模型类型显示名称
-export const MODEL_TYPE_LABELS = {
-  [MODEL_TYPES.OPENAI_COMPATIBLE]: 'OpenAI 兼容',
-  [MODEL_TYPES.CLAUDE_COMPATIBLE]: 'Claude 兼容',
-  [MODEL_TYPES.CUSTOM_HTTP]: '自定义 HTTP',
-  [MODEL_TYPES.HUGGING_FACE]: 'HuggingFace',
-  [MODEL_TYPES.OLLAMA]: 'Ollama',
-  [MODEL_TYPES.OPENROUTER]: 'OpenRouter'
-} as const
+export interface TestConfigRequest {
+  prompt: string
+  max_tokens?: number
+  temperature?: string
+}
 
-// 请求格式显示名称
-export const REQUEST_FORMAT_LABELS = {
-  [REQUEST_FORMATS.OPENAI_CHAT]: 'OpenAI Chat',
-  [REQUEST_FORMATS.CLAUDE_MESSAGES]: 'Claude Messages',
-  [REQUEST_FORMATS.CUSTOM_JSON]: '自定义 JSON',
-  [REQUEST_FORMATS.REST_API]: 'REST API'
-} as const
+export interface TestConfigResponse {
+  success: boolean
+  response_time: number
+  content?: string
+  error?: string
+  usage?: Record<string, any>
+}
 
-// 默认配置值
-export const DEFAULT_CONFIG = {
+export interface BatchOperationRequest {
+  config_ids: number[]
+  action: 'activate' | 'deactivate' | 'delete'
+}
+
+export interface AvailableGroup {
+  name: string
+  description: string
+  priority: number
+  suggested_models: string[]
+}
+
+// 常量定义
+export const MODEL_TYPE_LABELS: Record<ModelType, string> = {
+  openai_compatible: 'OpenAI兼容',
+  custom_http: '自定义HTTP',
+  claude_compatible: 'Claude兼容',
+  hugging_face: 'HuggingFace',
+  ollama: 'Ollama本地',
+  openrouter: 'OpenRouter'
+}
+
+export const REQUEST_FORMAT_LABELS: Record<RequestFormat, string> = {
+  openai_chat: 'OpenAI Chat',
+  openai_completion: 'OpenAI Completion',
+  claude_messages: 'Claude Messages',
+  custom_json: '自定义JSON',
+  rest_api: 'REST API'
+}
+
+export const DEFAULT_CONFIG: Partial<AIModelConfigCreate> = {
+  is_active: true,
+  is_default: false,
+  is_group_default: false,
   max_tokens: 2000,
   temperature: '0.7',
   timeout: 60,
   retry_count: 3,
   priority: 5
-} as const
+}
 
-// 预设的API端点
-export const PRESET_ENDPOINTS = {
-  OPENAI: 'https://api.openai.com/v1/chat/completions',
-  CLAUDE: 'https://api.anthropic.com/v1/messages',
-  OPENROUTER: 'https://openrouter.ai/api/v1/chat/completions'
-} as const
+export const PRESET_ENDPOINTS: Record<string, string> = {
+  'OpenAI官方': 'https://api.openai.com/v1/chat/completions',
+  'Claude官方': 'https://api.anthropic.com/v1/messages',
+  'Ollama本地': 'http://localhost:11434/v1/chat/completions',
+  '自定义': ''
+}
 
-// 常用模型名称
-export const COMMON_MODELS = {
-  OPENAI: [
-    'gpt-3.5-turbo',
-    'gpt-3.5-turbo-16k',
-    'gpt-4',
-    'gpt-4-32k',
-    'gpt-4-turbo-preview'
-  ],
-  CLAUDE: [
-    'claude-3-haiku-20240307',
-    'claude-3-sonnet-20240229',
-    'claude-3-opus-20240229'
-  ]
-} as const
+export const COMMON_MODELS: Record<ModelType, string[]> & Record<string, string[]> = {
+  openai_compatible: ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-turbo'],
+  claude_compatible: ['claude-3-sonnet-20240229', 'claude-3-opus-20240229', 'claude-3-haiku-20240307'],
+  ollama: ['llama2', 'mistral', 'codellama', 'vicuna'],
+  custom_http: [],
+  hugging_face: [],
+  openrouter: [],
+  // 兼容旧的键名
+  OPENAI: ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-turbo'],
+  CLAUDE: ['claude-3-sonnet-20240229', 'claude-3-opus-20240229', 'claude-3-haiku-20240307'],
+  OLLAMA: ['llama2', 'mistral', 'codellama', 'vicuna']
+}
 
+// 统一API服务 - 使用函数式API而非类
+export const aiConfigsApi = {
+  // 基础CRUD操作
+  async createConfig(data: AIModelConfigCreate): Promise<AIModelConfig> {
+    const response = await apiClient.post('/ai-configs', data)
+    return response.data
+  },
+
+  async getConfigs(params?: {
+    page?: number
+    page_size?: number
+    search?: string
+    model_type?: ModelType
+    is_active?: boolean
+  }): Promise<AIModelConfigListResponse> {
+    const response = await apiClient.get('/ai-configs', { params })
+    return response.data
+  },
+
+  async getConfig(id: number): Promise<AIModelConfig> {
+    const response = await apiClient.get(`/ai-configs/${id}`)
+    return response.data
+  },
+
+  async updateConfig(id: number, data: AIModelConfigUpdate): Promise<AIModelConfig> {
+    const response = await apiClient.put(`/ai-configs/${id}`, data)
+    return response.data
+  },
+
+  async deleteConfig(id: number): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.delete(`/ai-configs/${id}`)
+    return response.data
+  },
+
+  // 配置管理操作
+  async toggleConfig(id: number): Promise<AIModelConfig> {
+    const response = await apiClient.patch(`/ai-configs/${id}/toggle`)
+    return response.data
+  },
+
+  async setDefaultConfig(id: number): Promise<AIModelConfig> {
+    const response = await apiClient.patch(`/ai-configs/${id}/set-default`)
+    return response.data
+  },
+
+  async setGroupDefaultConfig(id: number): Promise<AIModelConfig> {
+    const response = await apiClient.patch(`/ai-configs/${id}/set-group-default`)
+    return response.data
+  },
+
+  async testConfig(id: number, testData: TestConfigRequest): Promise<TestConfigResponse> {
+    const response = await apiClient.post(`/ai-configs/${id}/test`, testData)
+    return response.data
+  },
+
+  async batchOperation(data: BatchOperationRequest): Promise<{
+    success: boolean
+    message: string
+    affected_count: number
+  }> {
+    const response = await apiClient.post('/ai-configs/batch', data)
+    return response.data
+  },
+
+  // 统计信息
+  async getStats(): Promise<AIModelConfigStats> {
+    const response = await apiClient.get('/ai-configs/stats/overview')
+    return response.data
+  },
+
+  // 模板操作
+  async getTemplates(): Promise<AIModelConfigTemplate[]> {
+    const response = await apiClient.get('/ai-configs/templates/list')
+    return response.data
+  },
+
+  async createFromTemplate(templateName: string, apiKey?: string): Promise<AIModelConfig> {
+    const response = await apiClient.post(
+      `/ai-configs/templates/${templateName}`,
+      apiKey ? { api_key: apiKey } : {}
+    )
+    return response.data
+  },
+
+  // 分组操作
+  async getGroups(): Promise<AIModelGroupListResponse> {
+    const response = await apiClient.get('/ai-configs/groups/list')
+    return response.data
+  },
+
+  async getGroupStats(groupName: string): Promise<AIModelGroupStats> {
+    const response = await apiClient.get(`/ai-configs/groups/${groupName}/stats`)
+    return response.data
+  },
+
+  async getAvailableGroups(): Promise<{
+    success: boolean
+    data: AvailableGroup[]
+    message: string
+  }> {
+    const response = await apiClient.get('/ai-configs/groups/available')
+    return response.data
+  }
+}
+
+// 便捷方法导出（保持向后兼容）
+export const aiConfigs = {
+  // 基础操作
+  create: aiConfigsApi.createConfig,
+  list: aiConfigsApi.getConfigs,
+  get: aiConfigsApi.getConfig,
+  update: aiConfigsApi.updateConfig,
+  delete: aiConfigsApi.deleteConfig,
+
+  // 配置管理
+  toggle: aiConfigsApi.toggleConfig,
+  setDefault: aiConfigsApi.setDefaultConfig,
+  setGroupDefault: aiConfigsApi.setGroupDefaultConfig,
+  test: aiConfigsApi.testConfig,
+  batchOperation: aiConfigsApi.batchOperation,
+
+  // 统计和模板
+  getStats: aiConfigsApi.getStats,
+  getTemplates: aiConfigsApi.getTemplates,
+  createFromTemplate: aiConfigsApi.createFromTemplate,
+
+  // 分组操作
+  getGroups: aiConfigsApi.getGroups,
+  getGroupStats: aiConfigsApi.getGroupStats,
+  getAvailableGroups: aiConfigsApi.getAvailableGroups,
+}
+
+// 默认导出
 export default aiConfigsApi

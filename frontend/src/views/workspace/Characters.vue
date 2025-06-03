@@ -403,6 +403,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router'
+import apiClient from '@/api/index'
 import * as charactersApi from '@/api/characters'
 import * as outlineApi from '@/api/outline'
 
@@ -516,8 +517,8 @@ const loadCharacters = async () => {
 
 const loadWorldviews = async () => {
   try {
-    const response = await fetch(`/api/v1/worldview/novel/${novelId.value}`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/novel/${novelId.value}`)
+    const data = response.data
     if (data.success !== false) {
       worldviews.value = data.items || []
     }
@@ -676,29 +677,19 @@ const submitCreateForm = async () => {
 
 const submitWorldviewForm = async () => {
   try {
-    const response = await fetch('/api/v1/worldview/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...worldviewForm,
-        novel_id: novelId.value
-      })
+    const response = await apiClient.post('/worldview/', {
+      ...worldviewForm,
+      novel_id: novelId.value
     })
     
-    if (response.ok) {
-      ElMessage.success('世界观创建成功')
-      showNewWorldviewDialog.value = false
-      await loadWorldviews()
-      Object.assign(worldviewForm, {
-        name: '',
-        description: '',
-        is_primary: false
-      })
-    } else {
-      throw new Error('创建失败')
-    }
+    ElMessage.success('世界观创建成功')
+    showNewWorldviewDialog.value = false
+    await loadWorldviews()
+    Object.assign(worldviewForm, {
+      name: '',
+      description: '',
+      is_primary: false
+    })
   } catch (error) {
     console.error('创建世界观失败:', error)
     ElMessage.error('创建世界观失败')

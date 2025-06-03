@@ -93,23 +93,166 @@ class OpenAIAdapter(AIModelAdapter):
             # 添加响应格式说明到提示词
             format_instruction = f"\n\n请按照以下JSON格式返回结果：\n{response_format}"
             full_prompt = prompt + format_instruction
-            
+
             response_text = await self.generate_text(
                 full_prompt,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 **kwargs
             )
-            
-            # 尝试解析JSON响应
+
             import json
+            import re
+            logger.info(f"生成的响应文本: {response_text}")
+
+            # 过滤掉<think>...</think>内容
+            response_text = re.sub(r"<think>.*?</think>", "", response_text, flags=re.DOTALL | re.IGNORECASE)
+
+            # 提取被```json ... ```包裹的内容（允许多行，使用单行匹配模式 re.DOTALL）
+            match = re.search(r"```json\s*(.*?)\s*```", response_text, re.DOTALL | re.IGNORECASE)
+            if match:
+                json_str = match.group(1)
+            else:
+                json_str = response_text
+
             try:
-                return json.loads(response_text)
+                return json.loads(json_str)
             except json.JSONDecodeError:
-                # 如果解析失败，返回原始文本
                 logger.warning(f"无法解析为JSON格式，返回原始文本: {response_text}")
                 return {"content": response_text}
-                
+
+        except Exception as e:
+            logger.error(f"生成结构化响应失败: {str(e)}")
+            raise AIServiceError(f"生成结构化响应失败: {str(e)}")
+
+
+class CustomHttpAdapter(AIModelAdapter):
+    """自定义HTTP API适配器"""
+    
+    def __init__(
+        self,
+        api_endpoint: str,
+        api_key: str,
+        model: str,
+        request_format: str = "openai_chat",
+        max_tokens: int = 2000,
+        temperature: float = 0.7,
+        timeout: int = 60
+    ):
+        self.api_endpoint = api_endpoint
+        self.api_key = api_key
+        self.model = model
+        self.request_format = request_format
+        self.default_max_tokens = max_tokens
+        self.default_temperature = temperature
+        self.timeout = timeout
+    
+    async def generate_text(
+        self,
+        prompt: str,
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        **kwargs
+    ) -> str:
+        """生成文本内容"""
+        try:
+            import aiohttp
+            
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            # 根据请求格式构建数据
+            if self.request_format == "openai_chat":
+                data = {
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": max_tokens or self.default_max_tokens,
+                    "temperature": temperature or self.default_temperature
+                }
+            elif self.request_format == "claude_messages":
+                data = {
+                    "model": self.model,
+                    "max_tokens": max_tokens or self.default_max_tokens,
+                    "temperature": temperature or self.default_temperature,
+                    "messages": [{"role": "user", "content": prompt}]
+                }
+            else:
+                # 自定义格式
+                data = {
+                    "model": self.model,
+                    "prompt": prompt,
+                    "max_tokens": max_tokens or self.default_max_tokens,
+                    "temperature": temperature or self.default_temperature
+                }
+            
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
+                async with session.post(self.api_endpoint, json=data, headers=headers) as response:
+                    if response.status != 200:
+                        error_text = await response.text()
+                        raise Exception(f"API调用失败: {response.status} - {error_text}")
+                    
+                    result = await response.json()
+                    
+                    # 根据格式解析响应
+                    if self.request_format == "openai_chat":
+                        return result["choices"][0]["message"]["content"].strip()
+                    elif self.request_format == "claude_messages":
+                        return result["content"][0]["text"].strip()
+                    else:
+                        # 尝试通用解析
+                        if "choices" in result and result["choices"]:
+                            return result["choices"][0].get("message", {}).get("content", "").strip()
+                        elif "content" in result:
+                            return result["content"].strip()
+                        else:
+                            return str(result).strip()
+                            
+        except Exception as e:
+            logger.error(f"自定义API调用失败: {str(e)}")
+            raise AIServiceError(f"生成内容失败: {str(e)}")
+    
+    async def generate_structured_response(
+        self,
+        prompt: str,
+        response_format: Dict[str, Any],
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """生成结构化响应"""
+        try:
+            # 添加响应格式说明到提示词
+            format_instruction = f"\n\n请按照以下JSON格式返回结果：\n{response_format}"
+            full_prompt = prompt + format_instruction
+
+            response_text = await self.generate_text(
+                full_prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                **kwargs
+            )
+
+            import json
+            import re
+
+            logger.info(f"生成的响应文本: {response_text}")
+            # 过滤掉<think>...</think>内容
+            response_text = re.sub(r"<think>.*?</think>", "", response_text, flags=re.DOTALL | re.IGNORECASE)
+            # 提取被```json ... ```包裹的内容
+            match = re.search(r"```json\s*(.*?)\s*```", response_text, re.DOTALL | re.IGNORECASE)
+            if match:
+                json_str = match.group(1)
+            else:
+                json_str = response_text
+
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError:
+                logger.warning(f"无法解析为JSON格式，返回原始文本: {response_text}")
+                return {"content": response_text}
+
         except Exception as e:
             logger.error(f"生成结构化响应失败: {str(e)}")
             raise AIServiceError(f"生成结构化响应失败: {str(e)}")
@@ -164,18 +307,57 @@ class AIService:
     def _init_adapters(self):
         """初始化AI模型适配器"""
         try:
-            # 初始化OpenAI适配器
-            if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY != "your-openai-api-key-here":
-                openai_adapter = OpenAIAdapter(
-                    api_key=settings.OPENAI_API_KEY,
-                    model=settings.OPENAI_MODEL
-                )
-                self.adapters["openai"] = openai_adapter
-                if self.default_adapter is None:
+            ai_config = settings.ai_model_config
+            default_provider = ai_config.get("default_provider", "openai")
+            
+            # 根据默认提供商初始化适配器
+            if default_provider == "openai":
+                # 初始化OpenAI适配器
+                if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY != "your-openai-api-key-here":
+                    openai_adapter = OpenAIAdapter(
+                        api_key=settings.OPENAI_API_KEY,
+                        model=settings.OPENAI_MODEL
+                    )
+                    self.adapters["openai"] = openai_adapter
+                    if self.default_adapter is None:
+                        self.default_adapter = "openai"
+                    logger.info("OpenAI适配器初始化成功")
+                else:
+                    logger.warning("OpenAI API Key未配置，跳过OpenAI适配器初始化")
+            
+            elif default_provider == "custom":
+                # 初始化自定义适配器
+                custom_config = ai_config.get("custom", {})
+                if (custom_config.get("api_endpoint") and
+                    custom_config.get("api_key") and
+                    custom_config.get("api_key") != "your-custom-api-key-here"):
+                    
+                    custom_adapter = CustomHttpAdapter(
+                        api_endpoint=custom_config["api_endpoint"],
+                        api_key=custom_config["api_key"],
+                        model=custom_config.get("model_name", "default-model"),
+                        request_format=custom_config.get("request_format", "openai_chat"),
+                        max_tokens=custom_config.get("max_tokens", 2000),
+                        temperature=custom_config.get("temperature", 0.7),
+                        timeout=custom_config.get("timeout", 60)
+                    )
+                    self.adapters["custom"] = custom_adapter
+                    if self.default_adapter is None:
+                        self.default_adapter = "custom"
+                    logger.info("自定义适配器初始化成功")
+                else:
+                    logger.warning("自定义API配置不完整，跳过自定义适配器初始化")
+            
+            # 如果还没有默认适配器，尝试初始化OpenAI作为备选
+            if self.default_adapter is None:
+                if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY != "your-openai-api-key-here":
+                    openai_adapter = OpenAIAdapter(
+                        api_key=settings.OPENAI_API_KEY,
+                        model=settings.OPENAI_MODEL
+                    )
+                    self.adapters["openai"] = openai_adapter
                     self.default_adapter = "openai"
-                logger.info("OpenAI适配器初始化成功")
-            else:
-                logger.warning("OpenAI API Key未配置，跳过OpenAI适配器初始化")
+                    logger.info("OpenAI适配器作为备选初始化成功")
             
         except Exception as e:
             logger.error(f"AI适配器初始化失败: {str(e)}")
@@ -316,6 +498,7 @@ class AIService:
                     temperature=temperature,
                     **kwargs
                 )
+                logger.info(f"生成结果: {result}")
                 return result
                 
             except Exception as e:

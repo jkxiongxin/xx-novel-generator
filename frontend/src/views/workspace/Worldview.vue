@@ -183,6 +183,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router'
+import apiClient from '@/api/index'
 import WorldviewOverview from '@/components/worldview/WorldviewOverview.vue'
 import WorldMapsSection from '@/components/worldview/WorldMapsSection.vue'
 import CultivationSection from '@/components/worldview/CultivationSection.vue'
@@ -235,8 +236,8 @@ const worldviewRules = {
 const loadWorldviews = async () => {
   try {
     loading.value = true
-    const response = await fetch(`/api/v1/worldview/novel/${novelId.value}`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/novel/${novelId.value}`)
+    const data = response.data
     if (data.success !== false) {
       worldviews.value = data.items || []
       
@@ -258,8 +259,8 @@ const loadWorldMaps = async () => {
   if (!selectedWorldviewId.value) return
   
   try {
-    const response = await fetch(`/api/v1/worldview/${selectedWorldviewId.value}/maps`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/${selectedWorldviewId.value}/maps`)
+    const data = response.data
     if (data.success !== false) {
       worldMaps.value = data.items || []
     }
@@ -272,8 +273,8 @@ const loadCultivationSystems = async () => {
   if (!selectedWorldviewId.value) return
   
   try {
-    const response = await fetch(`/api/v1/worldview/${selectedWorldviewId.value}/cultivation`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/${selectedWorldviewId.value}/cultivation`)
+    const data = response.data
     if (data.success !== false) {
       cultivationSystems.value = data.items || []
     }
@@ -286,8 +287,8 @@ const loadHistories = async () => {
   if (!selectedWorldviewId.value) return
   
   try {
-    const response = await fetch(`/api/v1/worldview/${selectedWorldviewId.value}/history`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/${selectedWorldviewId.value}/history`)
+    const data = response.data
     if (data.success !== false) {
       histories.value = data.items || []
     }
@@ -300,8 +301,8 @@ const loadFactions = async () => {
   if (!selectedWorldviewId.value) return
   
   try {
-    const response = await fetch(`/api/v1/worldview/${selectedWorldviewId.value}/factions`)
-    const data = await response.json()
+    const response = await apiClient.get(`/worldview/${selectedWorldviewId.value}/factions`)
+    const data = response.data
     if (data.success !== false) {
       factions.value = data.items || []
     }
@@ -329,22 +330,11 @@ const handleWorldviewChange = (worldviewId) => {
 
 const handleUpdateWorldview = async (updatedData) => {
   try {
-    const response = await fetch(`/api/v1/worldview/${currentWorldview.value.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedData)
-    })
+    const response = await apiClient.put(`/worldview/${currentWorldview.value.id}`, updatedData)
     
-    if (response.ok) {
-      const updatedWorldview = await response.json()
-      currentWorldview.value = updatedWorldview
-      await loadWorldviews()
-      ElMessage.success('世界观更新成功')
-    } else {
-      throw new Error('更新失败')
-    }
+    currentWorldview.value = response.data
+    await loadWorldviews()
+    ElMessage.success('世界观更新成功')
   } catch (error) {
     console.error('更新世界观失败:', error)
     ElMessage.error('更新世界观失败')
@@ -359,18 +349,12 @@ const handleDeleteWorldview = async () => {
       type: 'warning'
     })
     
-    const response = await fetch(`/api/v1/worldview/${currentWorldview.value.id}`, {
-      method: 'DELETE'
-    })
+    const response = await apiClient.delete(`/worldview/${currentWorldview.value.id}`)
     
-    if (response.ok) {
-      ElMessage.success('世界观删除成功')
-      currentWorldview.value = null
-      selectedWorldviewId.value = null
-      await loadWorldviews()
-    } else {
-      throw new Error('删除失败')
-    }
+    ElMessage.success('世界观删除成功')
+    currentWorldview.value = null
+    selectedWorldviewId.value = null
+    await loadWorldviews()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除世界观失败:', error)
@@ -437,29 +421,19 @@ const resetWorldviewForm = () => {
 
 const submitWorldviewForm = async () => {
   try {
-    const response = await fetch('/api/v1/worldview/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...worldviewForm,
-        novel_id: novelId.value
-      })
+    const response = await apiClient.post('/worldview/', {
+      ...worldviewForm,
+      novel_id: novelId.value
     })
     
-    if (response.ok) {
-      const newWorldview = await response.json()
-      ElMessage.success('世界观创建成功')
-      showCreateWorldviewDialog.value = false
-      await loadWorldviews()
-      
-      // 自动选择新创建的世界观
-      selectedWorldviewId.value = newWorldview.id
-      currentWorldview.value = newWorldview
-    } else {
-      throw new Error('创建失败')
-    }
+    const newWorldview = response.data
+    ElMessage.success('世界观创建成功')
+    showCreateWorldviewDialog.value = false
+    await loadWorldviews()
+    
+    // 自动选择新创建的世界观
+    selectedWorldviewId.value = newWorldview.id
+    currentWorldview.value = newWorldview
   } catch (error) {
     console.error('创建世界观失败:', error)
     ElMessage.error('创建世界观失败')
@@ -473,18 +447,12 @@ const generateWorldview = () => {
 const submitGenerateForm = async () => {
   try {
     generating.value = true
-    const response = await fetch('/api/v1/worldview/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...generateForm,
-        novel_id: novelId.value
-      })
+    const response = await apiClient.post('/worldview/generate', {
+      ...generateForm,
+      novel_id: novelId.value
     })
     
-    const result = await response.json()
+    const result = response.data
     
     if (result.success) {
       ElMessage.success(`世界观生成成功，共生成 ${result.total_generated} 个项目`)

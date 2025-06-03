@@ -20,6 +20,11 @@ class AIModelConfigBase(BaseModel):
     is_active: bool = Field(True, description="是否启用")
     is_default: bool = Field(False, description="是否为默认模型")
     
+    # 分组配置
+    group_name: Optional[str] = Field(None, max_length=100, description="配置分组名称")
+    group_description: Optional[str] = Field(None, max_length=1000, description="分组描述")
+    is_group_default: bool = Field(False, description="是否为分组内默认模型")
+    
     # API配置
     api_endpoint: str = Field(..., max_length=500, description="API端点URL")
     api_key: Optional[str] = Field(None, max_length=500, description="API密钥")
@@ -250,6 +255,45 @@ class AIModelConfigTemplateResponse(BaseModel):
         from_attributes = True
 
 
+class AIModelGroupResponse(BaseModel):
+    """AI模型分组响应模式"""
+    
+    group_name: str
+    group_description: Optional[str] = None
+    model_count: int
+    active_count: int
+    default_config_id: Optional[int] = None
+    configs: List[AIModelConfigResponse]
+    
+    class Config:
+        from_attributes = True
+
+
+class AIModelGroupListResponse(BaseModel):
+    """AI模型分组列表响应模式"""
+    
+    groups: List[AIModelGroupResponse]
+    total_groups: int
+    total_configs: int
+    
+    class Config:
+        from_attributes = True
+
+
+class AIModelGroupStatsResponse(BaseModel):
+    """AI模型分组统计响应模式"""
+    
+    group_name: str
+    group_description: Optional[str] = None
+    total_configs: int
+    active_configs: int
+    model_types: Dict[str, int]
+    default_config: Optional[AIModelConfigResponse] = None
+    
+    class Config:
+        from_attributes = True
+
+
 # 预设模板配置
 AI_MODEL_TEMPLATES = [
     {
@@ -308,5 +352,98 @@ AI_MODEL_TEMPLATES = [
             "retry_count": 3,
             "priority": 7
         }
+    },
+    {
+        "name": "Ollama Llama2",
+        "description": "本地部署的Llama2模型（通过Ollama）",
+        "model_type": ModelType.OLLAMA,
+        "request_format": RequestFormat.OPENAI_CHAT,
+        "default_config": {
+            "name": "Ollama Llama2",
+            "description": "本地部署的Llama2模型",
+            "model_type": ModelType.OLLAMA,
+            "api_endpoint": "http://localhost:11434/v1/chat/completions",
+            "model_name": "llama2",
+            "request_format": RequestFormat.OPENAI_CHAT,
+            "max_tokens": 2000,
+            "temperature": "0.7",
+            "timeout": 60,
+            "retry_count": 3,
+            "priority": 6,
+            "group_name": "本地模型",
+            "group_description": "本地部署的开源模型"
+        }
+    },
+    {
+        "name": "Ollama Mistral",
+        "description": "本地部署的Mistral模型（通过Ollama）",
+        "model_type": ModelType.OLLAMA,
+        "request_format": RequestFormat.OPENAI_CHAT,
+        "default_config": {
+            "name": "Ollama Mistral",
+            "description": "本地部署的Mistral模型",
+            "model_type": ModelType.OLLAMA,
+            "api_endpoint": "http://localhost:11434/v1/chat/completions",
+            "model_name": "mistral",
+            "request_format": RequestFormat.OPENAI_CHAT,
+            "max_tokens": 2000,
+            "temperature": "0.7",
+            "timeout": 60,
+            "retry_count": 3,
+            "priority": 6,
+            "group_name": "本地模型",
+            "group_description": "本地部署的开源模型"
+        }
+    },
+    {
+        "name": "自定义HTTP API",
+        "description": "自定义HTTP API接口配置模板",
+        "model_type": ModelType.CUSTOM_HTTP,
+        "request_format": RequestFormat.CUSTOM_JSON,
+        "default_config": {
+            "name": "自定义API模型",
+            "description": "自定义HTTP API接口",
+            "model_type": ModelType.CUSTOM_HTTP,
+            "api_endpoint": "http://your-api-endpoint.com/v1/chat",
+            "model_name": "custom-model",
+            "request_format": RequestFormat.CUSTOM_JSON,
+            "max_tokens": 2000,
+            "temperature": "0.7",
+            "timeout": 60,
+            "retry_count": 3,
+            "priority": 4,
+            "group_name": "自定义模型",
+            "group_description": "用户自定义配置的模型"
+        }
     }
 ]
+
+
+# 预设分组配置
+DEFAULT_MODEL_GROUPS = {
+    "OpenAI官方": {
+        "description": "OpenAI官方提供的模型",
+        "priority": 10,
+        "models": ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"]
+    },
+    "Claude系列": {
+        "description": "Anthropic Claude系列模型",
+        "priority": 9,
+        "models": ["claude-3-sonnet", "claude-3-opus", "claude-3-haiku"]
+    },
+    "本地模型": {
+        "description": "本地部署的开源模型",
+        "priority": 7,
+        "models": ["llama2", "mistral", "codellama"]
+    },
+    "自定义模型": {
+        "description": "用户自定义配置的模型",
+        "priority": 5,
+        "models": []
+    },
+    "国产大模型": {
+        "description": "国产大语言模型",
+        "priority": 8,
+        "models": ["文心一言", "通义千问", "ChatGLM"]
+    }
+}

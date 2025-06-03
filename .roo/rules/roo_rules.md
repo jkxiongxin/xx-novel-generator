@@ -1024,3 +1024,34 @@ attempt_completion
 switch_mode
 new_task
 fetch_instructions
+## 常见问题解决方案
+
+### SQLAlchemy 版本兼容性问题
+
+#### 问题描述
+在新版本的 SQLAlchemy 中，直接使用字符串 SQL 查询会报错：
+```
+Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+```
+
+#### 解决方案
+需要从 `sqlalchemy` 导入 `text` 函数，并将原始 SQL 字符串包装在 `text()` 中：
+
+```python
+# 错误写法
+db.execute("SELECT 1")
+
+# 正确写法
+from sqlalchemy import text
+db.execute(text("SELECT 1"))
+```
+
+#### 规范要求
+- 所有直接执行的 SQL 语句都必须使用 `text()` 包装
+- 在文件顶部导入：`from sqlalchemy import text`
+- 适用于所有 `.execute()` 调用中的字符串 SQL
+
+#### 修复记录
+- 文件：`backend/app/api/v1/generation.py`
+- 位置：第 211 行数据库连接检查
+- 修复时间：2025-06-02

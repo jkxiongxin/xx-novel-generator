@@ -1,0 +1,1220 @@
+INFO:     Will watch for changes in these directories: ['/Users/xiongxin/projects/ai-writer-design1/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [49335] using WatchFiles
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [49340]
+INFO:     Waiting for application startup.
+2025-06-02 12:07:23,043 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 12:07:23,043 - app.main - INFO - 数据库初始化完成
+2025-06-02 12:07:23,044 - app.main - INFO - 数据库连接正常
+2025-06-02 12:07:23,044 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 12:07:29,910 - app.main - INFO - 请求: GET http://localhost:8001/health
+2025-06-02 12:07:29,915 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49523 - "GET /health HTTP/1.1" 200 OK
+2025-06-02 12:08:02,761 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:08:02,770 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:08:02,778 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:08:02,780 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:08:02,813 - app.main - INFO - 响应: 200
+2025-06-02 12:08:02,813 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49711 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49710 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:08:02,866 - app.main - INFO - 响应: 200
+2025-06-02 12:08:02,866 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49713 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49712 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 12:08:03,135 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 12:08:03,135 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 12:08:03,136 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 12:08:03,137 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:49719 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:08:03,163 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49718 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 12:08:03,164 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49720 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:08:03,171 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: GET
+2025-06-02 12:08:03,171 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 12:08:03,172 - app.main - INFO - 响应: 403
+2025-06-02 12:08:03,172 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:49722 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 12:09:35,980 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 12:09:35,981 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:09:35,984 - app.main - INFO - 响应: 307
+2025-06-02 12:09:35,985 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:50464 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:09:35,989 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 12:09:35,990 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:09:35,991 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:09:35,991 - app.main - INFO - 响应: 400
+2025-06-02 12:09:35,992 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true'}
+INFO:     127.0.0.1:50466 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 400 Bad Request
+2025-06-02 12:10:25,362 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 12:10:25,363 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:10:25,377 - app.main - INFO - 响应: 307
+2025-06-02 12:10:25,377 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:50750 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:10:25,383 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 12:10:25,383 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:10:25,384 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:10:25,387 - app.main - INFO - 响应: 400
+2025-06-02 12:10:25,388 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true'}
+INFO:     127.0.0.1:50752 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 400 Bad Request
+2025-06-02 12:10:56,121 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 12:10:56,122 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:10:56,125 - app.main - INFO - 响应: 307
+2025-06-02 12:10:56,126 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:51034 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:10:56,129 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 12:10:56,129 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:10:56,129 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:10:56,130 - app.main - INFO - 响应: 400
+2025-06-02 12:10:56,130 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true'}
+INFO:     127.0.0.1:51036 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 400 Bad Request
+2025-06-02 12:11:47,346 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 12:11:47,347 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:11:47,350 - app.main - INFO - 响应: 307
+2025-06-02 12:11:47,350 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:51546 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:11:47,353 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 12:11:47,353 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:11:47,353 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:11:47,353 - app.main - INFO - 响应: 400
+2025-06-02 12:11:47,353 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true'}
+INFO:     127.0.0.1:51548 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 400 Bad Request
+2025-06-02 12:12:47,436 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:12:47,449 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51932 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:12:47,453 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:12:47,456 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51934 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:12:47,458 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:12:47,461 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51936 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:12:47,469 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:12:47,470 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51943 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:25,219 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:13:25,224 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 12:13:25,491 - app.main - INFO - 响应: 401
+2025-06-02 12:13:25,491 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52253 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+2025-06-02 12:13:25,638 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:25,639 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52266 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:25,642 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:25,642 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52268 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:34,120 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:34,121 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52318 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:34,125 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:34,127 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52320 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:34,134 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:34,136 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52322 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:34,138 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:34,140 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52324 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:45,422 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:13:45,423 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 12:13:45,632 - app.main - INFO - 响应: 401
+2025-06-02 12:13:45,632 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52415 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+2025-06-02 12:13:45,762 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:45,763 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52428 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:45,765 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:45,765 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52430 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:49,597 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:49,599 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52454 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:13:49,603 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:13:49,607 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52457 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:14:55,768 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:14:55,771 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 12:14:55,990 - app.main - INFO - 响应: 200
+2025-06-02 12:14:55,990 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52910 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2025-06-02 12:14:56,067 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 12:14:56,067 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:14:56,072 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52924 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:14:56,083 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52923 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:14:56,086 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:14:56,086 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52927 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:15:09,406 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:15:09,407 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:15:09,407 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 12:15:09,410 - app.main - INFO - 响应: 200
+2025-06-02 12:15:09,411 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52997 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52998 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:15:09,415 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52999 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:15:15,059 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 12:15:15,060 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 12:15:15,060 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 12:15:15,061 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:53034 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:15:15,072 - app.main - INFO - 响应: 200
+2025-06-02 12:15:15,072 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:53033 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53035 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:15:15,086 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: GET
+2025-06-02 12:15:15,086 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 12:15:15,087 - app.main - INFO - 响应: 403
+2025-06-02 12:15:15,087 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:53037 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 12:15:45,819 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:15:45,821 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:15:45,823 - app.main - INFO - 响应: 307
+2025-06-02 12:15:45,824 - app.main - INFO - CORS响应头: {'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:53355 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:15:45,831 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: OPTIONS
+2025-06-02 12:15:45,831 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://192.168.16.108:5173', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'cross-site', 'sec-fetch-dest': 'empty', 'referer': 'http://192.168.16.108:5173/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:15:45,832 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:15:45,832 - app.main - INFO - 响应: 400
+2025-06-02 12:15:45,832 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true'}
+INFO:     127.0.0.1:53357 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 400 Bad Request
+WARNING:  WatchFiles detected changes in 'app/core/config.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 12:16:16,519 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [49340]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [50371]
+INFO:     Waiting for application startup.
+2025-06-02 12:16:17,571 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 12:16:17,572 - app.main - INFO - 数据库初始化完成
+2025-06-02 12:16:17,572 - app.main - INFO - 数据库连接正常
+2025-06-02 12:16:17,572 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 12:16:42,947 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:16:42,948 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:16:42,950 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:16:42,957 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54716 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:16:42,960 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54717 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:16:42,966 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:16:43,038 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54718 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 12:16:43,042 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54719 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 12:16:43,342 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 12:16:43,346 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 12:16:43,346 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 12:16:43,347 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:54737 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:16:43,367 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: GET
+2025-06-02 12:16:43,367 - app.main - INFO - 响应: 200
+2025-06-02 12:16:43,367 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+INFO:     127.0.0.1:54733 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 12:16:43,368 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54736 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:16:43,370 - app.main - INFO - 响应: 403
+2025-06-02 12:16:43,371 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:54740 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 12:17:27,539 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:17:27,540 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 12:17:27,543 - app.main - INFO - 响应: 307
+2025-06-02 12:17:27,543 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55713 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 12:17:27,548 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: OPTIONS
+2025-06-02 12:17:27,548 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://192.168.16.108:5173', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'cross-site', 'sec-fetch-dest': 'empty', 'referer': 'http://192.168.16.108:5173/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 12:17:27,549 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:17:27,549 - app.main - INFO - 响应: 200
+2025-06-02 12:17:27,549 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://192.168.16.108:5173'}
+INFO:     127.0.0.1:55715 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 12:17:27,553 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:17:27,553 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 12:17:27,562 - app.main - INFO - 响应: 403
+2025-06-02 12:17:27,562 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55715 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 12:17:42,855 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:42,857 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:42,858 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 12:17:42,858 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 12:17:42,877 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55984 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:17:42,879 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55986 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:17:42,894 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55989 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 200 OK
+2025-06-02 12:17:42,896 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55988 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 12:17:44,565 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:44,565 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:44,566 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:17:44,566 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 12:17:44,568 - app.main - INFO - 响应: 200
+2025-06-02 12:17:44,571 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56047 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56048 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:17:44,578 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56049 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 12:17:44,579 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56050 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 12:17:44,594 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 12:17:44,594 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 12:17:44,595 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:44,595 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:17:44,599 - app.main - INFO - 响应: 200
+2025-06-02 12:17:44,599 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56058 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56060 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:17:44,603 - app.main - INFO - 响应: 200
+2025-06-02 12:17:44,603 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56055 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'fix_auth_403.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 12:19:39,384 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50371]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [50744]
+INFO:     Waiting for application startup.
+2025-06-02 12:19:41,108 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 12:19:41,108 - app.main - INFO - 数据库初始化完成
+2025-06-02 12:19:41,109 - app.main - INFO - 数据库连接正常
+2025-06-02 12:19:41,109 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'fix_auth_403.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 12:19:48,933 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50744]
+WARNING:  WatchFiles detected changes in 'fix_auth_403.py'. Reloading...
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [50776]
+INFO:     Waiting for application startup.
+2025-06-02 12:19:50,365 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 12:19:50,366 - app.main - INFO - 数据库初始化完成
+2025-06-02 12:19:50,366 - app.main - INFO - 数据库连接正常
+2025-06-02 12:19:50,366 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [50780]
+INFO:     Waiting for application startup.
+2025-06-02 12:19:51,029 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 12:19:51,030 - app.main - INFO - 数据库初始化完成
+2025-06-02 12:19:51,030 - app.main - INFO - 数据库连接正常
+2025-06-02 12:19:51,030 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 12:20:14,909 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 12:20:14,910 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/demo/novel-name
+2025-06-02 12:20:14,939 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 12:20:14,939 - app.api.v1.demo - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 12:20:14,940 - app.main - INFO - 响应: 200
+2025-06-02 12:20:14,940 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57174 - "POST /api/v1/demo/novel-name HTTP/1.1" 200 OK
+2025-06-02 12:22:44,586 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:22:44,605 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58111 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:27:44,576 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:27:44,587 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60070 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:32:44,589 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:32:44,624 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:64140 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:37:44,506 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:37:44,515 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:49648 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:42:44,511 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:42:44,528 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51656 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:47:45,296 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:47:45,377 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55881 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:53:09,187 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:53:09,197 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58352 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 12:58:09,175 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 12:58:09,183 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60653 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:03:09,174 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:03:09,184 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:64550 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:08:09,180 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:08:09,191 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:50430 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:13:09,167 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:13:09,176 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52532 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:18:09,173 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:18:09,183 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:56036 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:23:09,179 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:23:09,186 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58016 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:28:09,189 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:28:09,201 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59819 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:33:09,204 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:33:09,223 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:63341 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:38:09,248 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:38:09,269 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:65463 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:43:09,237 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:43:09,249 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51408 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:09,404 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:44:09,407 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:09,456 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 13:44:09,456 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 13:44:09,527 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51871 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:09,565 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:09,992 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51877 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:10,005 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:51875 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 401 Unauthorized
+2025-06-02 13:44:10,029 - app.main - INFO - 响应: 401
+2025-06-02 13:44:10,050 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:51870 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51874 - "GET /api/v1/novels/stats/overview HTTP/1.1" 401 Unauthorized
+2025-06-02 13:44:10,165 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:10,172 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:44:10,176 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51884 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:10,194 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:51886 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2025-06-02 13:44:10,204 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:10,206 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51889 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:10,374 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:10,375 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51901 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:10,378 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:10,378 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51903 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:21,048 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:44:21,058 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 13:44:21,495 - app.main - INFO - 响应: 401
+2025-06-02 13:44:21,495 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:51979 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+2025-06-02 13:44:21,879 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:21,883 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51988 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:21,890 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:21,895 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:51990 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:34,492 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:44:34,493 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 13:44:34,844 - app.main - INFO - 响应: 200
+2025-06-02 13:44:34,844 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52066 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2025-06-02 13:44:35,024 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 13:44:35,024 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:35,043 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52079 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:35,050 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52078 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:44:35,058 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:44:35,059 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52082 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:44:40,973 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:44:40,973 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:44:40,977 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:44:40,979 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:52123 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:44:41,008 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: GET
+2025-06-02 13:44:41,008 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:44:41,025 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52121 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:44:41,025 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:52122 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:44:41,026 - app.main - INFO - 响应: 403
+2025-06-02 13:44:41,026 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52125 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:45:24,179 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:45:24,181 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:45:24,186 - app.main - INFO - 响应: 307
+2025-06-02 13:45:24,187 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52368 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:45:24,190 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 13:45:24,190 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 13:45:24,191 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:45:24,192 - app.main - INFO - 响应: 200
+2025-06-02 13:45:24,192 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://localhost:5175'}
+INFO:     127.0.0.1:52370 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 13:45:24,194 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:45:24,194 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:45:24,209 - app.main - INFO - 响应: 403
+2025-06-02 13:45:24,209 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52370 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:45:27,712 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:45:27,713 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:45:27,714 - app.main - INFO - 响应: 307
+2025-06-02 13:45:27,714 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52386 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:45:27,720 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 13:45:27,720 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 13:45:27,720 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:45:27,721 - app.main - INFO - 响应: 200
+2025-06-02 13:45:27,721 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://localhost:5175'}
+INFO:     127.0.0.1:52388 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 13:45:27,723 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:45:27,730 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:45:27,734 - app.main - INFO - 响应: 403
+2025-06-02 13:45:27,734 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52388 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:48:01,846 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:48:01,856 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:48:01,859 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:48:01,890 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:54968 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:48:01,927 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54967 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:48:01,928 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54966 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:48:02,384 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: GET
+2025-06-02 13:48:02,384 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:48:02,433 - app.main - INFO - 响应: 403
+2025-06-02 13:48:02,439 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:54972 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:48:09,238 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:48:09,256 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55074 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:48:31,047 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:48:31,048 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:48:31,051 - app.main - INFO - 响应: 307
+2025-06-02 13:48:31,053 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55231 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:48:31,057 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 13:48:31,058 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 13:48:31,058 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:48:31,059 - app.main - INFO - 响应: 200
+2025-06-02 13:48:31,059 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://localhost:5175'}
+INFO:     127.0.0.1:55233 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 13:48:31,061 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:48:31,061 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:48:31,069 - app.main - INFO - 响应: 403
+2025-06-02 13:48:31,070 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55233 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:49:01,480 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:01,496 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:01,503 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:01,504 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:01,512 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55398 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:01,514 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55399 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:01,516 - app.main - INFO - 响应: 200
+2025-06-02 13:49:01,516 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55396 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55397 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:01,944 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:49:01,944 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:49:01,945 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:49:01,945 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:55412 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:49:01,949 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55411 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:49:01,950 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55413 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:49:01,986 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: GET
+2025-06-02 13:49:01,987 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:49:01,988 - app.main - INFO - 响应: 403
+2025-06-02 13:49:01,989 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55416 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:49:08,433 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:08,439 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:08,461 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 13:49:08,461 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 13:49:08,465 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55487 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:08,467 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55486 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:08,484 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:08,484 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:08,484 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55490 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:49:08,486 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55491 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 200 OK
+2025-06-02 13:49:08,488 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55493 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:08,489 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55495 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:08,490 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:08,491 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55498 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:08,492 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:08,493 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55501 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:15,109 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:15,142 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55543 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:16,832 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:16,838 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:49:16,857 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:16,916 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:49:17,000 - app.main - INFO - 响应: 200
+2025-06-02 13:49:17,001 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55575 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55574 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:49:17,004 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55572 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:17,005 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55573 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:49:17,193 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:49:17,196 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:49:17,199 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:49:17,203 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:55584 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:49:17,237 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: GET
+2025-06-02 13:49:17,238 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:49:17,239 - app.main - INFO - 响应: 200
+2025-06-02 13:49:17,240 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:55582 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55583 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:49:17,246 - app.main - INFO - 响应: 403
+2025-06-02 13:49:17,247 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55586 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:49:50,006 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:49:50,007 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:49:50,013 - app.main - INFO - 响应: 307
+2025-06-02 13:49:50,013 - app.main - INFO - CORS响应头: {'access-control-allow-origin': 'http://localhost:5175', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55844 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:49:50,019 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: OPTIONS
+2025-06-02 13:49:50,021 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://localhost:5175', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:5175/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 13:49:50,022 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:49:50,022 - app.main - INFO - 响应: 200
+2025-06-02 13:49:50,023 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://localhost:5175'}
+INFO:     127.0.0.1:55846 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 13:49:50,029 - app.main - INFO - CORS请求 - Origin: http://localhost:5175, Method: POST
+2025-06-02 13:49:50,029 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:49:50,045 - app.main - INFO - 响应: 403
+2025-06-02 13:49:50,045 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:55846 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:53:09,231 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:09,249 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57253 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:11,612 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:53:11,612 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:11,639 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 13:53:11,640 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 13:53:11,669 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57287 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:11,671 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:57286 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2025-06-02 13:53:11,682 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:57290 - "GET /api/v1/novels/stats/overview HTTP/1.1" 401 Unauthorized
+2025-06-02 13:53:11,682 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:57291 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 401 Unauthorized
+2025-06-02 13:53:11,690 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:11,690 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:53:11,694 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57294 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:11,696 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:57295 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2025-06-02 13:53:11,699 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:11,703 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57298 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:11,707 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:11,709 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57301 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:12,165 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:12,166 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57310 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:12,170 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:12,172 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57312 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:22,225 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 13:53:22,227 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 13:53:22,475 - app.main - INFO - 响应: 200
+2025-06-02 13:53:22,475 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57370 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2025-06-02 13:53:22,501 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:53:22,510 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57377 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:53:22,520 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 13:53:22,522 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:22,525 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57383 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:22,526 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57381 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:53:22,528 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:53:22,528 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57389 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:53:31,501 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:53:31,516 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:53:31,521 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:53:31,522 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:57438 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:53:31,531 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: GET
+2025-06-02 13:53:31,532 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:53:31,541 - app.main - INFO - 响应: 200
+2025-06-02 13:53:31,542 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57436 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57437 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:53:31,543 - app.main - INFO - 响应: 403
+2025-06-02 13:53:31,543 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57440 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:53:54,799 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 13:53:54,799 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:53:54,800 - app.main - INFO - 响应: 307
+2025-06-02 13:53:54,801 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57552 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:53:54,805 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 13:53:54,805 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:53:54,806 - app.main - INFO - 响应: 403
+2025-06-02 13:53:54,807 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57554 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:53:58,208 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 13:53:58,208 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 13:53:58,210 - app.main - INFO - 响应: 307
+2025-06-02 13:53:58,210 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57570 - "POST /api/v1/ai-configs HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:53:58,214 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: OPTIONS
+2025-06-02 13:53:58,215 - app.main - INFO - 预检请求 - Headers: {'host': 'localhost:8001', 'connection': 'keep-alive', 'pragma': 'no-cache', 'cache-control': 'no-cache', 'accept': '*/*', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type', 'origin': 'http://192.168.16.108:5173', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'cross-site', 'sec-fetch-dest': 'empty', 'referer': 'http://192.168.16.108:5173/', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8'}
+2025-06-02 13:53:58,215 - app.main - INFO - 请求: OPTIONS http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:53:58,215 - app.main - INFO - 响应: 200
+2025-06-02 13:53:58,216 - app.main - INFO - CORS响应头: {'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH', 'access-control-max-age': '86400', 'access-control-allow-headers': 'Accept, Accept-Language, Authorization, Content-Language, Content-Type, X-CSRF-Token, X-Process-Time, X-Requested-With', 'access-control-allow-credentials': 'true', 'access-control-allow-origin': 'http://192.168.16.108:5173'}
+INFO:     127.0.0.1:57572 - "OPTIONS /api/v1/ai-configs/ HTTP/1.1" 200 OK
+2025-06-02 13:53:58,217 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5173, Method: POST
+2025-06-02 13:53:58,217 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs/
+2025-06-02 13:53:58,222 - app.main - INFO - 响应: 403
+2025-06-02 13:53:58,222 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:57572 - "POST /api/v1/ai-configs/ HTTP/1.1" 403 Forbidden
+2025-06-02 13:55:00,234 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:55:00,239 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:55:00,266 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57957 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:55:00,276 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:57958 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:55:09,472 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 13:55:09,472 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/auth/login
+2025-06-02 13:55:09,687 - app.main - INFO - 响应: 200
+2025-06-02 13:55:09,687 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:58011 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2025-06-02 13:55:09,978 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:55:09,979 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:55:09,980 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:55:09,983 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:58025 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 307 Temporary Redirect
+2025-06-02 13:55:09,992 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: GET
+2025-06-02 13:55:09,993 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:55:09,994 - app.main - INFO - 响应: 200
+2025-06-02 13:55:09,994 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58026 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58027 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:55:09,995 - app.main - INFO - 响应: 403
+2025-06-02 13:55:09,996 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:58029 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+WARNING:  WatchFiles detected changes in 'app/api/v1/ai_configs.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 13:56:38,536 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50780]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60225]
+INFO:     Waiting for application startup.
+2025-06-02 13:56:41,163 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 13:56:41,175 - app.main - INFO - 数据库初始化完成
+2025-06-02 13:56:41,176 - app.main - INFO - 数据库连接正常
+2025-06-02 13:56:41,176 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 13:56:50,704 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:56:50,708 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:56:50,715 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:56:50,716 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:56:50,726 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58912 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:56:50,726 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58913 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:56:50,782 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58914 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:56:50,881 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58915 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:56:51,033 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:56:51,034 - app.main - INFO - 响应: 405
+INFO:     127.0.0.1:58925 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 405 Method Not Allowed
+2025-06-02 13:56:51,035 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:56:51,036 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:56:51,060 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58927 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:56:51,063 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:58929 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:58:37,190 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:58:37,200 - app.main - INFO - 响应: 403
+INFO:     127.0.0.1:59528 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:58:41,474 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:58:41,496 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59560 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:58:46,890 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:58:46,891 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:58:46,891 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:58:46,892 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:58:46,907 - app.main - INFO - 响应: 200
+2025-06-02 13:58:46,907 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59603 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59604 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:58:46,909 - app.main - INFO - 响应: 200
+2025-06-02 13:58:46,909 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59601 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59602 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:58:47,207 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:58:47,208 - app.main - INFO - 响应: 405
+2025-06-02 13:58:47,208 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+INFO:     127.0.0.1:59612 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 405 Method Not Allowed
+2025-06-02 13:58:47,218 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:58:47,219 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59614 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:58:47,224 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59616 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 13:58:57,366 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/?page=1&page_size=5
+2025-06-02 13:58:57,376 - app.main - INFO - 响应: 403
+INFO:     127.0.0.1:59675 - "GET /api/v1/ai-configs/?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:59:17,433 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:59:17,443 - app.main - INFO - 响应: 405
+INFO:     127.0.0.1:59808 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 405 Method Not Allowed
+WARNING:  WatchFiles detected changes in 'app/api/v1/ai_configs.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 13:59:32,115 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60225]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60468]
+INFO:     Waiting for application startup.
+2025-06-02 13:59:33,034 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 13:59:33,035 - app.main - INFO - 数据库初始化完成
+2025-06-02 13:59:33,035 - app.main - INFO - 数据库连接正常
+2025-06-02 13:59:33,036 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 13:59:42,735 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:59:42,745 - app.main - INFO - 响应: 403
+INFO:     127.0.0.1:59951 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 403 Forbidden
+2025-06-02 13:59:45,127 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:59:45,188 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59965 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:59:46,683 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:59:46,686 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 13:59:46,686 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:59:46,687 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 13:59:46,695 - app.main - INFO - 响应: 200
+2025-06-02 13:59:46,695 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59993 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59994 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 13:59:46,698 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59991 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:59:46,698 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:59992 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 13:59:47,016 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 13:59:47,017 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 13:59:47,017 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 13:59:47,037 - app.main - INFO - 响应: 200
+2025-06-02 13:59:47,038 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60004 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60005 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 13:59:47,038 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60006 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 14:00:46,021 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:00:46,023 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/ai-configs
+2025-06-02 14:00:46,090 - app.api.v1.ai_configs - INFO - 用户 2 创建AI配置: hajimi
+2025-06-02 14:00:46,091 - app.main - INFO - 响应: 200
+2025-06-02 14:00:46,091 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:60334 - "POST /api/v1/ai-configs HTTP/1.1" 200 OK
+2025-06-02 14:00:46,111 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 14:00:46,111 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 14:00:46,111 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 14:00:46,119 - app.main - INFO - 响应: 200
+2025-06-02 14:00:46,119 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60344 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60345 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 14:00:46,120 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60346 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 200 OK
+2025-06-02 14:00:57,796 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: PATCH
+2025-06-02 14:00:57,797 - app.main - INFO - 请求: PATCH http://localhost:8001/api/v1/ai-configs/1/set-group-default
+2025-06-02 14:00:57,835 - app.api.v1.ai_configs - INFO - 用户 2 设置分组默认AI配置: hajimi
+2025-06-02 14:00:57,836 - app.main - INFO - 响应: 200
+2025-06-02 14:00:57,837 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:60434 - "PATCH /api/v1/ai-configs/1/set-group-default HTTP/1.1" 200 OK
+2025-06-02 14:00:57,852 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 14:00:57,852 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 14:00:57,853 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 14:00:57,859 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60442 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 14:00:57,859 - app.main - INFO - 响应: 200
+2025-06-02 14:00:57,859 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60444 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60443 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 14:01:07,363 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: PATCH
+2025-06-02 14:01:07,365 - app.main - INFO - 请求: PATCH http://localhost:8001/api/v1/ai-configs/1/toggle
+2025-06-02 14:01:07,380 - app.api.v1.ai_configs - INFO - 用户 2 禁用AI配置: hajimi
+2025-06-02 14:01:07,384 - app.main - INFO - 响应: 200
+2025-06-02 14:01:07,385 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:60621 - "PATCH /api/v1/ai-configs/1/toggle HTTP/1.1" 200 OK
+2025-06-02 14:01:07,406 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 14:01:07,406 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 14:01:07,407 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 14:01:07,421 - app.main - INFO - 响应: 200
+2025-06-02 14:01:07,421 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60630 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60629 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 200 OK
+2025-06-02 14:01:07,422 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60631 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+2025-06-02 14:01:08,351 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: PATCH
+2025-06-02 14:01:08,352 - app.main - INFO - 请求: PATCH http://localhost:8001/api/v1/ai-configs/1/toggle
+2025-06-02 14:01:08,354 - app.api.v1.ai_configs - INFO - 用户 2 启用AI配置: hajimi
+2025-06-02 14:01:08,355 - app.main - INFO - 响应: 200
+2025-06-02 14:01:08,355 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:60665 - "PATCH /api/v1/ai-configs/1/toggle HTTP/1.1" 200 OK
+2025-06-02 14:01:08,365 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/stats/overview
+2025-06-02 14:01:08,366 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs/groups/list
+2025-06-02 14:01:08,366 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/ai-configs?page=1&page_size=5
+2025-06-02 14:01:08,371 - app.main - INFO - 响应: 200
+2025-06-02 14:01:08,372 - app.main - INFO - 响应: 200
+2025-06-02 14:01:08,372 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:60673 - "GET /api/v1/ai-configs/groups/list HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60674 - "GET /api/v1/ai-configs?page=1&page_size=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60671 - "GET /api/v1/ai-configs/stats/overview HTTP/1.1" 200 OK
+2025-06-02 14:01:22,863 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 14:01:22,878 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels?page=1&page_size=20&sort_by=updated_at&sort_order=desc
+2025-06-02 14:01:22,903 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:61072 - "GET /api/v1/novels?page=1&page_size=20&sort_by=updated_at&sort_order=desc HTTP/1.1" 307 Temporary Redirect
+2025-06-02 14:01:22,940 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: GET
+2025-06-02 14:01:22,940 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/?page=1&page_size=20&sort_by=updated_at&sort_order=desc
+2025-06-02 14:01:22,944 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61071 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 14:01:22,945 - app.main - INFO - 响应: 403
+2025-06-02 14:01:22,945 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:61074 - "GET /api/v1/novels/?page=1&page_size=20&sort_by=updated_at&sort_order=desc HTTP/1.1" 403 Forbidden
+2025-06-02 14:01:25,051 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 14:01:25,052 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:01:25,052 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:01:25,052 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/recent?limit=6
+2025-06-02 14:01:25,060 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61102 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:01:25,062 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61103 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:01:25,067 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61101 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 14:01:25,068 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61104 - "GET /api/v1/novels/recent?limit=6 HTTP/1.1" 200 OK
+2025-06-02 14:01:36,815 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/stats/overview
+2025-06-02 14:01:36,817 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels?page=1&page_size=20&sort_by=updated_at&sort_order=desc
+2025-06-02 14:01:36,818 - app.main - INFO - 响应: 307
+INFO:     127.0.0.1:61379 - "GET /api/v1/novels?page=1&page_size=20&sort_by=updated_at&sort_order=desc HTTP/1.1" 307 Temporary Redirect
+2025-06-02 14:01:36,823 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:61377 - "GET /api/v1/novels/stats/overview HTTP/1.1" 200 OK
+2025-06-02 14:01:36,837 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: GET
+2025-06-02 14:01:36,837 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/novels/?page=1&page_size=20&sort_by=updated_at&sort_order=desc
+2025-06-02 14:01:36,838 - app.main - INFO - 响应: 403
+2025-06-02 14:01:36,838 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:61382 - "GET /api/v1/novels/?page=1&page_size=20&sort_by=updated_at&sort_order=desc HTTP/1.1" 403 Forbidden
+2025-06-02 14:01:42,686 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:01:42,688 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/demo/novel-name
+2025-06-02 14:01:42,707 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 14:01:42,707 - app.api.v1.demo - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 14:01:42,708 - app.main - INFO - 响应: 200
+2025-06-02 14:01:42,708 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:61521 - "POST /api/v1/demo/novel-name HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/api/v1/novels.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:02:16,441 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60468]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60767]
+INFO:     Waiting for application startup.
+2025-06-02 14:02:17,395 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:02:17,395 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:02:17,396 - app.main - INFO - 数据库连接正常
+2025-06-02 14:02:17,396 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/v1/novels.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:02:20,945 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60767]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60788]
+INFO:     Waiting for application startup.
+2025-06-02 14:02:21,606 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:02:21,607 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:02:21,607 - app.main - INFO - 数据库连接正常
+2025-06-02 14:02:21,607 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/v1/novels.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:02:28,778 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60788]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60802]
+INFO:     Waiting for application startup.
+2025-06-02 14:02:29,493 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:02:29,493 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:02:29,494 - app.main - INFO - 数据库连接正常
+2025-06-02 14:02:29,494 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 14:02:33,847 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:02:33,852 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:02:33,854 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 14:02:33,855 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 14:02:33,860 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62652 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:02:33,861 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62653 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:02:33,916 - app.main - INFO - 响应: 200
+2025-06-02 14:02:33,916 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62654 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62655 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 14:02:37,277 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:02:37,277 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/demo/novel-name
+2025-06-02 14:02:37,281 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 14:02:37,281 - app.api.v1.demo - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 14:02:37,282 - app.main - INFO - 响应: 200
+2025-06-02 14:02:37,282 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:62724 - "POST /api/v1/demo/novel-name HTTP/1.1" 200 OK
+2025-06-02 14:02:45,088 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 14:02:45,091 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/auth/me
+2025-06-02 14:02:45,092 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:02:45,095 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:02:45,110 - app.main - INFO - 响应: 200
+2025-06-02 14:02:45,110 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62867 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62866 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:02:45,111 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62864 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 14:02:45,111 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:62865 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2025-06-02 14:02:48,830 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:02:48,831 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/demo/novel-name
+2025-06-02 14:02:48,833 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 14:02:48,833 - app.api.v1.demo - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 14:02:48,834 - app.main - INFO - 响应: 200
+2025-06-02 14:02:48,834 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:62929 - "POST /api/v1/demo/novel-name HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:03:45,156 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60802]
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60907]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:46,352 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:46,353 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:46,353 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:46,353 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60922]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:47,000 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:47,000 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:47,001 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:47,001 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60923]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:47,575 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:47,575 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:47,576 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:47,576 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:03:50,203 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60923]
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60935]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:50,887 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:50,888 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:50,888 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:50,888 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60941]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:51,750 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:51,751 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:51,751 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:51,751 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [60946]
+INFO:     Waiting for application startup.
+2025-06-02 14:03:52,472 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:03:52,472 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:03:52,472 - app.main - INFO - 数据库连接正常
+2025-06-02 14:03:52,473 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 14:03:57,729 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:03:57,739 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/demo/novel-name
+2025-06-02 14:03:57,743 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 14:03:57,743 - app.api.v1.demo - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 14:03:57,743 - app.main - INFO - 响应: 200
+2025-06-02 14:03:57,744 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:63436 - "POST /api/v1/demo/novel-name HTTP/1.1" 200 OK
+2025-06-02 14:05:22,583 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:05:22,585 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/generation/novel-name
+2025-06-02 14:05:22,643 - app.api.v1.generation - INFO - 用户 xiongxin 请求生成小说名
+2025-06-02 14:05:22,643 - app.services.generation_service - ERROR - 生成请求验证失败: '>' not supported between instances of 'NoneType' and 'int'
+2025-06-02 14:05:22,643 - app.api.v1.generation - ERROR - 小说名生成异常: 400: 请求参数验证失败
+2025-06-02 14:05:22,644 - app.main - INFO - 响应: 500
+2025-06-02 14:05:22,644 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:64170 - "POST /api/v1/generation/novel-name HTTP/1.1" 500 Internal Server Error
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:07:12,958 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60946]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [61360]
+INFO:     Waiting for application startup.
+2025-06-02 14:07:14,451 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:07:14,452 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:07:14,452 - app.main - INFO - 数据库连接正常
+2025-06-02 14:07:14,452 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:07:20,617 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61360]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [61412]
+INFO:     Waiting for application startup.
+2025-06-02 14:07:21,456 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:07:21,456 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:07:21,457 - app.main - INFO - 数据库连接正常
+2025-06-02 14:07:21,457 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:07:27,434 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61412]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [61443]
+INFO:     Waiting for application startup.
+2025-06-02 14:07:28,471 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:07:28,471 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:07:28,472 - app.main - INFO - 数据库连接正常
+2025-06-02 14:07:28,472 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:07:33,742 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61443]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [61484]
+INFO:     Waiting for application startup.
+2025-06-02 14:07:34,692 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:07:34,692 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:07:34,693 - app.main - INFO - 数据库连接正常
+2025-06-02 14:07:34,693 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 14:07:45,128 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:07:45,134 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:64998 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+2025-06-02 14:07:51,485 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/generation/novel-name
+2025-06-02 14:07:51,492 - app.main - INFO - 响应: 401
+INFO:     127.0.0.1:65049 - "POST /api/v1/generation/novel-name HTTP/1.1" 401 Unauthorized
+2025-06-02 14:07:51,789 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:07:51,789 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/generation/novel-name
+2025-06-02 14:07:51,873 - app.api.v1.generation - INFO - 用户 xiongxin 请求生成小说名
+2025-06-02 14:07:51,873 - app.services.generation_service - ERROR - 小说名生成失败: AI服务当前不可用
+2025-06-02 14:07:51,873 - app.api.v1.generation - ERROR - 小说名生成失败: 小说名生成失败: AI服务当前不可用
+2025-06-02 14:07:51,873 - app.main - INFO - 响应: 503
+2025-06-02 14:07:51,874 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:65056 - "POST /api/v1/generation/novel-name HTTP/1.1" 503 Service Unavailable
+2025-06-02 14:12:45,078 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:12:45,086 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:50561 - "GET /api/v1/generation/status HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:13:09,806 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61484]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [62062]
+INFO:     Waiting for application startup.
+2025-06-02 14:13:10,985 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:13:10,986 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:13:10,987 - app.main - INFO - 数据库连接正常
+2025-06-02 14:13:10,987 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/generation_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:13:11,190 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [62062]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [62072]
+INFO:     Waiting for application startup.
+2025-06-02 14:13:11,898 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:13:11,898 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:13:11,899 - app.main - INFO - 数据库连接正常
+2025-06-02 14:13:11,899 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 14:13:15,308 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:13:15,308 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/generation/novel-name
+2025-06-02 14:13:15,342 - app.api.v1.generation - INFO - 用户 xiongxin 请求生成小说名
+2025-06-02 14:13:15,342 - app.services.generation_service - INFO - 小说名生成开始: {'user_input': '请为小说生成标题', 'max_tokens': None, 'temperature': None, 'genre': None, 'keywords': None, 'style': None}, 当前用户 None
+2025-06-02 14:13:15,342 - app.services.generation_service - ERROR - 小说名生成失败: AI服务当前不可用
+2025-06-02 14:13:15,342 - app.api.v1.generation - ERROR - 小说名生成失败: 小说名生成失败: AI服务当前不可用
+2025-06-02 14:13:15,343 - app.main - INFO - 响应: 503
+2025-06-02 14:13:15,343 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:50914 - "POST /api/v1/generation/novel-name HTTP/1.1" 503 Service Unavailable
+WARNING:  WatchFiles detected changes in 'app/api/v1/generation.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-06-02 14:16:28,570 - app.main - INFO - 正在关闭服务...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [62072]
+OpenAI API Key未配置，跳过OpenAI适配器初始化
+INFO:     Started server process [62394]
+INFO:     Waiting for application startup.
+2025-06-02 14:16:29,567 - app.main - INFO - 正在启动AI智能小说创作平台后端服务...
+2025-06-02 14:16:29,568 - app.main - INFO - 数据库初始化完成
+2025-06-02 14:16:29,569 - app.main - INFO - 数据库连接正常
+2025-06-02 14:16:29,569 - app.main - INFO - 服务启动完成，运行在 0.0.0.0:8000
+INFO:     Application startup complete.
+2025-06-02 14:16:31,718 - app.main - INFO - CORS请求 - Origin: http://192.168.16.108:5174, Method: POST
+2025-06-02 14:16:31,719 - app.main - INFO - 请求: POST http://localhost:8001/api/v1/generation/novel-name
+2025-06-02 14:16:31,763 - app.api.v1.generation - INFO - 用户 xiongxin 请求生成小说名
+2025-06-02 14:16:31,765 - app.services.generation_service - INFO - 小说名生成开始: {'user_input': '请为小说生成标题', 'max_tokens': None, 'temperature': None, 'genre': None, 'keywords': None, 'style': None}, 当前用户 2
+2025-06-02 14:16:31,765 - app.services.generation_service - ERROR - 小说名生成失败: AI服务当前不可用
+2025-06-02 14:16:31,786 - app.api.v1.generation - ERROR - 小说名生成失败: 小说名生成失败: AI服务当前不可用
+2025-06-02 14:16:31,787 - app.main - INFO - 响应: 503
+2025-06-02 14:16:31,796 - app.main - INFO - CORS响应头: {'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'X-Process-Time, X-Total-Count'}
+INFO:     127.0.0.1:52652 - "POST /api/v1/generation/novel-name HTTP/1.1" 503 Service Unavailable
+2025-06-02 14:18:09,186 - app.main - INFO - 请求: GET http://localhost:8001/api/v1/generation/status
+2025-06-02 14:18:09,194 - app.main - INFO - 响应: 200
+INFO:     127.0.0.1:54475 - "GET /api/v1/generation/status HTTP/1.1" 200 OK

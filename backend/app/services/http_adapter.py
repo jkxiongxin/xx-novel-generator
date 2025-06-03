@@ -261,7 +261,8 @@ class HTTPAdapter(AIModelAdapter):
         # 在提示词中添加格式说明
         format_instruction = f"\n\n请严格按照以下JSON格式返回结果，不要添加任何额外的文字说明：\n{json.dumps(response_format, ensure_ascii=False, indent=2)}"
         full_prompt = prompt + format_instruction
-        
+
+        import re
         # 生成文本
         response_text = await self.generate_text(
             full_prompt,
@@ -269,10 +270,22 @@ class HTTPAdapter(AIModelAdapter):
             temperature=temperature,
             **kwargs
         )
-        
+
+        logger.info(f"生成的响应文本: {response_text}")
+
+        # 过滤掉<think>...</think>内容
+        response_text = re.sub(r"<think>.*?</think>", "", response_text, flags=re.DOTALL | re.IGNORECASE)
+
+        # 提取被```json ... ```包裹的内容
+        match = re.search(r"```json\s*(.*?)\s*```", response_text, re.DOTALL | re.IGNORECASE)
+        if match:
+            json_str = match.group(1)
+        else:
+            json_str = response_text
+
         # 尝试解析JSON
         try:
-            return json.loads(response_text)
+            return json.loads(json_str)
         except json.JSONDecodeError:
             logger.warning(f"无法解析为JSON格式，返回原始文本: {response_text}")
             return {"content": response_text, "raw_response": response_text}
@@ -280,6 +293,7 @@ class HTTPAdapter(AIModelAdapter):
     async def test_connection(self, test_prompt: str = "你好") -> Dict[str, Any]:
         """测试连接"""
         import time
+        import re
         
         start_time = time.time()
         

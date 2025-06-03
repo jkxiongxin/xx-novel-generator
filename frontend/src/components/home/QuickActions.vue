@@ -145,74 +145,12 @@
         </div>
       </div>
       
-      <!-- 快速创建对话框 -->
-      <el-dialog
-        v-model="showQuickCreateDialog"
-        title="快速创建小说"
-        width="500px"
-        :before-close="handleDialogClose"
-      >
-        <el-form
-          :model="quickCreateForm"
-          :rules="quickCreateRules"
-          ref="quickCreateFormRef"
-          label-width="80px"
-        >
-          <el-form-item label="小说标题" prop="title">
-            <el-input 
-              v-model="quickCreateForm.title"
-              placeholder="输入你的小说标题"
-              maxlength="50"
-              show-word-limit
-            />
-          </el-form-item>
-          
-          <el-form-item label="小说类型" prop="genre">
-            <el-select 
-              v-model="quickCreateForm.genre"
-              placeholder="选择小说类型"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="genre in novelGenres"
-                :key="genre.value"
-                :label="genre.label"
-                :value="genre.value"
-              />
-            </el-select>
-          </el-form-item>
-          
-          <el-form-item label="简介" prop="description">
-            <el-input 
-              v-model="quickCreateForm.description"
-              type="textarea"
-              :rows="3"
-              placeholder="简单描述你的小说内容（可选）"
-              maxlength="200"
-              show-word-limit
-            />
-          </el-form-item>
-        </el-form>
-        
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="showQuickCreateDialog = false">取消</el-button>
-            <el-button 
-              type="primary" 
-              @click="handleQuickCreate"
-              :loading="quickCreateLoading"
-            >
-              创建并进入工作台
-            </el-button>
-          </span>
-        </template>
-      </el-dialog>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -224,56 +162,33 @@ import {
   UserFilled,
   ArrowRight,
   Folder,
-  DataAnalysis
+  DataAnalysis,
+  Setting
 } from '@element-plus/icons-vue'
-import { HomepageService, type QuickCreateNovelRequest } from '@/api/homepage'
+import { HomepageService } from '@/api/homepage'
 
 const router = useRouter()
-
-// 表单引用
-const quickCreateFormRef = ref()
 
 // 响应式数据
 const createLoading = ref(false)
 const continueLoading = ref(false)
-const quickCreateLoading = ref(false)
-const showQuickCreateDialog = ref(false)
+const loginStatus = ref(!!localStorage.getItem('access_token'))
 
 // 计算属性
-const isLoggedIn = computed(() => {
-  return !!localStorage.getItem('access_token')
-})
+const isLoggedIn = computed(() => loginStatus.value)
 
-// 快速创建表单
-const quickCreateForm = reactive({
-  title: '',
-  genre: '',
-  description: ''
-})
-
-// 表单验证规则
-const quickCreateRules = {
-  title: [
-    { required: true, message: '请输入小说标题', trigger: 'blur' },
-    { min: 1, max: 50, message: '标题长度应在1-50个字符', trigger: 'blur' }
-  ],
-  genre: [
-    { required: true, message: '请选择小说类型', trigger: 'change' }
-  ]
+// 监听localStorage变化
+const handleStorageChange = (event: StorageEvent) => {
+  if (event.key === 'access_token') {
+    loginStatus.value = !!event.newValue
+  }
 }
 
-// 小说类型选项
-const novelGenres = [
-  { label: '奇幻', value: 'fantasy' },
-  { label: '都市', value: 'urban' },
-  { label: '科幻', value: 'scifi' },
-  { label: '武侠', value: 'martial_arts' },
-  { label: '言情', value: 'romance' },
-  { label: '悬疑', value: 'mystery' },
-  { label: '历史', value: 'historical' },
-  { label: '游戏', value: 'game' },
-  { label: '其他', value: 'other' }
-]
+// 监听token变化
+watch(() => localStorage.getItem('access_token'), (newToken) => {
+  loginStatus.value = !!newToken
+}, { immediate: true })
+
 
 // 次要操作配置
 const secondaryActions = ref([
@@ -291,15 +206,15 @@ const secondaryActions = ref([
     description: 'AI创意激发工具',
     icon: MagicStick,
     color: '#67c23a',
-    route: '/tools/brain-generator'
+    route: '/brain-generator'
   },
   {
-    id: 'workspace',
-    title: '工作台',
-    description: '创作管理中心',
-    icon: DataAnalysis,
-    color: '#e6a23c',
-    route: '/workspace'
+    id: 'ai-config-management',
+    title: 'AI模型配置',
+    description: '管理AI模型和设置',
+    icon: Setting,
+    color: '#909399',
+    route: '/ai-config-management'
   }
 ])
 
@@ -310,9 +225,9 @@ const trialFeatures = [
   { id: 'outline', title: '大纲助手', icon: TrendCharts, color: '#e6a23c' }
 ]
 
-// 处理创建新小说
+// 处理创建新小说 - 直接跳转到创建页面
 const handleCreateNovel = () => {
-  showQuickCreateDialog.value = true
+  router.push('/novels/create')
 }
 
 // 处理继续写作
@@ -328,11 +243,14 @@ const handleContinueWriting = async () => {
       router.push(`/workspace/${latestNovel.id}/chapters`)
     } else {
       ElMessage.info('暂无作品，请先创建一部小说')
-      handleCreateNovel()
+      // 没有小说时也跳转到创建页面，与"创建新小说"保持一致
+      router.push('/novels/create')
     }
   } catch (error) {
     console.error('获取最近作品失败:', error)
     ElMessage.error('获取最近作品失败')
+    // 出错时也跳转到创建页面
+    router.push('/novels/create')
   } finally {
     continueLoading.value = false
   }
@@ -343,76 +261,6 @@ const handleSecondaryAction = (action: any) => {
   router.push(action.route)
 }
 
-// 处理快速创建
-const handleQuickCreate = async () => {
-  if (!quickCreateFormRef.value) return
-  
-  try {
-    await quickCreateFormRef.value.validate()
-    
-    quickCreateLoading.value = true
-    
-    const novelData: QuickCreateNovelRequest = {
-      title: quickCreateForm.title,
-      genre: quickCreateForm.genre,
-      description: quickCreateForm.description || undefined
-    }
-    
-    const result = await HomepageService.quickCreateNovel(novelData)
-    
-    ElMessage.success('小说创建成功！')
-    
-    // 跳转到工作台
-    router.push(result.redirect_url)
-    
-    // 关闭对话框
-    showQuickCreateDialog.value = false
-    
-    // 重置表单
-    resetQuickCreateForm()
-    
-  } catch (error: any) {
-    console.error('创建小说失败:', error)
-    if (error.response?.data?.message) {
-      ElMessage.error(error.response.data.message)
-    } else {
-      ElMessage.error('创建失败，请重试')
-    }
-  } finally {
-    quickCreateLoading.value = false
-  }
-}
-
-// 处理对话框关闭
-const handleDialogClose = (done: () => void) => {
-  if (quickCreateLoading.value) return
-  
-  if (quickCreateForm.title || quickCreateForm.description) {
-    ElMessageBox.confirm('确定要放弃当前输入的内容吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      resetQuickCreateForm()
-      done()
-    }).catch(() => {
-      // 用户取消
-    })
-  } else {
-    done()
-  }
-}
-
-// 重置快速创建表单
-const resetQuickCreateForm = () => {
-  quickCreateForm.title = ''
-  quickCreateForm.genre = ''
-  quickCreateForm.description = ''
-  
-  if (quickCreateFormRef.value) {
-    quickCreateFormRef.value.clearValidate()
-  }
-}
 
 // 处理注册
 const handleRegister = () => {
@@ -432,6 +280,11 @@ const handleTrialFeature = () => {
 // 生命周期
 onMounted(() => {
   // 组件初始化
+  window.addEventListener('storage', handleStorageChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange)
 })
 </script>
 

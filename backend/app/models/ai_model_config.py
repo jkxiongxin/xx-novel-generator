@@ -42,6 +42,11 @@ class AIModelConfig(Base, UserOwnedMixin):
     is_active = Column(Boolean, default=True, nullable=False, comment="是否启用")
     is_default = Column(Boolean, default=False, nullable=False, comment="是否为默认模型")
     
+    # 分组配置
+    group_name = Column(String(100), nullable=True, comment="配置分组名称")
+    group_description = Column(Text, nullable=True, comment="分组描述")
+    is_group_default = Column(Boolean, default=False, nullable=False, comment="是否为分组内默认模型")
+    
     # API配置
     api_endpoint = Column(String(500), nullable=False, comment="API端点URL")
     api_key = Column(String(500), nullable=True, comment="API密钥")

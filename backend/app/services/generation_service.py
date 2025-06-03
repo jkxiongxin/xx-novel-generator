@@ -44,6 +44,8 @@ class GenerationService:
         """生成小说名"""
         try:
             start_time = time.time()
+
+            logger.info(f"小说名生成开始: {request.dict()}, 当前用户 {user_id}")
             
             # 检查AI服务是否可用
             if not self.ai_service.is_available(user_id=user_id):
@@ -75,8 +77,8 @@ class GenerationService:
                     logger.warning("提示词响应格式解析失败，使用默认格式")
             
             # 调用AI生成
-            temperature = (request.temperature or prompt_template.default_temperature) / 100.0
-            max_tokens = request.max_tokens or prompt_template.default_max_tokens
+            temperature = (request.temperature or prompt_template.default_temperature if prompt_template else 70) / 100.0
+            max_tokens = request.max_tokens or (prompt_template.default_max_tokens if prompt_template else 2000)
             
             result = await self.ai_service.generate_structured_response(
                 prompt=prompt,
@@ -140,8 +142,8 @@ class GenerationService:
                     logger.warning("提示词响应格式解析失败，使用默认格式")
             
             # 调用AI生成
-            temperature = (request.temperature or prompt_template.default_temperature) / 100.0
-            max_tokens = request.max_tokens or prompt_template.default_max_tokens
+            temperature = (request.temperature or prompt_template.default_temperature if prompt_template else 70) / 100.0
+            max_tokens = request.max_tokens or (prompt_template.default_max_tokens if prompt_template else 2000)
             
             result = await self.ai_service.generate_structured_response(
                 prompt=prompt,
@@ -203,8 +205,8 @@ class GenerationService:
                     logger.warning("提示词响应格式解析失败，使用默认格式")
             
             # 调用AI生成
-            temperature = (request.temperature or prompt_template.default_temperature) / 100.0
-            max_tokens = request.max_tokens or prompt_template.default_max_tokens
+            temperature = (request.temperature or prompt_template.default_temperature if prompt_template else 70) / 100.0
+            max_tokens = request.max_tokens or (prompt_template.default_max_tokens if prompt_template else 2000)
             
             result = await self.ai_service.generate_structured_response(
                 prompt=prompt,
@@ -230,15 +232,17 @@ class GenerationService:
         """验证生成请求"""
         try:
             # 检查基本参数
-            if request.get("max_tokens", 0) > 8000:
+            max_tokens = request.get("max_tokens")
+            if max_tokens is not None and max_tokens > 8000:
                 raise ValueError("max_tokens不能超过8000")
             
-            if not (0 <= request.get("temperature", 50) <= 100):
+            temperature = request.get("temperature")
+            if temperature is not None and not (0 <= temperature <= 100):
                 raise ValueError("temperature必须在0-100之间")
             
             # 检查用户输入长度
             user_input = request.get("user_input", "")
-            if len(user_input) > 1000:
+            if user_input and len(user_input) > 1000:
                 raise ValueError("用户输入不能超过1000字符")
             
             return True

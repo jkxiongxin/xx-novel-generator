@@ -49,7 +49,7 @@ export interface PromptType {
 export const generationApi = {
   // 生成小说名（使用演示模式）
   async generateNovelName(data: NovelNameRequest): Promise<GenerationResponse> {
-    const response = await apiClient.post('/demo/novel-name', data)
+    const response = await apiClient.post('/generation/novel-name', data)
     return response.data
   },
 

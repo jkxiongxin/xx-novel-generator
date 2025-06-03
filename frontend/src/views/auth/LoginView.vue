@@ -283,6 +283,9 @@ const handleQuickLogin = async () => {
     
     ElMessage.success('登录成功！')
     
+    // 触发全局用户状态更新
+    triggerUserStateUpdate()
+    
     // 跳转到目标页面
     await router.push(redirectPath.value)
     
@@ -315,6 +318,9 @@ const handleExtendedLogin = async () => {
     const response = await AuthService.loginExtended(extendedForm)
     
     ElMessage.success('登录成功！')
+    
+    // 触发全局用户状态更新
+    triggerUserStateUpdate()
     
     // 检查邮箱验证状态
     if (!response.user.email_verified) {
@@ -410,6 +416,10 @@ const handleGitHubCallback = async (code: string, state?: string) => {
     const response = await AuthService.handleGitHubCallback(code, state)
     
     ElMessage.success('GitHub登录成功！')
+    
+    // 触发全局用户状态更新
+    triggerUserStateUpdate()
+    
     await router.push(redirectPath.value)
     
   } catch (error: any) {
@@ -417,6 +427,21 @@ const handleGitHubCallback = async (code: string, state?: string) => {
     ElMessage.error('GitHub登录失败：' + (error.response?.data?.detail || error.message))
   } finally {
     loading.value = false
+  }
+}
+
+// 触发用户状态更新
+const triggerUserStateUpdate = () => {
+  // 触发storage change事件来通知其他组件
+  window.dispatchEvent(new StorageEvent('storage', {
+    key: 'access_token',
+    newValue: localStorage.getItem('access_token'),
+    oldValue: null
+  }))
+  
+  // 如果全局刷新方法存在，也调用它
+  if (typeof (window as any).refreshUserInfo === 'function') {
+    (window as any).refreshUserInfo()
   }
 }
 </script>

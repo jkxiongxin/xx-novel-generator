@@ -8,6 +8,7 @@ import logging
 from typing import Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
@@ -42,9 +43,12 @@ async def generate_novel_name(
     - **temperature**: 温度值0-100（可选）
     """
     try:
+        logger.info(f"用户 {current_user.username} 请求生成小说名")
         # 获取服务实例
         prompt_service = get_prompt_service(db)
         generation_service = get_generation_service(prompt_service)
+
+        
         
         # 验证请求
         request_dict = request.dict()
@@ -56,7 +60,7 @@ async def generate_novel_name(
             )
         
         # 生成小说名
-        result = await generation_service.generate_novel_name(request)
+        result = await generation_service.generate_novel_name(request, user_id=current_user.id)
         
         logger.info(f"用户 {current_user.username} 生成小说名成功")
         return result
@@ -208,7 +212,7 @@ async def get_generation_status(
         
         # 检查数据库连接
         try:
-            db.execute("SELECT 1")
+            db.execute(text("SELECT 1"))
             database_status = "connected"
         except Exception as db_error:
             logger.error(f"数据库连接检查失败: {str(db_error)}")
