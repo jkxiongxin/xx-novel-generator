@@ -302,7 +302,7 @@ const handleCancel = (field: string) => {
 }
 
 const enterWorkspace = () => {
-  router.push(`/workspace/${novelId.value}/chapters`)
+  router.push(`/workspace/${novelId.value}`)
 }
 
 const openSettings = () => {

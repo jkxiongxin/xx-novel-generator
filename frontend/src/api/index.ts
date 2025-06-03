@@ -26,7 +26,7 @@ if (import.meta.env.VITE_DEBUG === 'true') {
 // 创建axios实例
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 增加超时时间，支持AI生成等长时间操作
+  timeout: 300000, // 增加超时时间，支持AI生成等长时间操作
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -131,7 +131,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('access_token')
         localStorage.removeItem('user_info')
         // 重定向到登录页面
-        window.location.href = '/login'
+        window.location.href = '/auth/login'
         return Promise.reject({
           success: false,
           code: 401,

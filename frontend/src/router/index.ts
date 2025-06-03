@@ -75,8 +75,8 @@ const router = createRouter({
     {
       path: '/workspace/:novelId',
       name: 'workspace',
-      redirect: to => `/workspace/${to.params.novelId}/chapters`,
-      meta: { requiresAuth: true }
+      component: () => import('../views/workspace/WorkspaceOverviewView.vue'),
+      meta: { title: '工作台概览', requiresAuth: true }
     },
     {
       path: '/workspace/:novelId/chapters',

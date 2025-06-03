@@ -231,14 +231,14 @@ const captchaImageUrl = ref('/api/captcha/image?t=' + Date.now())
 
 // 快速登录表单
 const quickForm = reactive<UserLogin>({
-  email: '',
-  password: ''
+  email: 'testuser@qq.com',
+  password: 'testuser123'
 })
 
 // 扩展登录表单
 const extendedForm = reactive<LoginRequestExtended>({
-  username: '846762278@qq.com',
-  password: '214wochusheng',
+  username: 'test_user',
+  password: 'testuser123',
   remember_me: false,
   captcha_token: undefined
 })

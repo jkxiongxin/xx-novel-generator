@@ -289,7 +289,7 @@ const viewDetail = (novelId: number) => {
 }
 
 const enterWorkspace = (novelId: number) => {
-  router.push(`/workspace/${novelId}/characters`)
+  router.push(`/workspace/${novelId}`)
 }
 
 const exportNovel = (novel: NovelListItem) => {

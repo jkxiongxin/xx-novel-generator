@@ -22,7 +22,7 @@ async def api_health():
 
 
 # 导入路由模块
-from app.api.v1 import auth, novels, generation, demo, characters, outline, worldview, chapters, ai_configs
+from app.api.v1 import auth, novels, generation, demo, characters, outline, worldview, chapters, ai_configs, workspace
 from app.api.v1 import character_templates, character_template_interactions, admin_character_templates
 
 # 包含认证路由
@@ -101,4 +101,11 @@ api_router.include_router(
 api_router.include_router(
     admin_character_templates.router,
     tags=["管理员-角色模板管理"]
+)
+
+# 包含工作台路由
+api_router.include_router(
+    workspace.router,
+    prefix="/workspace",
+    tags=["工作台"]
 )
