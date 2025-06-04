@@ -37,6 +37,12 @@ class AIModelConfigBase(BaseModel):
     timeout: int = Field(60, ge=1, le=300, description="请求超时时间(秒)")
     retry_count: int = Field(3, ge=0, le=10, description="重试次数")
     
+    # 代理配置
+    proxy_enabled: bool = Field(False, description="是否启用代理")
+    proxy_url: Optional[str] = Field(None, max_length=500, description="代理服务器地址")
+    proxy_username: Optional[str] = Field(None, max_length=200, description="代理用户名")
+    proxy_password: Optional[str] = Field(None, max_length=200, description="代理密码")
+    
     # 高级配置
     request_headers: Optional[Dict[str, str]] = Field(None, description="自定义请求头")
     request_params: Optional[Dict[str, Any]] = Field(None, description="请求参数映射")
@@ -91,6 +97,14 @@ class AIModelConfigBase(BaseModel):
             if len(v) > 50:
                 raise ValueError('请求参数不能超过50个')
         return v
+    
+    @validator('proxy_url')
+    def validate_proxy_url(cls, v):
+        """验证代理URL格式"""
+        if v is not None and v.strip():
+            if not v.startswith(('http://', 'https://', 'socks4://', 'socks5://')):
+                raise ValueError('代理URL必须是有效的HTTP(S)或SOCKS协议地址')
+        return v
 
 
 class AIModelConfigCreate(AIModelConfigBase):
@@ -116,6 +130,12 @@ class AIModelConfigUpdate(BaseModel):
     temperature: Optional[str] = None
     timeout: Optional[int] = Field(None, ge=1, le=300)
     retry_count: Optional[int] = Field(None, ge=0, le=10)
+    
+    # 代理配置
+    proxy_enabled: Optional[bool] = None
+    proxy_url: Optional[str] = Field(None, max_length=500)
+    proxy_username: Optional[str] = Field(None, max_length=200)
+    proxy_password: Optional[str] = Field(None, max_length=200)
     
     request_headers: Optional[Dict[str, str]] = None
     request_params: Optional[Dict[str, Any]] = None
@@ -143,6 +163,14 @@ class AIModelConfigUpdate(BaseModel):
                     raise ValueError('温度参数必须在0-2之间')
             except ValueError:
                 raise ValueError('温度参数必须是有效数字')
+        return v
+    
+    @validator('proxy_url')
+    def validate_proxy_url(cls, v):
+        """验证代理URL格式"""
+        if v is not None and v.strip():
+            if not v.startswith(('http://', 'https://', 'socks4://', 'socks5://')):
+                raise ValueError('代理URL必须是有效的HTTP(S)或SOCKS协议地址')
         return v
 
 
@@ -308,7 +336,7 @@ AI_MODEL_TEMPLATES = [
             "api_endpoint": "https://api.openai.com/v1/chat/completions",
             "model_name": "gpt-3.5-turbo",
             "request_format": RequestFormat.OPENAI_CHAT,
-            "max_tokens": 2000,
+            "max_tokens": 100000,
             "temperature": "0.7",
             "timeout": 60,
             "retry_count": 3,

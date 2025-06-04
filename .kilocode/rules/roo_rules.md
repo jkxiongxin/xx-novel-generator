@@ -1637,6 +1637,280 @@ attempt_completion
 switch_mode
 new_task
 fetch_instructions
+## AI生成功能实现规范
+
+### 1. AI Generation Service Implementation Guidelines
+
+#### 标准提示词模板结构
+```python
+class WorldviewPromptTemplate:
+    """世界观提示词模板基类"""
+    def __init__(self, novel_info: dict, worldview_type: str):
+        self.novel_info = novel_info
+        self.worldview_type = worldview_type
+        self.variables = {
+            "novel_title": novel_info.get("title", ""),
+            "novel_genre": novel_info.get("genre", ""),
+            "worldview_type": worldview_type
+        }
+    
+    async def render(self) -> str:
+        """渲染提示词模板"""
+        template = await self._load_template()
+        return template.format(**self.variables)
+    
+    async def _load_template(self) -> str:
+        """从数据库加载提示词模板"""
+        prompt = await PromptService.get_template(
+            template_type="worldview",
+            template_name=self.worldview_type
+        )
+        return prompt.template_content
+```
+
+#### 错误处理和重试机制
+```python
+class AIGenerationService:
+    """AI生成服务类"""
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        retry=retry_if_exception_type(AIServiceTemporaryError)
+    )
+    async def generate_content(self, prompt: str) -> str:
+        """生成内容，支持自动重试"""
+        try:
+            response = await self.ai_service.generate(prompt)
+            return self._process_response(response)
+        except AIServiceError as e:
+            if self._is_temporary_error(e):
+                raise AIServiceTemporaryError(str(e))
+            raise AIGenerationError(f"AI生成失败: {str(e)}")
+```
+
+#### 与AIService和PromptService集成模式
+```python
+class WorldviewGenerationService:
+    def __init__(
+        self,
+        prompt_service: PromptService,
+        ai_service: AIService
+    ):
+        self.prompt_service = prompt_service
+        self.ai_service = ai_service
+    
+    async def generate_worldview(
+        self,
+        novel_id: int,
+        worldview_type: str
+    ) -> dict:
+        # 1. 加载小说信息
+        novel = await self._get_novel_info(novel_id)
+        
+        # 2. 构建提示词
+        prompt = await WorldviewPromptTemplate(
+            novel_info=novel,
+            worldview_type=worldview_type
+        ).render()
+        
+        # 3. 调用AI生成
+        content = await self.ai_service.generate(prompt)
+        
+        # 4. 解析处理结果
+        return self._parse_worldview_content(content)
+```
+
+### 2. Best Practices for Generation Endpoints
+
+#### 输入验证和参数处理
+```python
+@router.post("/generation/worldview")
+async def generate_worldview(
+    request: WorldviewGenerationRequest,
+    novel = Depends(get_current_novel),
+    generation_service: WorldviewGenerationService = Depends()
+):
+    # 1. 验证请求参数
+    if not request.worldview_type:
+        raise HTTPException(
+            status_code=400,
+            detail="世界观类型不能为空"
+        )
+    
+    # 2. 验证业务规则
+    if novel.worldview_count >= novel.max_worldviews:
+        raise HTTPException(
+            status_code=400,
+            detail="已达到最大世界观数量限制"
+        )
+    
+    # 3. 调用生成服务
+    try:
+        result = await generation_service.generate_worldview(
+            novel_id=novel.id,
+            worldview_type=request.worldview_type
+        )
+        return SuccessResponse(data=result)
+    except AIGenerationError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+```
+
+#### 响应结构规范
+```python
+class GenerationResponse(BaseModel):
+    """生成接口统一响应格式"""
+    success: bool
+    data: Optional[dict] = None
+    error: Optional[str] = None
+    generation_id: Optional[str] = None  # 用于追踪生成过程
+    usage: Optional[dict] = None         # AI接口调用统计
+```
+
+#### 性能优化技术
+```python
+class WorldviewGenerationService:
+    def __init__(self):
+        # 使用缓存减少重复计算
+        self._template_cache = TTLCache(maxsize=100, ttl=3600)
+        self._novel_cache = TTLCache(maxsize=1000, ttl=300)
+    
+    @cached(cache=_template_cache)
+    async def _get_template(self, template_type: str) -> str:
+        return await self.prompt_service.get_template(template_type)
+    
+    @cached(cache=_novel_cache)
+    async def _get_novel_info(self, novel_id: int) -> dict:
+        return await self.novel_service.get_novel(novel_id)
+```
+
+#### 错误处理模式
+```python
+# 自定义异常类型
+class GenerationError(Exception):
+    """生成错误基类"""
+    pass
+
+class PromptError(GenerationError):
+    """提示词错误"""
+    pass
+
+class AIServiceError(GenerationError):
+    """AI服务调用错误"""
+    pass
+
+# 错误处理中间件
+@app.exception_handler(GenerationError)
+async def generation_error_handler(request: Request, exc: GenerationError):
+    if isinstance(exc, PromptError):
+        return JSONResponse(
+            status_code=400,
+            content={"message": f"提示词错误: {str(exc)}"}
+        )
+    if isinstance(exc, AIServiceError):
+        return JSONResponse(
+            status_code=503,
+            content={"message": f"AI服务暂时不可用: {str(exc)}"}
+        )
+    return JSONResponse(
+        status_code=500,
+        content={"message": f"生成失败: {str(exc)}"}
+    )
+```
+
+### 3. Content Generation Architecture
+
+#### 服务层职责划分
+1. **GenerationService**: 负责生成内容的核心逻辑
+   - 协调各个子服务
+   - 处理生成流程
+   - 管理生成状态
+
+2. **PromptService**: 负责提示词管理
+   - 模板加载和渲染
+   - 变量替换
+   - 模板验证
+
+3. **AIService**: 负责AI模型调用
+   - 模型选择
+   - 参数控制
+   - 响应处理
+
+#### 数据流转模式
+```mermaid
+sequenceDiagram
+    participant C as Controller
+    participant GS as GenerationService
+    participant PS as PromptService
+    participant AS as AIService
+    participant DB as Database
+    
+    C->>GS: 请求生成内容
+    GS->>DB: 获取相关数据
+    GS->>PS: 获取提示词模板
+    PS->>PS: 渲染模板
+    PS-->>GS: 返回完整提示词
+    GS->>AS: 调用AI生成
+    AS-->>GS: 返回生成内容
+    GS->>GS: 处理响应
+    GS->>DB: 保存生成结果
+    GS-->>C: 返回结果
+```
+
+#### 与其他系统组件集成
+1. **审核服务集成**
+```python
+class ContentGenerationService:
+    async def generate_and_review(self, prompt: str) -> tuple[str, bool]:
+        # 1. 生成内容
+        content = await self.generate_content(prompt)
+        
+        # 2. 自动审核
+        is_appropriate = await self.review_service.check_content(
+            content=content,
+            check_items=["sensitive", "consistency", "quality"]
+        )
+        
+        # 3. 根据审核结果处理
+        if not is_appropriate:
+            raise ContentNotAppropriateError(
+                "生成内容未通过审核，请调整提示词重新生成"
+            )
+        
+        return content, is_appropriate
+```
+
+2. **用户反馈集成**
+```python
+class GenerationService:
+    async def handle_generation_feedback(
+        self,
+        generation_id: str,
+        feedback: GenerationFeedback
+    ):
+        # 1. 记录反馈
+        await self.feedback_service.save_feedback(
+            generation_id=generation_id,
+            feedback_type=feedback.type,
+            content=feedback.content
+        )
+        
+        # 2. 更新提示词质量评分
+        if feedback.affects_prompt:
+            await self.prompt_service.update_prompt_score(
+                prompt_id=feedback.prompt_id,
+                score_delta=feedback.score_change
+            )
+        
+        # 3. 触发相关优化
+        await self.optimization_service.handle_feedback(
+            generation_id=generation_id,
+            feedback=feedback
+        )
+```
+
+以上规范提供了AI生成功能实现的标准化指南，确保了生成服务的可靠性、可维护性和可扩展性。所有AI生成相关的新功能开发都应遵循这些规范。
+
 ## 常见问题解决方案
 
 ### SQLAlchemy 版本兼容性问题
@@ -1667,6 +1941,196 @@ db.execute(text("SELECT 1"))
 ## 前端文件拆分
 页面结构，逻辑和样式都应该分开，存放为 vue, ts和 css 文件。
 
-## 后端api接口定义
+## 后端API接口定义规范
+
+### 1. 路由定义规范
 不要以/结尾，否则前端调用接口时会触发重定向。
 比如router.get("/")，需要写为router.get("")
+
+### 2. 统一API响应格式
+
+#### 后端接口返回值基本结构
+所有API接口都应返回以下标准格式：
+
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    // 具体的响应数据
+  },
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+**字段说明：**
+- `success`: boolean - 操作是否成功
+- `code`: number - HTTP状态码
+- `message`: string - 响应消息
+- `data`: any - 具体的响应数据
+- `timestamp`: string - 响应时间戳（可选）
+
+#### 错误响应格式
+```json
+{
+  "success": false,
+  "code": 400,
+  "message": "请求参数错误",
+  "errors": [
+    {
+      "field": "title",
+      "message": "标题不能为空"
+    }
+  ],
+  "timestamp": "2024-01-01T00:00:00Z"
+}
+```
+
+#### 分页响应格式
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "获取成功",
+  "data": {
+    "items": [],
+    "total": 100,
+    "page": 1,
+    "page_size": 20,
+    "total_pages": 5
+  }
+}
+```
+
+### 3. 前端解析返回值代码实践
+
+#### 前端API调用标准模式
+```typescript
+// 1. 导入API客户端
+import apiClient from '@/api/index'
+
+// 2. API调用方法
+const loadData = async () => {
+  try {
+    loading.value = true
+    
+    // 调用API，返回已经是解析后的数据
+    const response = await apiClient.get('/api/endpoint')
+    
+    // 检查success字段
+    if (response.success) {
+      // 成功处理
+      data.value = response.data
+      ElMessage.success(response.message || '操作成功')
+    } else {
+      // 失败处理
+      ElMessage.error(response.message || '操作失败')
+    }
+  } catch (error) {
+    console.error('API调用失败:', error)
+    ElMessage.error('网络错误或服务器错误')
+  } finally {
+    loading.value = false
+  }
+}
+```
+
+#### 重要实践要点
+1. **检查success字段**: 前端必须检查 `response.success` 来判断操作是否成功
+2. **错误处理**: 统一使用 `ElMessage.error()` 显示错误信息
+3. **Loading状态**: 使用 `try-finally` 确保loading状态正确重置
+4. **响应拦截器**: `apiClient` 已配置响应拦截器，直接返回 `response.data`
+
+#### API客户端配置示例
+```typescript
+// api/index.ts
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1',
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
+
+// 响应拦截器处理统一数据格式
+apiClient.interceptors.response.use(
+  (response) => {
+    // 直接返回后端的标准响应格式
+    return response.data
+  },
+  (error) => {
+    console.error('API Error:', error)
+    throw error
+  }
+)
+```
+
+#### 常见错误示例
+❌ **错误做法**: 不检查success字段
+```typescript
+const result = await apiClient.post('/api/save')
+// 直接假设成功，未检查result.success
+data.value = result.data
+```
+
+✅ **正确做法**: 检查success字段
+```typescript
+const result = await apiClient.post('/api/save')
+if (result.success) {
+  data.value = result.data
+  ElMessage.success(result.message)
+} else {
+  ElMessage.error(result.message)
+}
+```
+
+### 4. 接口设计最佳实践
+
+#### 后端接口实现规范
+```python
+@router.post("/save-data")
+async def save_data(
+    request: SaveDataRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """保存数据接口"""
+    try:
+        # 业务逻辑处理
+        result = await service.save_data(request, current_user.id, db)
+        
+        # 返回标准格式
+        return {
+            "success": True,
+            "code": 200,
+            "message": "数据保存成功",
+            "data": {
+                "id": result.id,
+                "name": result.name,
+                "created_at": result.created_at
+            },
+            "timestamp": None
+        }
+        
+    except ValueError as e:
+        # 业务逻辑错误
+        return {
+            "success": False,
+            "code": 400,
+            "message": str(e),
+            "data": None
+        }
+    except Exception as e:
+        # 系统错误
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"服务器内部错误: {str(e)}"
+        )
+```
+
+#### 异常处理规范
+1. **业务逻辑错误**: 返回 `success: false` 的标准格式
+2. **系统错误**: 抛出 HTTPException
+3. **数据库错误**: 确保回滚事务

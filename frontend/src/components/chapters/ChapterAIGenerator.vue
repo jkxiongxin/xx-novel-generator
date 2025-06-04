@@ -139,7 +139,7 @@
                     <el-input-number
                       v-model="form.generation_params.max_tokens"
                       :min="100"
-                      :max="4000"
+                      :max="30000"
                       :step="100"
                       style="width: 100%;"
                     />
@@ -257,7 +257,7 @@ const form = reactive({
   user_suggestion: '',
   generation_params: {
     temperature: 0.7,
-    max_tokens: 2000
+    max_tokens: 30000
   }
 })
 
@@ -305,7 +305,7 @@ const resetForm = () => {
     user_suggestion: '',
     generation_params: {
       temperature: 0.7,
-      max_tokens: 2000
+      max_tokens: 30000
     }
   })
   contextOptions.value = ['include_worldview', 'include_characters', 'include_outline']

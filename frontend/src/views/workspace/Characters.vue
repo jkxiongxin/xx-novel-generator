@@ -517,8 +517,7 @@ const loadCharacters = async () => {
 
 const loadWorldviews = async () => {
   try {
-    const response = await apiClient.get(`/worldview/novel/${novelId.value}`)
-    const data = response.data
+    const data = await apiClient.get(`/worldview/novel/${novelId.value}`)
     if (data.success !== false) {
       worldviews.value = data.items || []
     }
@@ -677,7 +676,7 @@ const submitCreateForm = async () => {
 
 const submitWorldviewForm = async () => {
   try {
-    const response = await apiClient.post('/worldview/', {
+    await apiClient.post('/worldview/', {
       ...worldviewForm,
       novel_id: novelId.value
     })

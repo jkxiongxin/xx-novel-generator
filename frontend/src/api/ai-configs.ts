@@ -26,6 +26,11 @@ export interface AIModelConfig {
   temperature: string
   timeout: number
   retry_count: number
+  // 代理配置
+  proxy_enabled: boolean
+  proxy_url?: string
+  proxy_username?: string
+  proxy_password?: string
   request_headers?: Record<string, string>
   request_params?: Record<string, any>
   response_mapping?: Record<string, string>
@@ -71,6 +76,11 @@ export interface AIModelConfigCreate {
   temperature?: string
   timeout?: number
   retry_count?: number
+  // 代理配置
+  proxy_enabled?: boolean
+  proxy_url?: string
+  proxy_username?: string
+  proxy_password?: string
   request_headers?: Record<string, string>
   request_params?: Record<string, any>
   response_mapping?: Record<string, string>
@@ -180,11 +190,16 @@ export const DEFAULT_CONFIG: Partial<AIModelConfigCreate> = {
   is_active: true,
   is_default: false,
   is_group_default: false,
-  max_tokens: 2000,
+  max_tokens: 30000,
   temperature: '0.7',
   timeout: 60,
   retry_count: 3,
-  priority: 5
+  priority: 5,
+  // 代理配置默认值
+  proxy_enabled: false,
+  proxy_url: '',
+  proxy_username: '',
+  proxy_password: ''
 }
 
 export const PRESET_ENDPOINTS: Record<string, string> = {

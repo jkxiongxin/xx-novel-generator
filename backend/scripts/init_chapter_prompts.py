@@ -87,7 +87,7 @@ def init_chapter_prompts():
 }}""",
                 "description": "用于生成完整章节内容的默认模板，支持多种章节类型和上下文感知",
                 "response_format": '{"title": "string", "content": "string", "word_count": "number", "chapter_summary": "string", "key_events": ["string"], "character_development": "string", "plot_advancement": "string"}',
-                "default_max_tokens": 4000,
+                "default_max_tokens": 30000,
                 "default_temperature": 75
             }
             prompts_to_create.append(chapter_prompt)
@@ -125,7 +125,7 @@ def init_chapter_prompts():
 请直接生成续写内容，不要重复已有内容：""",
                 "description": "用于为现有章节续写内容的专用模板",
                 "response_format": '{"content": "string", "word_count": "number"}',
-                "default_max_tokens": 3000,
+                "default_max_tokens": 30000,
                 "default_temperature": 70
             }
             prompts_to_create.append(chapter_continuation_prompt)
@@ -171,7 +171,7 @@ def init_chapter_prompts():
 }}""",
                 "description": "用于重写和优化现有章节内容的专用模板",
                 "response_format": '{"title": "string", "content": "string", "word_count": "number", "improvements": ["string"], "rewrite_summary": "string"}',
-                "default_max_tokens": 5000,
+                "default_max_tokens": 30000,
                 "default_temperature": 70
             }
             prompts_to_create.append(chapter_rewrite_prompt)
@@ -224,7 +224,7 @@ def init_chapter_prompts():
 }}""",
                 "description": "专门用于生成小说第一章的特化模板，注重开头的吸引力和世界观建立",
                 "response_format": '{"title": "string", "content": "string", "word_count": "number", "opening_hook": "string", "world_building": "string", "character_introduction": "string", "tone_setting": "string"}',
-                "default_max_tokens": 4500,
+                "default_max_tokens": 30000,
                 "default_temperature": 80
             }
             prompts_to_create.append(chapter_opening_prompt)
@@ -279,7 +279,7 @@ def init_chapter_prompts():
 }}""",
                 "description": "专门用于生成故事高潮章节的特化模板，注重冲突和紧张感的营造",
                 "response_format": '{"title": "string", "content": "string", "word_count": "number", "climax_peak": "string", "tension_build": "string", "character_crisis": "string", "emotional_impact": "string"}',
-                "default_max_tokens": 4500,
+                "default_max_tokens": 30000,
                 "default_temperature": 75
             }
             prompts_to_create.append(chapter_climax_prompt)

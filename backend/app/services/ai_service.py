@@ -49,11 +49,46 @@ class AIModelAdapter(ABC):
 class OpenAIAdapter(AIModelAdapter):
     """OpenAI模型适配器"""
     
-    def __init__(self, api_key: str, model: str = "gpt-3.5-turbo"):
-        self.client = AsyncOpenAI(api_key=api_key)
+    def __init__(self, api_key: str, model: str = "gpt-3.5-turbo", proxy_url: Optional[str] = None):
+        # 创建HTTP客户端配置
+        http_client_kwargs = {}
+        if proxy_url:
+            import httpx
+            http_client_kwargs["proxies"] = proxy_url
+        
+        # 创建AsyncOpenAI客户端
+        if http_client_kwargs:
+            http_client = httpx.AsyncClient(**http_client_kwargs)
+            self.client = AsyncOpenAI(api_key=api_key, http_client=http_client)
+        else:
+            self.client = AsyncOpenAI(api_key=api_key)
+        
         self.model = model
+        self.proxy_url = proxy_url
         self.default_max_tokens = settings.OPENAI_MAX_TOKENS
         self.default_temperature = settings.OPENAI_TEMPERATURE
+    
+    def _clean_json_trailing_commas(self, json_str: str) -> str:
+        """增强版JSON逗号清理"""
+        import re
+        
+        # 移除对象中的尾随逗号 (,})
+        json_str = re.sub(r',\s*}', '}', json_str)
+        
+        # 移除数组中的尾随逗号 (,])
+        json_str = re.sub(r',\s*]', ']', json_str)
+        
+        # 移除数组/对象开头的逗号
+        json_str = re.sub(r'(\[|\{)\s*,', r'\1', json_str)
+        
+        # 移除连续的逗号
+        json_str = re.sub(r',\s*,+', ',', json_str)
+        
+        # 修复值缺失的情况
+        json_str = re.sub(r':\s*,', ': null,', json_str)
+        json_str = re.sub(r'null,\s*([}\]])', r'null\1', json_str)
+        
+        return json_str
     
     async def generate_text(
         self,
@@ -104,6 +139,8 @@ class OpenAIAdapter(AIModelAdapter):
             import json
             import re
             logger.info(f"生成的响应文本: {response_text}")
+            # 清理逗号
+            response_text = self._clean_json_trailing_commas(response_text)
 
             # 过滤掉<think>...</think>内容
             response_text = re.sub(r"<think>.*?</think>", "", response_text, flags=re.DOTALL | re.IGNORECASE)
@@ -137,7 +174,9 @@ class CustomHttpAdapter(AIModelAdapter):
         request_format: str = "openai_chat",
         max_tokens: int = 2000,
         temperature: float = 0.7,
-        timeout: int = 60
+        timeout: int = 60,
+        proxy_url: Optional[str] = None,
+        proxy_auth: Optional[Dict[str, str]] = None
     ):
         self.api_endpoint = api_endpoint
         self.api_key = api_key
@@ -146,6 +185,31 @@ class CustomHttpAdapter(AIModelAdapter):
         self.default_max_tokens = max_tokens
         self.default_temperature = temperature
         self.timeout = timeout
+        self.proxy_url = proxy_url
+        self.proxy_auth = proxy_auth
+    
+    def _clean_json_trailing_commas(self, json_str: str) -> str:
+        """增强版JSON逗号清理"""
+        import re
+        
+        # 移除对象中的尾随逗号 (,})
+        json_str = re.sub(r',\s*}', '}', json_str)
+        
+        # 移除数组中的尾随逗号 (,])
+        json_str = re.sub(r',\s*]', ']', json_str)
+        
+        # 移除数组/对象开头的逗号
+        json_str = re.sub(r'(\[|\{)\s*,', r'\1', json_str)
+        
+        # 移除连续的逗号
+        json_str = re.sub(r',\s*,+', ',', json_str)
+        
+        # 修复值缺失的情况
+        json_str = re.sub(r':\s*,', ': null,', json_str)
+        json_str = re.sub(r'null,\s*([}\]])', r'null\1', json_str)
+        
+        return json_str
+
     
     async def generate_text(
         self,
@@ -187,8 +251,21 @@ class CustomHttpAdapter(AIModelAdapter):
                     "temperature": temperature or self.default_temperature
                 }
             
-            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
-                async with session.post(self.api_endpoint, json=data, headers=headers) as response:
+            # 构建会话配置，支持代理
+            session_kwargs = {"timeout": aiohttp.ClientTimeout(total=self.timeout)}
+            request_kwargs = {"json": data, "headers": headers}
+            
+            # 如果配置了代理，添加代理参数
+            if self.proxy_url:
+                request_kwargs["proxy"] = self.proxy_url
+                if self.proxy_auth:
+                    request_kwargs["proxy_auth"] = aiohttp.BasicAuth(
+                        self.proxy_auth.get("username", ""),
+                        self.proxy_auth.get("password", "")
+                    )
+            
+            async with aiohttp.ClientSession(**session_kwargs) as session:
+                async with session.post(self.api_endpoint, **request_kwargs) as response:
                     if response.status != 200:
                         error_text = await response.text()
                         raise Exception(f"API调用失败: {response.status} - {error_text}")
@@ -238,10 +315,13 @@ class CustomHttpAdapter(AIModelAdapter):
             import re
 
             logger.info(f"生成的响应文本: {response_text}")
+
+            response_text = self._clean_json_trailing_commas(response_text)
             # 过滤掉<think>...</think>内容
             response_text = re.sub(r"<think>.*?</think>", "", response_text, flags=re.DOTALL | re.IGNORECASE)
             # 提取被```json ... ```包裹的内容
             match = re.search(r"```json\s*(.*?)\s*```", response_text, re.DOTALL | re.IGNORECASE)
+
             if match:
                 json_str = match.group(1)
             else:
@@ -314,9 +394,15 @@ class AIService:
             if default_provider == "openai":
                 # 初始化OpenAI适配器
                 if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY != "your-openai-api-key-here":
+                    # 获取代理配置
+                    proxy_url = None
+                    if settings.PROXY_ENABLED and settings.PROXY_URL:
+                        proxy_url = settings.PROXY_URL
+                    
                     openai_adapter = OpenAIAdapter(
                         api_key=settings.OPENAI_API_KEY,
-                        model=settings.OPENAI_MODEL
+                        model=settings.OPENAI_MODEL,
+                        proxy_url=proxy_url
                     )
                     self.adapters["openai"] = openai_adapter
                     if self.default_adapter is None:
@@ -332,14 +418,27 @@ class AIService:
                     custom_config.get("api_key") and
                     custom_config.get("api_key") != "your-custom-api-key-here"):
                     
+                    # 获取代理配置
+                    proxy_url = None
+                    proxy_auth = None
+                    if settings.PROXY_ENABLED and settings.PROXY_URL:
+                        proxy_url = settings.PROXY_URL
+                        if settings.PROXY_USERNAME and settings.PROXY_PASSWORD:
+                            proxy_auth = {
+                                "username": settings.PROXY_USERNAME,
+                                "password": settings.PROXY_PASSWORD
+                            }
+                    
                     custom_adapter = CustomHttpAdapter(
                         api_endpoint=custom_config["api_endpoint"],
                         api_key=custom_config["api_key"],
                         model=custom_config.get("model_name", "default-model"),
                         request_format=custom_config.get("request_format", "openai_chat"),
-                        max_tokens=custom_config.get("max_tokens", 2000),
+                        max_tokens=custom_config.get("max_tokens", 30000),
                         temperature=custom_config.get("temperature", 0.7),
-                        timeout=custom_config.get("timeout", 60)
+                        timeout=custom_config.get("timeout", 60),
+                        proxy_url=proxy_url,
+                        proxy_auth=proxy_auth
                     )
                     self.adapters["custom"] = custom_adapter
                     if self.default_adapter is None:
@@ -351,9 +450,15 @@ class AIService:
             # 如果还没有默认适配器，尝试初始化OpenAI作为备选
             if self.default_adapter is None:
                 if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY != "your-openai-api-key-here":
+                    # 获取代理配置
+                    proxy_url = None
+                    if settings.PROXY_ENABLED and settings.PROXY_URL:
+                        proxy_url = settings.PROXY_URL
+                    
                     openai_adapter = OpenAIAdapter(
                         api_key=settings.OPENAI_API_KEY,
-                        model=settings.OPENAI_MODEL
+                        model=settings.OPENAI_MODEL,
+                        proxy_url=proxy_url
                     )
                     self.adapters["openai"] = openai_adapter
                     self.default_adapter = "openai"
@@ -488,9 +593,11 @@ class AIService:
             self.load_user_adapters(user_id, db)
         
         adapter = self.get_adapter(adapter_name, user_id)
+        max_tokens = 30000
         
         for attempt in range(retry_count):
             try:
+                logger.info(f"请求参数为：prompt={prompt}, response_format={response_format}, max_tokens={max_tokens}, temperature={temperature}, kwargs={kwargs}")
                 result = await adapter.generate_structured_response(
                     prompt=prompt,
                     response_format=response_format,

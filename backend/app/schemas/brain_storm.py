@@ -21,7 +21,7 @@ class BrainStormRequest(BaseModel):
     avoid_keywords: Optional[List[str]] = Field(None, description="避免的关键词")
     reference_works: Optional[List[str]] = Field(None, description="参考作品")
     user_input: Optional[str] = Field(None, description="用户想法描述", max_length=1000)
-    max_tokens: Optional[int] = Field(None, description="最大token数", ge=1, le=8000)
+    max_tokens: Optional[int] = Field(None, description="最大token数", ge=1, le=30000)
     temperature: Optional[int] = Field(None, description="温度值(0-100)", ge=0, le=100)
 
     @validator('idea_type')

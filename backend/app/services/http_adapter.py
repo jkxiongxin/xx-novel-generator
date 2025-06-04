@@ -23,15 +23,58 @@ class HTTPAdapter(AIModelAdapter):
     def __init__(self, config: AIModelConfig):
         self.config = config
         self.session: Optional[aiohttp.ClientSession] = None
+    
+    def _clean_json_trailing_commas(self, json_str: str) -> str:
+        """清理JSON中的多余逗号"""
+        import re
+        
+        # 移除对象中的尾随逗号 (,})
+        json_str = re.sub(r',\s*}', '}', json_str)
+        
+        # 移除数组中的尾随逗号 (,])
+        json_str = re.sub(r',\s*]', ']', json_str)
+        
+        return json_str
         
     async def _get_session(self) -> aiohttp.ClientSession:
         """获取HTTP会话"""
         if self.session is None or self.session.closed:
             timeout = ClientTimeout(total=self.config.timeout)
-            self.session = aiohttp.ClientSession(
-                timeout=timeout,
-                headers=self.config.get_request_headers()
-            )
+            
+            # 配置代理和连接器
+            connector = None
+            proxy_config = self.config.get_proxy_config()
+            
+            if proxy_config:
+                # 如果启用了代理，创建连接器
+                from aiohttp import TCPConnector
+                import aiohttp
+                
+                # 创建连接器
+                connector = TCPConnector()
+                
+                # 设置代理认证
+                proxy_auth = None
+                if proxy_config.get('username') and proxy_config.get('password'):
+                    proxy_auth = aiohttp.BasicAuth(
+                        proxy_config['username'],
+                        proxy_config['password']
+                    )
+                
+                self.session = aiohttp.ClientSession(
+                    timeout=timeout,
+                    headers=self.config.get_request_headers(),
+                    connector=connector
+                )
+                
+                # 设置会话级别的代理配置
+                self.session._proxy = proxy_config['url']
+                self.session._proxy_auth = proxy_auth
+            else:
+                self.session = aiohttp.ClientSession(
+                    timeout=timeout,
+                    headers=self.config.get_request_headers()
+                )
         return self.session
     
     async def _close_session(self):
@@ -215,10 +258,25 @@ class HTTPAdapter(AIModelAdapter):
             logger.info(f"调用AI API: {self.config.api_endpoint}")
             logger.debug(f"请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
-            # 发送请求
+            # 发送请求，支持代理
+            proxy_config = self.config.get_proxy_config()
+            request_kwargs = {
+                "json": request_data
+            }
+            
+            # 如果配置了代理，添加代理参数
+            if proxy_config:
+                request_kwargs["proxy"] = proxy_config['url']
+                if proxy_config.get('username') and proxy_config.get('password'):
+                    import aiohttp
+                    request_kwargs["proxy_auth"] = aiohttp.BasicAuth(
+                        proxy_config['username'],
+                        proxy_config['password']
+                    )
+            
             async with session.post(
                 self.config.api_endpoint,
-                json=request_data
+                **request_kwargs
             ) as response:
                 
                 # 检查响应状态
@@ -282,6 +340,9 @@ class HTTPAdapter(AIModelAdapter):
             json_str = match.group(1)
         else:
             json_str = response_text
+
+        # 清理JSON中的多余逗号
+        json_str = self._clean_json_trailing_commas(json_str)
 
         # 尝试解析JSON
         try:

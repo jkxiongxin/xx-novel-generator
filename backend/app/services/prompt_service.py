@@ -172,6 +172,174 @@ class PromptService:
         """获取默认提示词模板配置"""
         return [
             {
+                "name": "默认世界观生成器",
+                "type": PromptType.WORLD_VIEW,
+                "template": """请根据以下要求生成一个完整、合理、有特色的世界观体系。
+
+生成要求：
+- 小说类型：{genre}
+- 小说主题：{themes}
+- 写作风格：{style}
+- 用户需求：{user_input}
+
+请生成一个包含以下要素的完整世界观体系，并按JSON格式返回：
+
+{
+  "world_base": {
+    "name": "世界名称",
+    "description": "基本世界观描述",
+    "background": "历史背景和基础设定",
+    "rules": ["核心规则1", "核心规则2", "..."],
+    "characteristics": ["世界特色1", "世界特色2", "..."]
+  },
+  "geography": {
+    "map_regions": [
+      {
+        "name": "区域名称",
+        "type": "区域类型(大陆/海域/空域等)",
+        "description": "区域描述",
+        "features": ["地理特征1", "地理特征2", "..."],
+        "resources": ["特色资源1", "特色资源2", "..."]
+      }
+    ],
+    "special_locations": [
+      {
+        "name": "特殊地点名称",
+        "description": "地点描述",
+        "significance": "地点重要性",
+        "mysteries": ["相关谜团1", "相关谜团2", "..."]
+      }
+    ]
+  },
+  "power_system": {
+    "name": "修炼/力量体系名称",
+    "description": "体系整体描述",
+    "levels": [
+      {
+        "name": "等级名称",
+        "description": "等级描述",
+        "requirements": "晋升要求",
+        "abilities": ["能力1", "能力2", "..."]
+      }
+    ],
+    "unique_features": ["特色1", "特色2", "..."],
+    "cultivation_methods": ["修炼方法1", "修炼方法2", "..."]
+  },
+  "history": {
+    "eras": [
+      {
+        "name": "时代名称",
+        "description": "时代概述",
+        "major_events": [
+          {
+            "name": "事件名称",
+            "description": "事件描述",
+            "impact": "历史影响",
+            "key_figures": ["重要人物1", "重要人物2", "..."]
+          }
+        ]
+      }
+    ],
+    "significant_artifacts": [
+      {
+        "name": "神器/遗物名称",
+        "description": "描述",
+        "powers": ["能力1", "能力2", "..."],
+        "history": "来历"
+      }
+    ]
+  },
+  "factions": [
+    {
+      "name": "势力名称",
+      "type": "势力类型",
+      "description": "势力描述",
+      "ideology": "理念和目标",
+      "strength": "势力实力",
+      "territory": "势力范围",
+      "relationships": [
+        {
+          "faction": "相关势力名称",
+          "type": "关系类型(同盟/敌对/竞争等)",
+          "description": "关系描述"
+        }
+      ]
+    }
+  ]
+}""",
+                "description": "用于生成完整世界观体系的默认模板",
+                "response_format": '''
+{
+  "world_base": {
+    "name": "string",
+    "description": "string",
+    "background": "string",
+    "rules": ["string"],
+    "characteristics": ["string"]
+  },
+  "geography": {
+    "map_regions": [{
+      "name": "string",
+      "type": "string",
+      "description": "string",
+      "features": ["string"],
+      "resources": ["string"]
+    }],
+    "special_locations": [{
+      "name": "string",
+      "description": "string",
+      "significance": "string",
+      "mysteries": ["string"]
+    }]
+  },
+  "power_system": {
+    "name": "string",
+    "description": "string",
+    "levels": [{
+      "name": "string",
+      "description": "string",
+      "requirements": "string",
+      "abilities": ["string"]
+    }],
+    "unique_features": ["string"],
+    "cultivation_methods": ["string"]
+  },
+  "history": {
+    "eras": [{
+      "name": "string",
+      "description": "string",
+      "major_events": [{
+        "name": "string",
+        "description": "string",
+        "impact": "string",
+        "key_figures": ["string"]
+      }]
+    }],
+    "significant_artifacts": [{
+      "name": "string",
+      "description": "string",
+      "powers": ["string"],
+      "history": "string"
+    }]
+  },
+  "factions": [{
+    "name": "string",
+    "type": "string",
+    "description": "string",
+    "ideology": "string",
+    "strength": "string",
+    "territory": "string",
+    "relationships": [{
+      "faction": "string",
+      "type": "string",
+      "description": "string"
+    }]
+  }]
+}''',
+                "default_max_tokens": 30000,
+                "default_temperature": 75
+            },
+            {
                 "name": "默认小说名生成器",
                 "type": PromptType.NOVEL_NAME,
                 "template": """请为小说生成5个有吸引力的标题。
@@ -200,7 +368,7 @@ class PromptService:
 }}""",
                 "description": "用于生成小说标题的默认模板",
                 "response_format": '{"titles": [{"title": "string", "reason": "string"}]}',
-                "default_max_tokens": 1000,
+                "default_max_tokens": 30000,
                 "default_temperature": 80
             },
             {
@@ -235,7 +403,7 @@ class PromptService:
 }}""",
                 "description": "用于生成小说创意的默认模板",
                 "response_format": '{"idea": {"title": "string", "setting": "string", "main_character": "string", "conflict": "string", "plot": "string", "unique_selling_point": "string", "target_audience": "string"}}',
-                "default_max_tokens": 1500,
+                "default_max_tokens": 30000,
                 "default_temperature": 85
             },
             {
@@ -284,7 +452,7 @@ class PromptService:
 }}""",
                 "description": "用于生成创意脑洞的默认模板",
                 "response_format": '{"brainstorms": [{"style": "string", "concept": "string", "implementation": "string", "development": "string"}]}',
-                "default_max_tokens": 2000,
+                "default_max_tokens": 30000,
                 "default_temperature": 90
             }
         ]

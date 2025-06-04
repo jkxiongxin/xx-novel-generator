@@ -306,6 +306,7 @@ Language Preference:
 要求：
 概念记录：如果需求中出现了某个陌生概念，并且需求中有解释概念的含义与实体的对照关系，需要记录到.roo/rules/概念.md文件中
 如果文件内容超过了1000行，应该使用apply_diff工具来修改文件，不能使用write_to_file工具
+禁止使用可用工具列表之外的工具！！！
 可用工具列表：
 - read_file
 - write_to_file

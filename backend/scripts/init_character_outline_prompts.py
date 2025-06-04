@@ -84,7 +84,7 @@ def init_character_outline_prompts():
 }}""",
                 "description": "用于生成小说角色的默认模板",
                 "response_format": '{"characters": [{"name": "string", "gender": "string", "personality": "string", "character_type": "string", "faction": "string", "tags": ["string"], "description": "string", "abilities": "string"}]}',
-                "default_max_tokens": 2000,
+                "default_max_tokens": 30000,
                 "default_temperature": 80
             }
             prompts_to_create.append(character_prompt)
@@ -137,7 +137,7 @@ def init_character_outline_prompts():
 }}""",
                 "description": "用于生成粗略大纲的默认模板",
                 "response_format": '{"rough_outlines": [{"outline_type": "string", "title": "string", "content": "string", "start_chapter": "number", "end_chapter": "number", "importance": "string"}]}',
-                "default_max_tokens": 3000,
+                "default_max_tokens": 30000,
                 "default_temperature": 75
             }
             prompts_to_create.append(rough_outline_prompt)
@@ -192,7 +192,7 @@ def init_character_outline_prompts():
 }}""",
                 "description": "用于生成详细章节大纲的默认模板",
                 "response_format": '{"detailed_outlines": [{"chapter_number": "number", "chapter_title": "string", "plot_points": "string", "participating_characters": ["number"], "entering_characters": ["number"], "exiting_characters": ["number"], "chapter_summary": "string", "is_plot_end": "boolean", "is_new_plot": "boolean", "new_plot_summary": "string"}]}',
-                "default_max_tokens": 4000,
+                "default_max_tokens": 30000,
                 "default_temperature": 75
             }
             prompts_to_create.append(detail_outline_prompt)

@@ -17,7 +17,7 @@ class PromptBase(BaseModel):
     type: PromptType = Field(..., description="提示词类型")
     template: str = Field(..., description="提示词模板内容")
     description: Optional[str] = Field(None, description="提示词描述")
-    default_max_tokens: int = Field(2000, description="默认最大token数", ge=1, le=8000)
+    default_max_tokens: int = Field(2000, description="默认最大token数", ge=1, le=30000)
     default_temperature: int = Field(70, description="默认温度值(0-100)", ge=0, le=100)
     response_format: Optional[str] = Field(None, description="期望的响应格式(JSON)")
     is_active: bool = Field(True, description="是否启用")
@@ -34,7 +34,7 @@ class PromptUpdate(BaseModel):
     name: Optional[str] = Field(None, description="提示词名称", max_length=200)
     template: Optional[str] = Field(None, description="提示词模板内容")
     description: Optional[str] = Field(None, description="提示词描述")
-    default_max_tokens: Optional[int] = Field(None, description="默认最大token数", ge=1, le=8000)
+    default_max_tokens: Optional[int] = Field(None, description="默认最大token数", ge=1, le=30000)
     default_temperature: Optional[int] = Field(None, description="默认温度值(0-100)", ge=0, le=100)
     response_format: Optional[str] = Field(None, description="期望的响应格式(JSON)")
     is_active: Optional[bool] = Field(None, description="是否启用")
@@ -54,7 +54,7 @@ class PromptResponse(PromptBase):
 class GenerationRequest(BaseModel):
     """生成请求基础模式"""
     user_input: Optional[str] = Field(None, description="用户输入", max_length=1000)
-    max_tokens: Optional[int] = Field(None, description="最大token数", ge=1, le=8000)
+    max_tokens: Optional[int] = Field(None, description="最大token数", ge=1, le=30000)
     temperature: Optional[int] = Field(None, description="温度值(0-100)", ge=0, le=100)
     
     @validator('temperature')

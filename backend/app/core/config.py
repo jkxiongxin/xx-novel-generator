@@ -84,10 +84,16 @@ class Settings(BaseSettings):
     CUSTOM_API_KEY: Optional[str] = None
     CUSTOM_MODEL_NAME: str = "gpt-3.5-turbo"
     CUSTOM_REQUEST_FORMAT: str = "openai_chat"  # openai_chat, claude_messages, custom_json
-    CUSTOM_MAX_TOKENS: int = 2000
+    CUSTOM_MAX_TOKENS: int = 100000
     CUSTOM_TEMPERATURE: float = 0.7
     CUSTOM_TIMEOUT: int = 60
     CUSTOM_MODEL_CONFIGS: Dict[str, Any] = {}
+    
+    # 代理配置
+    PROXY_ENABLED: bool = False
+    PROXY_URL: Optional[str] = None
+    PROXY_USERNAME: Optional[str] = None
+    PROXY_PASSWORD: Optional[str] = None
     
     # 文件上传配置
     UPLOAD_DIR: str = "uploads"
@@ -195,6 +201,12 @@ class Settings(BaseSettings):
                 "enabled": self.OLLAMA_ENABLED,
                 "default_model": self.OLLAMA_DEFAULT_MODEL,
                 "timeout": self.OLLAMA_TIMEOUT,
+            },
+            "proxy": {
+                "enabled": self.PROXY_ENABLED,
+                "url": self.PROXY_URL,
+                "username": self.PROXY_USERNAME,
+                "password": self.PROXY_PASSWORD
             }
         }
     

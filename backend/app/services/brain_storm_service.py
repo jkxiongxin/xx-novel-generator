@@ -76,7 +76,7 @@ class BrainStormService:
             
             # 调用AI生成
             temperature = (request.temperature or 70) / 100.0
-            max_tokens = request.max_tokens or 4000
+            max_tokens = request.max_tokens or 30000
             
             result = await self.ai_service.generate_structured_response(
                 prompt=prompt,

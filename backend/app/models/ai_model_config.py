@@ -54,10 +54,16 @@ class AIModelConfig(Base, UserOwnedMixin):
     request_format = Column(SQLEnum(RequestFormat), nullable=False, comment="请求格式")
     
     # 请求配置
-    max_tokens = Column(Integer, default=2000, nullable=False, comment="最大token数")
+    max_tokens = Column(Integer, default=30000, nullable=False, comment="最大token数")
     temperature = Column(String(10), default="0.7", nullable=False, comment="温度参数")
     timeout = Column(Integer, default=60, nullable=False, comment="请求超时时间(秒)")
     retry_count = Column(Integer, default=3, nullable=False, comment="重试次数")
+    
+    # 代理配置
+    proxy_enabled = Column(Boolean, default=False, nullable=False, comment="是否启用代理")
+    proxy_url = Column(String(500), nullable=True, comment="代理服务器地址")
+    proxy_username = Column(String(200), nullable=True, comment="代理用户名")
+    proxy_password = Column(String(200), nullable=True, comment="代理密码")
     
     # 高级配置
     request_headers = Column(JSON, nullable=True, comment="自定义请求头")
@@ -150,6 +156,22 @@ class AIModelConfig(Base, UserOwnedMixin):
         """是否为自定义格式"""
         return self.model_type == ModelType.CUSTOM_HTTP
     
+    def get_proxy_config(self) -> Optional[Dict[str, Any]]:
+        """获取代理配置"""
+        if not self.proxy_enabled or not self.proxy_url:
+            return None
+        
+        proxy_config = {
+            "url": self.proxy_url
+        }
+        
+        # 添加认证信息
+        if self.proxy_username and self.proxy_password:
+            proxy_config["username"] = self.proxy_username
+            proxy_config["password"] = self.proxy_password
+        
+        return proxy_config
+    
     def validate_config(self) -> List[str]:
         """验证配置有效性"""
         errors = []
@@ -181,6 +203,11 @@ class AIModelConfig(Base, UserOwnedMixin):
         
         if self.retry_count < 0 or self.retry_count > 10:
             errors.append("重试次数必须在0-10之间")
+        
+        # 检查代理配置
+        if self.proxy_enabled and self.proxy_url:
+            if not self.proxy_url.startswith(('http://', 'https://', 'socks4://', 'socks5://')):
+                errors.append("代理URL必须是有效的HTTP(S)或SOCKS协议地址")
         
         return errors
     

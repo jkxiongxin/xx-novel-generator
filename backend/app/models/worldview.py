@@ -2,6 +2,7 @@
 世界观数据模型
 Author: AI Assistant
 Created: 2025-06-01
+Updated: 2025-06-03
 """
 
 import enum
@@ -69,8 +70,15 @@ class WorldMap(Base, TimestampMixin, UserOwnedMixin):
     worldview_id = Column(Integer, ForeignKey("worldviews.id", ondelete="CASCADE"), nullable=False, comment="世界观ID")
     region_name = Column(String(100), nullable=False, comment="区域名称")
     description = Column(Text, nullable=False, comment="区域描述")
-    parent_id = Column(Integer, ForeignKey("world_maps.id", ondelete="CASCADE"), nullable=True, comment="父区域ID")
+    parent_region_id = Column(Integer, ForeignKey("world_maps.id", ondelete="CASCADE"), nullable=True, comment="父区域ID")
     level = Column(Integer, default=1, comment="层级")
+    
+    # 扩展字段（根据设计文档）
+    climate = Column(String(200), comment="气候特征")
+    terrain = Column(String(200), comment="地形特征")
+    resources = Column(Text, comment="主要资源")
+    population = Column(String(100), comment="人口情况")
+    culture = Column(Text, comment="文化特色")
     
     # 关系定义
     user = relationship("User", back_populates="world_maps")
@@ -85,8 +93,13 @@ class WorldMap(Base, TimestampMixin, UserOwnedMixin):
             "worldview_id": self.worldview_id,
             "region_name": self.region_name,
             "description": self.description,
-            "parent_id": self.parent_id,
+            "parent_region_id": self.parent_region_id,
             "level": self.level,
+            "climate": self.climate,
+            "terrain": self.terrain,
+            "resources": self.resources,
+            "population": self.population,
+            "culture": self.culture,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "user_id": self.user_id
@@ -94,7 +107,10 @@ class WorldMap(Base, TimestampMixin, UserOwnedMixin):
     
     def update_from_dict(self, data: dict) -> None:
         """从字典更新数据"""
-        updatable_fields = ["region_name", "description", "parent_id", "level"]
+        updatable_fields = [
+            "region_name", "description", "parent_region_id", "level",
+            "climate", "terrain", "resources", "population", "culture"
+        ]
         
         for field in updatable_fields:
             if field in data:
@@ -115,9 +131,13 @@ class CultivationSystem(Base, TimestampMixin, UserOwnedMixin):
     system_name = Column(String(100), nullable=False, comment="体系名称")
     level_name = Column(String(100), nullable=False, comment="等级名称")
     description = Column(Text, nullable=False, comment="等级描述")
+    level_order = Column(Integer, nullable=False, comment="等级顺序")
+    
+    # 扩展字段（根据设计文档）
     cultivation_method = Column(Text, comment="修炼方法")
     required_resources = Column(Text, comment="所需资源")
-    level_order = Column(Integer, nullable=False, comment="等级顺序")
+    breakthrough_condition = Column(Text, comment="突破条件")
+    power_description = Column(Text, comment="力量描述")
     
     # 关系定义
     user = relationship("User", back_populates="cultivation_systems")
@@ -131,9 +151,11 @@ class CultivationSystem(Base, TimestampMixin, UserOwnedMixin):
             "system_name": self.system_name,
             "level_name": self.level_name,
             "description": self.description,
+            "level_order": self.level_order,
             "cultivation_method": self.cultivation_method,
             "required_resources": self.required_resources,
-            "level_order": self.level_order,
+            "breakthrough_condition": self.breakthrough_condition,
+            "power_description": self.power_description,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "user_id": self.user_id
@@ -142,8 +164,8 @@ class CultivationSystem(Base, TimestampMixin, UserOwnedMixin):
     def update_from_dict(self, data: dict) -> None:
         """从字典更新数据"""
         updatable_fields = [
-            "system_name", "level_name", "description", "cultivation_method",
-            "required_resources", "level_order"
+            "system_name", "level_name", "description", "level_order",
+            "cultivation_method", "required_resources", "breakthrough_condition", "power_description"
         ]
         
         for field in updatable_fields:
@@ -163,11 +185,15 @@ class History(Base, TimestampMixin, UserOwnedMixin):
     id = Column(Integer, primary_key=True, index=True)
     worldview_id = Column(Integer, ForeignKey("worldviews.id", ondelete="CASCADE"), nullable=False, comment="世界观ID")
     event_name = Column(String(200), nullable=False, comment="事件名称")
-    dynasty_name = Column(String(100), comment="朝代名称")
-    background = Column(Text, nullable=False, comment="历史背景")
-    important_events = Column(Text, comment="重要事件")
-    impact_description = Column(Text, comment="影响描述")
+    time_period = Column(String(100), comment="时间段")
     time_order = Column(Integer, nullable=False, comment="时间顺序")
+    event_type = Column(String(50), comment="事件类型")
+    description = Column(Text, nullable=False, comment="事件描述")
+    
+    # 扩展字段（根据设计文档）
+    participants = Column(Text, comment="参与者")
+    consequences = Column(Text, comment="后果影响")
+    related_locations = Column(Text, comment="相关地点")
     
     # 关系定义
     user = relationship("User", back_populates="histories")
@@ -179,11 +205,13 @@ class History(Base, TimestampMixin, UserOwnedMixin):
             "id": self.id,
             "worldview_id": self.worldview_id,
             "event_name": self.event_name,
-            "dynasty_name": self.dynasty_name,
-            "background": self.background,
-            "important_events": self.important_events,
-            "impact_description": self.impact_description,
+            "time_period": self.time_period,
             "time_order": self.time_order,
+            "event_type": self.event_type,
+            "description": self.description,
+            "participants": self.participants,
+            "consequences": self.consequences,
+            "related_locations": self.related_locations,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "user_id": self.user_id
@@ -192,8 +220,8 @@ class History(Base, TimestampMixin, UserOwnedMixin):
     def update_from_dict(self, data: dict) -> None:
         """从字典更新数据"""
         updatable_fields = [
-            "event_name", "dynasty_name", "background", "important_events",
-            "impact_description", "time_order"
+            "event_name", "time_period", "time_order", "event_type", "description",
+            "participants", "consequences", "related_locations"
         ]
         
         for field in updatable_fields:
@@ -214,10 +242,16 @@ class Faction(Base, TimestampMixin, UserOwnedMixin):
     worldview_id = Column(Integer, ForeignKey("worldviews.id", ondelete="CASCADE"), nullable=False, comment="世界观ID")
     name = Column(String(100), nullable=False, comment="阵营名称")
     faction_type = Column(String(50), nullable=False, comment="类型：阵营/势力/组织")
-    organization_structure = Column(Text, comment="组织架构")
-    territory = Column(Text, comment="势力范围")
+    description = Column(Text, comment="组织描述")
+    
+    # 扩展字段（根据设计文档）
+    leader = Column(String(100), comment="领导者")
+    territory = Column(Text, comment="控制区域")
+    power_level = Column(String(50), comment="势力等级")
     ideology = Column(Text, comment="理念目标")
-    important_figures = Column(Text, comment="重要人物")
+    allies = Column(JSON, comment="盟友列表")
+    enemies = Column(JSON, comment="敌对列表")
+    member_count = Column(String(50), comment="成员数量")
     
     # 关系定义
     user = relationship("User", back_populates="factions")
@@ -230,10 +264,14 @@ class Faction(Base, TimestampMixin, UserOwnedMixin):
             "worldview_id": self.worldview_id,
             "name": self.name,
             "faction_type": self.faction_type,
-            "organization_structure": self.organization_structure,
+            "description": self.description,
+            "leader": self.leader,
             "territory": self.territory,
+            "power_level": self.power_level,
             "ideology": self.ideology,
-            "important_figures": self.important_figures,
+            "allies": self.allies,
+            "enemies": self.enemies,
+            "member_count": self.member_count,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "user_id": self.user_id
@@ -242,8 +280,8 @@ class Faction(Base, TimestampMixin, UserOwnedMixin):
     def update_from_dict(self, data: dict) -> None:
         """从字典更新数据"""
         updatable_fields = [
-            "name", "faction_type", "organization_structure", "territory",
-            "ideology", "important_figures"
+            "name", "faction_type", "description", "leader", "territory",
+            "power_level", "ideology", "allies", "enemies", "member_count"
         ]
         
         for field in updatable_fields:

@@ -92,7 +92,11 @@ apiClient.interceptors.response.use(
     if (response.data && typeof response.data === 'object') {
       // 如果是标准响应格式 {success, data, message}
       if ('success' in response.data) {
-        return response.data.success ? response.data : Promise.reject(response.data)
+        if (response.data.success) {
+          return response.data
+        } else {
+          return Promise.reject(response.data)
+        }
       }
     }
 
