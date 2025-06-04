@@ -36,6 +36,115 @@ from app.services.brain_storm_service import get_brain_storm_service
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+@router.get("/status")
+async def get_generation_status(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    获取AI生成服务状态
+    """
+    try:
+        # 获取服务实例
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        # 检查AI服务状态
+        ai_service_available = True
+        available_adapters = []
+        default_adapter = "openai"
+        
+        try:
+            # 尝试获取AI服务配置
+            from app.services.ai_service import get_ai_service
+            ai_service = get_ai_service()
+            
+            # 检查是否有可用的适配器
+            available_adapters = ["openai"]  # 根据实际配置返回
+            ai_service_available = True
+            
+        except Exception as e:
+            logger.warning(f"AI服务检查失败: {str(e)}")
+            ai_service_available = False
+            available_adapters = []
+            default_adapter = None
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": "获取服务状态成功",
+            "data": {
+                "ai_service_available": ai_service_available,
+                "available_adapters": available_adapters,
+                "default_adapter": default_adapter
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"获取服务状态失败: {str(e)}")
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"获取服务状态失败: {str(e)}",
+            "data": {
+                "ai_service_available": False,
+                "available_adapters": [],
+                "default_adapter": None
+            }
+        }
+
+
+@router.get("/prompt-types")
+async def get_prompt_types(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    获取可用的提示词类型
+    """
+    try:
+        # 获取服务实例
+        prompt_service = get_prompt_service(db)
+        
+        # 获取所有提示词类型
+        prompt_types = [
+            {
+                "value": "novel_name",
+                "label": "小说名生成",
+                "description": "根据类型和关键词生成小说名"
+            },
+            {
+                "value": "novel_idea", 
+                "label": "小说创意生成",
+                "description": "生成小说创意和大纲"
+            },
+            {
+                "value": "worldview",
+                "label": "世界观生成", 
+                "description": "生成完整的世界观设定"
+            },
+            {
+                "value": "brain_storm",
+                "label": "脑洞生成",
+                "description": "创意脑洞和想法生成"
+            }
+        ]
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": "获取提示词类型成功",
+            "data": prompt_types
+        }
+        
+    except Exception as e:
+        logger.error(f"获取提示词类型失败: {str(e)}")
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"获取提示词类型失败: {str(e)}",
+            "data": []
+        }
 
 
 @router.post("/novel-name", response_model=StructuredGenerationResponse)

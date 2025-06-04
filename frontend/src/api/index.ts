@@ -87,19 +87,21 @@ apiClient.interceptors.response.use(
         headers: response.headers
       })
     }
-
-    // 统一处理响应格式
+    
     if (response.data && typeof response.data === 'object') {
       // 如果是标准响应格式 {success, data, message}
       if ('success' in response.data) {
         if (response.data.success) {
+          // 成功时返回完整的响应对象，包含success, data, message等字段
           return response.data
         } else {
+          // 失败时抛出错误
           return Promise.reject(response.data)
         }
       }
     }
 
+    // 对于非标准格式的响应，返回原始response对象
     return response
   },
   (error) => {

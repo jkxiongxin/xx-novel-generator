@@ -155,13 +155,10 @@ const handleSubmit = async () => {
     
     const response = await AuthService.forgotPassword(form)
     
-    if (response.success) {
-      showSuccess.value = true
-      ElMessage.success('密码重置邮件已发送')
-      startResendCountdown()
-    } else {
-      ElMessage.error(response.message || '发送失败，请重试')
-    }
+    // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+    showSuccess.value = true
+    ElMessage.success('密码重置邮件已发送')
+    startResendCountdown()
     
   } catch (error: any) {
     console.error('Forgot password error:', error)
@@ -187,12 +184,9 @@ const resendEmail = async () => {
     
     const response = await AuthService.forgotPassword(form)
     
-    if (response.success) {
-      ElMessage.success('邮件已重新发送')
-      startResendCountdown()
-    } else {
-      ElMessage.error(response.message || '发送失败，请重试')
-    }
+    // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+    ElMessage.success('邮件已重新发送')
+    startResendCountdown()
     
   } catch (error: any) {
     console.error('Resend email error:', error)

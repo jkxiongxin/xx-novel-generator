@@ -482,7 +482,330 @@ class GenerationService:
             logger.error(f"小说名生成失败: {str(e)}")
             raise AIServiceError(f"小说名生成失败: {str(e)}")
 
-    # ... [previous methods remain unchanged]
+    async def generate_world_maps(
+        self,
+        worldview_id: int,
+        parent_region = None,
+        request_params: Dict[str, Any] = None,
+        user_id: Optional[int] = None,
+        db = None
+    ) -> Dict[str, Any]:
+        """生成世界地图区域"""
+        try:
+            start_time = time.time()
+            
+            logger.info(f"开始生成地图区域: worldview_id={worldview_id}, parent_region={parent_region}")
+            
+            # 检查AI服务是否可用
+            if not self.ai_service.is_available(user_id=user_id):
+                raise AIServiceError("AI服务当前不可用")
+            
+            # 获取世界观信息
+            worldview_info = await self._get_worldview_context(worldview_id, db)
+            
+            # 构建父区域上下文
+            parent_context = ""
+            if parent_region:
+                parent_context = f"""
+父区域信息：
+- 名称：{parent_region.region_name}
+- 描述：{parent_region.description}
+- 气候：{parent_region.climate or '未知'}
+- 地形：{parent_region.terrain or '未知'}
+- 层级：{parent_region.level}
+
+请生成这个父区域的子区域，确保与父区域的设定保持一致。
+"""
+            
+            # 获取请求参数
+            count = request_params.get("count", 3)
+            include_features = request_params.get("include", [])
+            user_suggestion = request_params.get("suggestion", "")
+            
+            # 构建上下文数据
+            context_data = {
+                "worldview_name": worldview_info.get("name", "未命名世界观"),
+                "worldview_description": worldview_info.get("description", ""),
+                "parent_context": parent_context,
+                "generation_count": count,
+                "include_climate": "climate" in include_features,
+                "include_terrain": "terrain" in include_features,
+                "include_resources": "resources" in include_features,
+                "include_population": "population" in include_features,
+                "include_culture": "culture" in include_features,
+                "user_suggestion": user_suggestion
+            }
+            
+            # 构建专门的地图生成提示词
+            map_prompt = f"""
+作为一个世界观设计师，请为"{worldview_info.get('name', '未命名世界观')}"生成{count}个地图区域。
+
+世界观背景：
+{worldview_info.get('description', '暂无描述')}
+
+{parent_context}
+
+生成要求：
+1. 生成{count}个不同的地图区域
+2. 每个区域都要有独特的特色和设定
+3. 区域之间要有逻辑联系和层次关系
+{'4. 包含气候特征描述' if 'climate' in include_features else ''}
+{'5. 包含地形地貌描述' if 'terrain' in include_features else ''}
+{'6. 包含自然资源描述' if 'resources' in include_features else ''}
+{'7. 包含人口分布描述' if 'population' in include_features else ''}
+{'8. 包含文化特色描述' if 'culture' in include_features else ''}
+
+用户建议：{user_suggestion}
+
+请按照以下JSON格式返回：
+{{
+    "generated_maps": [
+        {{
+            "name": "区域名称",
+            "description": "详细的区域描述，包含历史背景和特色",
+            "climate": "气候特征（如果需要）",
+            "terrain": "地形地貌（如果需要）",
+            "resources": "主要自然资源（如果需要）",
+            "population": "人口分布情况（如果需要）",
+            "culture": "文化特色（如果需要）"
+        }}
+    ]
+}}
+"""
+            
+            # 调用AI生成
+            result = await self.ai_service.generate_structured_response(
+                prompt=map_prompt,
+                response_format={
+                    "type": "object",
+                    "properties": {
+                        "generated_maps": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {"type": "string"},
+                                    "description": {"type": "string"},
+                                    "climate": {"type": "string"},
+                                    "terrain": {"type": "string"},
+                                    "resources": {"type": "string"},
+                                    "population": {"type": "string"},
+                                    "culture": {"type": "string"}
+                                },
+                                "required": ["name", "description"]
+                            }
+                        }
+                    }
+                }
+                ,
+                temperature=0.7,
+                max_tokens=4000,
+                user_id=user_id,
+                db=db
+            )
+            
+            generation_time = time.time() - start_time
+            
+            # 处理生成结果
+            generated_maps = result.get("generated_maps", [])
+            
+            # 确保每个地图区域都有基本字段
+            for map_data in generated_maps:
+                if "climate" not in map_data:
+                    map_data["climate"] = ""
+                if "terrain" not in map_data:
+                    map_data["terrain"] = ""
+                if "resources" not in map_data:
+                    map_data["resources"] = ""
+                if "population" not in map_data:
+                    map_data["population"] = ""
+                if "culture" not in map_data:
+                    map_data["culture"] = ""
+            
+            return {
+                "generated_maps": generated_maps,
+                "generation_time": round(generation_time, 2),
+                "total_count": len(generated_maps),
+                "parent_region_id": parent_region.id if parent_region else None,
+                "worldview_id": worldview_id
+            }
+            
+        except Exception as e:
+            logger.error(f"地图生成失败: {str(e)}")
+            raise AIServiceError(f"地图生成失败: {str(e)}")
+    
+    async def _get_worldview_context(self, worldview_id: int, db) -> Dict[str, Any]:
+        """获取世界观上下文信息"""
+        try:
+            from app.models.worldview import Worldview
+            
+            worldview = db.query(Worldview).filter(Worldview.id == worldview_id).first()
+            
+            if not worldview:
+                logger.warning(f"未找到世界观ID: {worldview_id}")
+                return {}
+            
+            return {
+                "name": worldview.name,
+                "description": worldview.description or "",
+                "is_primary": worldview.is_primary
+            }
+            
+        except Exception as e:
+            logger.error(f"获取世界观上下文失败: {str(e)}")
+            return {}
+
+    async def generate_cultivation_system(
+        self,
+        worldview_id: int,
+        request_params: Dict[str, Any] = None,
+        user_id: Optional[int] = None,
+        db = None
+    ) -> Dict[str, Any]:
+        """生成修炼体系"""
+        try:
+            start_time = time.time()
+            
+            logger.info(f"开始生成修炼体系: worldview_id={worldview_id}")
+            
+            # 检查AI服务是否可用
+            if not self.ai_service.is_available(user_id=user_id):
+                raise AIServiceError("AI服务当前不可用")
+            
+            # 获取世界观信息
+            worldview_info = await self._get_worldview_context(worldview_id, db)
+            
+            # 获取请求参数
+            system_name = request_params.get("system_name", "")
+            level_count = request_params.get("level_count", 9)
+            include_features = request_params.get("include", [])
+            user_suggestion = request_params.get("suggestion", "")
+            
+            # 构建上下文数据
+            context_data = {
+                "worldview_name": worldview_info.get("name", "未命名世界观"),
+                "worldview_description": worldview_info.get("description", ""),
+                "system_name": system_name,
+                "level_count": level_count,
+                "include_cultivation_method": "cultivation_method" in include_features,
+                "include_required_resources": "required_resources" in include_features,
+                "include_breakthrough_condition": "breakthrough_condition" in include_features,
+                "include_power_description": "power_description" in include_features,
+                "user_suggestion": user_suggestion
+            }
+            
+            # 构建修炼体系生成提示词
+            cultivation_prompt = f"""
+作为一个修真世界设计师，请为"{worldview_info.get('name', '未命名世界观')}"设计一个完整的修炼体系。
+
+世界观背景：
+{worldview_info.get('description', '暂无描述')}
+
+修炼体系要求：
+1. 体系名称：{system_name or '请自动命名'}
+2. 等级数量：{level_count}个等级
+3. 每个等级都要有清晰的划分和特色
+4. 等级间要有合理的递进关系
+{'5. 包含详细的修炼方法描述' if 'cultivation_method' in include_features else ''}
+{'6. 包含所需资源和材料说明' if 'required_resources' in include_features else ''}
+{'7. 包含突破条件和要求' if 'breakthrough_condition' in include_features else ''}
+{'8. 包含该等级的力量描述' if 'power_description' in include_features else ''}
+
+用户建议：{user_suggestion}
+
+请按照以下JSON格式返回：
+{{
+    "generated_systems": [
+        {{
+            "system_name": "修炼体系名称",
+            "description": "体系整体描述",
+            "levels": [
+                {{
+                    "name": "等级名称",
+                    "description": "等级描述和特点",
+                    "cultivation_method": "修炼方法（如果需要）",
+                    "required_resources": "所需资源（如果需要）",
+                    "breakthrough_condition": "突破条件（如果需要）",
+                    "power_description": "力量描述（如果需要）"
+                }}
+            ]
+        }}
+    ]
+}}
+"""
+            
+            # 调用AI生成
+            result = await self.ai_service.generate_structured_response(
+                prompt=cultivation_prompt,
+                response_format={
+                    "type": "object",
+                    "properties": {
+                        "generated_systems": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "system_name": {"type": "string"},
+                                    "description": {"type": "string"},
+                                    "levels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {"type": "string"},
+                                                "description": {"type": "string"},
+                                                "cultivation_method": {"type": "string"},
+                                                "required_resources": {"type": "string"},
+                                                "breakthrough_condition": {"type": "string"},
+                                                "power_description": {"type": "string"}
+                                            },
+                                            "required": ["name", "description"]
+                                        }
+                                    }
+                                },
+                                "required": ["system_name", "levels"]
+                            }
+                        }
+                    }
+                },
+                temperature=0.7,
+                max_tokens=6000,
+                user_id=user_id,
+                db=db
+            )
+            
+            generation_time = time.time() - start_time
+            
+            # 处理生成结果
+            generated_systems = result.get("generated_systems", [])
+            
+            # 确保每个等级都有基本字段
+            for system_data in generated_systems:
+                levels = system_data.get("levels", [])
+                for level_data in levels:
+                    if "cultivation_method" not in level_data:
+                        level_data["cultivation_method"] = ""
+                    if "required_resources" not in level_data:
+                        level_data["required_resources"] = ""
+                    if "breakthrough_condition" not in level_data:
+                        level_data["breakthrough_condition"] = ""
+                    if "power_description" not in level_data:
+                        level_data["power_description"] = ""
+            
+            # 计算总生成的等级数量
+            total_levels = sum(len(system.get("levels", [])) for system in generated_systems)
+            
+            return {
+                "generated_systems": generated_systems,
+                "generation_time": round(generation_time, 2),
+                "total_systems": len(generated_systems),
+                "total_levels": total_levels,
+                "worldview_id": worldview_id
+            }
+            
+        except Exception as e:
+            logger.error(f"修炼体系生成失败: {str(e)}")
+            raise AIServiceError(f"修炼体系生成失败: {str(e)}")
 
     async def validate_generation_request(self, request: Dict[str, Any]) -> bool:
         """验证生成请求"""

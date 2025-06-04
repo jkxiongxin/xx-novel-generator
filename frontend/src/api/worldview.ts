@@ -388,7 +388,7 @@ export class WorldviewAPI {
    */
   static async generateWorldview(data: WorldviewGenerationRequest): Promise<any> {
     const response = await apiClient.post('/worldview/generate', data)
-    return response.data
+    return response
   }
 
   /**
@@ -399,7 +399,54 @@ export class WorldviewAPI {
       novel_id: novelId,
       generated_data: generatedData
     })
-    return response.data
+    return response
+  }
+
+  /**
+   * AI生成世界地图区域
+   */
+  static async generateWorldMaps(worldviewId: number, params: {
+    parent_region_id?: number
+    count?: number
+    include?: string[]
+    suggestion?: string
+  }): Promise<any> {
+    const response = await apiClient.post(`/worldview/${worldviewId}/maps/generate`, params)
+    return response
+  }
+
+  /**
+   * 保存AI生成的地图数据
+   */
+  static async saveGeneratedMaps(worldviewId: number, data: {
+    generated_maps: any[]
+    parent_region_id?: number
+  }): Promise<any> {
+    const response = await apiClient.post(`/worldview/${worldviewId}/maps/save-generated`, data)
+    return response
+  }
+
+  /**
+   * AI生成修炼体系
+   */
+  static async generateCultivationSystem(worldviewId: number, params: {
+    system_name?: string
+    level_count?: number
+    include?: string[]
+    suggestion?: string
+  }): Promise<any> {
+    const response = await apiClient.post(`/worldview/${worldviewId}/cultivation/generate`, params)
+    return response
+  }
+
+  /**
+   * 保存AI生成的修炼体系数据
+   */
+  static async saveGeneratedCultivation(worldviewId: number, data: {
+    generated_systems: any[]
+  }): Promise<any> {
+    const response = await apiClient.post(`/worldview/${worldviewId}/cultivation/save-generated`, data)
+    return response
   }
 }
 

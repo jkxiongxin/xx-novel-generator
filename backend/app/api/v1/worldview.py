@@ -971,6 +971,338 @@ async def generate_worldview(
         )
 
 
+@router.post("/{worldview_id}/maps/generate")
+async def generate_world_maps(
+    worldview_id: int,
+    request: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """AI生成世界地图区域"""
+    try:
+        # 验证世界观是否属于当前用户
+        worldview = db.query(Worldview).filter(
+            and_(Worldview.id == worldview_id, Worldview.user_id == current_user.id)
+        ).first()
+        if not worldview:
+            return {
+                "success": False,
+                "code": 404,
+                "message": "世界观不存在或无权访问",
+                "data": None
+            }
+        
+        # 获取父区域信息（如果指定了parent_region_id）
+        parent_region = None
+        parent_region_id = request.get("parent_region_id")
+        if parent_region_id:
+            parent_region = db.query(WorldMap).filter(
+                and_(
+                    WorldMap.id == parent_region_id,
+                    WorldMap.worldview_id == worldview_id,
+                    WorldMap.user_id == current_user.id
+                )
+            ).first()
+            if not parent_region:
+                return {
+                    "success": False,
+                    "code": 404,
+                    "message": "父区域不存在",
+                    "data": None
+                }
+        
+        # 调用生成服务
+        from app.services.generation_service import get_generation_service
+        from app.services.prompt_service import get_prompt_service
+        
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        result = await generation_service.generate_world_maps(
+            worldview_id=worldview_id,
+            parent_region=parent_region,
+            request_params=request,
+            user_id=current_user.id,
+            db=db
+        )
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": "地图生成成功",
+            "data": result
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"生成地图失败: {str(e)}",
+            "data": None
+        }
+@router.post("/{worldview_id}/cultivation/generate")
+async def generate_cultivation_system(
+    worldview_id: int,
+    request: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """AI生成修炼体系"""
+    try:
+        # 验证世界观是否属于当前用户
+        worldview = db.query(Worldview).filter(
+            and_(Worldview.id == worldview_id, Worldview.user_id == current_user.id)
+        ).first()
+        if not worldview:
+            return {
+                "success": False,
+                "code": 404,
+                "message": "世界观不存在或无权访问",
+                "data": None
+            }
+        
+        # 调用生成服务
+        from app.services.generation_service import get_generation_service
+        from app.services.prompt_service import get_prompt_service
+        
+        prompt_service = get_prompt_service(db)
+        generation_service = get_generation_service(prompt_service)
+        
+        result = await generation_service.generate_cultivation_system(
+            worldview_id=worldview_id,
+            request_params=request,
+            user_id=current_user.id,
+            db=db
+        )
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": "修炼体系生成成功",
+            "data": result
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"生成修炼体系失败: {str(e)}",
+            "data": None
+        }
+
+
+@router.post("/{worldview_id}/cultivation/save-generated")
+async def save_generated_cultivation(
+    worldview_id: int,
+    request: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """保存AI生成的修炼体系数据"""
+    try:
+        # 验证世界观是否属于当前用户
+        worldview = db.query(Worldview).filter(
+            and_(Worldview.id == worldview_id, Worldview.user_id == current_user.id)
+        ).first()
+        if not worldview:
+            return {
+                "success": False,
+                "code": 404,
+                "message": "世界观不存在或无权访问",
+                "data": None
+            }
+        
+        generated_systems = request.get("generated_systems", [])
+        
+        if not generated_systems:
+            return {
+                "success": False,
+                "code": 400,
+                "message": "没有要保存的修炼体系数据",
+                "data": None
+            }
+        
+        saved_count = 0
+        saved_systems = []
+        
+        # 保存生成的修炼体系
+        for system_data in generated_systems:
+            try:
+                system_name = system_data.get("system_name", "未命名修炼体系")
+                levels = system_data.get("levels", [])
+                
+                # 为每个等级创建记录
+                for idx, level_data in enumerate(levels):
+                    if isinstance(level_data, dict):
+                        level_name = level_data.get("name", f"第{idx+1}级")
+                        level_desc = level_data.get("description", "")
+                        cultivation_method = level_data.get("cultivation_method", "")
+                        required_resources = level_data.get("required_resources", "")
+                        breakthrough_condition = level_data.get("breakthrough_condition", "")
+                        power_description = level_data.get("power_description", "")
+                    else:
+                        level_name = str(level_data)
+                        level_desc = f"{level_name}等级"
+                        cultivation_method = ""
+                        required_resources = ""
+                        breakthrough_condition = ""
+                        power_description = ""
+                    
+                    cultivation_level = CultivationSystem(
+                        system_name=system_name,
+                        level_name=level_name,
+                        description=level_desc,
+                        level_order=idx + 1,
+                        cultivation_method=cultivation_method,
+                        required_resources=required_resources,
+                        breakthrough_condition=breakthrough_condition,
+                        power_description=power_description,
+                        worldview_id=worldview_id,
+                        user_id=current_user.id
+                    )
+                    
+                    db.add(cultivation_level)
+                    db.flush()  # 获取ID
+                    
+                    saved_systems.append({
+                        "id": cultivation_level.id,
+                        "system_name": cultivation_level.system_name,
+                        "level_name": cultivation_level.level_name,
+                        "level_order": cultivation_level.level_order
+                    })
+                    saved_count += 1
+                    
+            except Exception as e:
+                print(f"保存修炼体系时出错: {e}")
+                continue
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": f"成功保存 {saved_count} 个修炼等级",
+            "data": {
+                "saved_count": saved_count,
+                "saved_systems": saved_systems
+            }
+        }
+        
+    except Exception as e:
+        db.rollback()
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"保存修炼体系数据失败: {str(e)}",
+            "data": None
+        }
+
+
+@router.post("/{worldview_id}/maps/save-generated")
+async def save_generated_maps(
+    worldview_id: int,
+    request: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """保存AI生成的地图数据"""
+    try:
+        # 验证世界观是否属于当前用户
+        worldview = db.query(Worldview).filter(
+            and_(Worldview.id == worldview_id, Worldview.user_id == current_user.id)
+        ).first()
+        if not worldview:
+            return {
+                "success": False,
+                "code": 404,
+                "message": "世界观不存在或无权访问",
+                "data": None
+            }
+        
+        generated_maps = request.get("generated_maps", [])
+        parent_region_id = request.get("parent_region_id")
+        
+        if not generated_maps:
+            return {
+                "success": False,
+                "code": 400,
+                "message": "没有要保存的地图数据",
+                "data": None
+            }
+        
+        saved_count = 0
+        saved_maps = []
+        
+        # 确定子区域的层级
+        parent_level = 1
+        if parent_region_id:
+            parent_region = db.query(WorldMap).filter(
+                and_(
+                    WorldMap.id == parent_region_id,
+                    WorldMap.worldview_id == worldview_id,
+                    WorldMap.user_id == current_user.id
+                )
+            ).first()
+            if parent_region:
+                parent_level = parent_region.level
+        
+        child_level = parent_level + 1
+        
+        # 保存生成的地图区域
+        for map_data in generated_maps:
+            try:
+                world_map = WorldMap(
+                    region_name=map_data.get("name", ""),
+                    description=map_data.get("description", ""),
+                    climate=map_data.get("climate", ""),
+                    terrain=map_data.get("terrain", ""),
+                    resources=map_data.get("resources", ""),
+                    population=map_data.get("population", ""),
+                    culture=map_data.get("culture", ""),
+                    parent_region_id=parent_region_id,
+                    level=child_level,
+                    worldview_id=worldview_id,
+                    user_id=current_user.id
+                )
+                
+                db.add(world_map)
+                db.flush()  # 获取ID
+                
+                saved_maps.append({
+                    "id": world_map.id,
+                    "region_name": world_map.region_name,
+                    "description": world_map.description,
+                    "level": world_map.level,
+                    "parent_region_id": world_map.parent_region_id
+                })
+                saved_count += 1
+                
+            except Exception as e:
+                print(f"保存地图区域时出错: {e}")
+                continue
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "code": 200,
+            "message": f"成功保存 {saved_count} 个地图区域",
+            "data": {
+                "saved_count": saved_count,
+                "saved_maps": saved_maps
+            }
+        }
+        
+    except Exception as e:
+        db.rollback()
+        return {
+            "success": False,
+            "code": 500,
+            "message": f"保存地图数据失败: {str(e)}",
+            "data": None
+        }
+
+
 @router.post("/save-generated")
 async def save_generated_worldview(
     request: dict,

@@ -217,18 +217,15 @@ const handleSubmit = async () => {
     
     const response = await AuthService.resetPassword(form)
     
-    if (response.success) {
-      showSuccess.value = true
-      ElMessage.success('密码重置成功！')
-      
-      // 如果支持自动登录，可以直接跳转
-      if (response.auto_login) {
-        setTimeout(() => {
-          router.push('/')
-        }, 2000)
-      }
-    } else {
-      ElMessage.error(response.message || '密码重置失败')
+    // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+    showSuccess.value = true
+    ElMessage.success('密码重置成功！')
+    
+    // 如果支持自动登录，可以直接跳转
+    if (response.auto_login) {
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
     }
     
   } catch (error: any) {

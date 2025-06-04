@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ],
+      "alwaysAllow": [
+        "playwright_navigate",
+        "playwright_screenshot",
+        "playwright_console_logs",
+        "playwright_click",
+        "playwright_evaluate",
+        "playwright_goto",
+        "playwright_launch"
+      ]
+    }
+  }
+}

@@ -392,14 +392,106 @@ const generateSystem = () => {
 const submitGenerate = async () => {
   try {
     generating.value = true
-    // TODO: 实现AI生成逻辑
-    ElMessage.warning('AI生成功能开发中...')
+    
+    // 验证参数
+    if (generateForm.level_count < 1 || generateForm.level_count > 15) {
+      ElMessage.error('等级数量必须在1-15之间')
+      return
+    }
+    
+    // 调用AI生成接口
+    const { WorldviewAPI } = await import('@/api/worldview')
+    const result = await WorldviewAPI.generateCultivationSystem(props.worldviewId, {
+      system_name: generateForm.system_name,
+      level_count: generateForm.level_count,
+      include: generateForm.include,
+      suggestion: generateForm.suggestion
+    })
+    
+    // 检查响应格式 - API拦截器返回完整的 {success, data, message} 对象
+    if (result && result.success && result.data?.generated_systems?.length > 0) {
+      console.log("进入预览逻辑")
+      // 显示生成结果预览
+      await showGenerationPreview(result.data.generated_systems)
+      
+      // 保存生成的数据
+      const saveResult = await WorldviewAPI.saveGeneratedCultivation(props.worldviewId, {
+        generated_systems: result.data.generated_systems
+      })
+      
+      if (saveResult && saveResult.success && saveResult.data?.saved_count > 0) {
+        ElMessage.success(`AI生成成功！共生成 ${saveResult.data.saved_count || result.data.total_levels || result.data.generated_systems.reduce((sum: number, sys: any) => sum + (sys.levels?.length || 0), 0)} 个修炼等级`)
+        emit('refresh')
+        showGenerateDialog.value = false
+      } else {
+        ElMessage.error(saveResult?.message || '保存失败')
+      }
+    } else {
+      // 更详细的错误信息
+      console.error('生成失败，响应数据:', result)
+      ElMessage.error(result?.message || 'AI生成失败，请重试')
+    }
+    
   } catch (error) {
     console.error('生成失败:', error)
-    ElMessage.error('生成失败')
+    ElMessage.error('生成失败，请稍后重试')
   } finally {
     generating.value = false
-    showGenerateDialog.value = false
+  }
+}
+
+const showGenerationPreview = async (generatedSystems: any[]) => {
+  // 构建预览内容
+  let previewContent = ''
+  
+  generatedSystems.forEach((system, systemIndex) => {
+    previewContent += `【${system.system_name}】\n`
+    if (system.description) {
+      previewContent += `${system.description}\n\n`
+    }
+    
+    system.levels.forEach((level: any, levelIndex: number) => {
+      previewContent += `${levelIndex + 1}. ${level.name}\n`
+      previewContent += `   ${level.description}\n`
+      
+      if (level.cultivation_method && generateForm.include.includes('cultivation_method')) {
+        previewContent += `   修炼方法：${level.cultivation_method}\n`
+      }
+      if (level.required_resources && generateForm.include.includes('required_resources')) {
+        previewContent += `   所需资源：${level.required_resources}\n`
+      }
+      if (level.breakthrough_condition && generateForm.include.includes('breakthrough_condition')) {
+        previewContent += `   突破条件：${level.breakthrough_condition}\n`
+      }
+      if (level.power_description && generateForm.include.includes('power_description')) {
+        previewContent += `   力量描述：${level.power_description}\n`
+      }
+      
+      previewContent += '\n'
+    })
+    
+    if (systemIndex < generatedSystems.length - 1) {
+      previewContent += '\n---\n\n'
+    }
+  })
+  
+  // 显示预览对话框
+  try {
+    await ElMessageBox.confirm(
+      previewContent,
+      `AI生成预览 - 共${generatedSystems.reduce((sum, sys) => sum + sys.levels.length, 0)}个等级`,
+      {
+        confirmButtonText: '确认保存',
+        cancelButtonText: '重新生成',
+        type: 'info',
+        customClass: 'generation-preview-dialog'
+      }
+    )
+  } catch (error) {
+    if (error === 'cancel') {
+      throw new Error('用户取消保存')
+    }
+    throw error
   }
 }
 </script>
@@ -470,5 +562,21 @@ const submitGenerate = async () => {
 
 :deep(.el-table) {
   margin: 12px 0;
+}
+
+// 生成预览对话框样式
+:deep(.generation-preview-dialog) {
+  .el-message-box__content {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .el-message-box__message {
+    white-space: pre-line;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+  }
 }
 </style>

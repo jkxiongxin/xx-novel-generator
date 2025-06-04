@@ -196,27 +196,26 @@ export const useBrainGenerator = () => {
       // 清除进度模拟
       clearInterval(progressInterval)
 
-      if (response.success) {
-        generatedIdeas.value = response.ideas
-        
-        // 保存到历史记录
-        if (preferences.value.auto_save_history) {
-          await loadRecentHistory()
-        }
-
-        progress.value = 100
-        currentStep.value = '生成完成！'
-        
-        ElMessage.success(`成功生成 ${response.ideas.length} 个创意！`)
-        
-        // 滚动到结果区域
-        nextTick(() => {
-          const resultsArea = document.querySelector('.results-area')
-          if (resultsArea) {
-            resultsArea.scrollIntoView({ behavior: 'smooth' })
-          }
-        })
+      // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+      generatedIdeas.value = response.ideas
+      
+      // 保存到历史记录
+      if (preferences.value.auto_save_history) {
+        await loadRecentHistory()
       }
+
+      progress.value = 100
+      currentStep.value = '生成完成！'
+      
+      ElMessage.success(`成功生成 ${response.ideas.length} 个创意！`)
+      
+      // 滚动到结果区域
+      nextTick(() => {
+        const resultsArea = document.querySelector('.results-area')
+        if (resultsArea) {
+          resultsArea.scrollIntoView({ behavior: 'smooth' })
+        }
+      })
     } catch (error: any) {
       handleGenerationError(error)
     } finally {

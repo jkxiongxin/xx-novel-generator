@@ -183,20 +183,16 @@ const verifyEmail = async (token: string) => {
     
     const response = await AuthService.verifyEmail({ token })
     
-    if (response.success) {
-      verificationStatus.value = 'success'
-      verifiedUser.value = response.user || null
-      
-      // 如果返回了访问token，说明已自动登录
-      if (response.access_token) {
-        isAutoLoggedIn.value = true
-        ElMessage.success('邮箱验证成功，已自动登录！')
-      } else {
-        ElMessage.success('邮箱验证成功！')
-      }
+    // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+    verificationStatus.value = 'success'
+    verifiedUser.value = response.user || null
+    
+    // 如果返回了访问token，说明已自动登录
+    if (response.access_token) {
+      isAutoLoggedIn.value = true
+      ElMessage.success('邮箱验证成功，已自动登录！')
     } else {
-      verificationStatus.value = 'error'
-      errorMessage.value = response.message
+      ElMessage.success('邮箱验证成功！')
     }
     
   } catch (error: any) {
@@ -226,12 +222,9 @@ const handleResendSubmit = async () => {
     
     const response = await AuthService.resendVerification(resendForm)
     
-    if (response.success) {
-      ElMessage.success('验证邮件已重新发送，请查收')
-      showResendForm.value = false
-    } else {
-      ElMessage.error(response.message || '发送失败，请重试')
-    }
+    // 由于响应拦截器已经处理了success判断，这里直接处理成功情况
+    ElMessage.success('验证邮件已重新发送，请查收')
+    showResendForm.value = false
     
   } catch (error: any) {
     console.error('Resend verification error:', error)
